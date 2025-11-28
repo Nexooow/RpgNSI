@@ -1,15 +1,15 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
-image = plt.imread("assets/background.webp")
-
-
 class Graph:
-    def __init__(self, sommets, aretes, pos, orientation=False):
+    def __init__(self, sommets, aretes, pos, orientation=False, image="background.webp"):
         self.aretes = aretes
+        if not orientation:
+            self.aretes = [(s2, s1, p) for s1, s2, p in self.aretes if s1 != s2 and (s2, s1, p) not in self.aretes]
         self.sommets = sommets
         self.pos = pos
         self.orientation = orientation
+        self.image = image
 
     def __str__(self):
         return f"Graph ({self.aretes}, {self.sommets}, {self.orientation})"
@@ -60,8 +60,8 @@ class Graph:
         # un graphe est complet quand la somme des degrés de tous les sommets est égale au double du nombre d'arêtes
         return somme_degres == 2 * len(self.aretes)
 
-    def affichage(self, fond):
-        img = plt.imread(f"assets/{fond}.webp")
+    def affichage(self):
+        img = plt.imread(f"assets/{self.image}.webp")
         G = nx.DiGraph() if self.orientation else nx.Graph()
 
         G.add_nodes_from(self.sommets)
@@ -92,7 +92,7 @@ class Graph:
             font_family="Arial",
             bbox=dict(
                 facecolor="white", pad=0.2, edgecolor="none"
-            ),  # cache l'étiquette derrière le label
+            ) # cache l'étiquette derrière le label
         )
         plt.show()
 
@@ -107,6 +107,7 @@ if __name__ == "__main__":
         ("Ceilidh", "Auberge", 0),
         ("Auberge", "Elder Tree", 0),
         ("Auberge", "Ceilidh", 0),
+        ("Auberge", "Dawn of the world", 0)
     ]
     pos = {
         "Auberge": (200, 400),
@@ -120,6 +121,5 @@ if __name__ == "__main__":
         aretes,
         pos,
         True,
+        "background.webp"
     )
-    graph.ajout_arete("Auberge", "Dawn of the world")
-    graph.affichage("background")
