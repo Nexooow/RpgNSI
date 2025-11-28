@@ -2,5 +2,10 @@
     "type": "event",
     "id": "test",
     "chance": "bad",
-    "run": {}
+    "run": [
+        {
+            "type": "dialog",
+            "data": "Salut !"
+        }
+    ]
 }
