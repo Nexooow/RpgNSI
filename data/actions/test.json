@@ -1,0 +1,6 @@
+{
+    "type": "event",
+    "id": "test",
+    "chance": "bad",
+    "run": {}
+}

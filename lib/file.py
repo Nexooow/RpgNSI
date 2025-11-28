@@ -9,4 +9,5 @@ class File:
     def empiler (self, valeur):
         self.contenu.append(valeur)
 
-    
+    def sommet (self):
+        return self.contenu[0]
