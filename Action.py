@@ -1,30 +1,32 @@
 import pygame
 
 class Action:
-    data: dict()
-    complete: False
-    indexAction: -1 # l'index de la sous action en cours d'utilisation, -1: l'action n'est pas lancée
-
+    
     def __init__ (self, json):
-        assert isinstance(json, dict)
-        self.json = json;
-        self.nom = json["nom"]
-
+        self.complete = False
+        self.json = json
+        
+    def draw (self, screen):
+        pass
+        
+    def update (self, events):
+        pass
+        
     def executer (self):
-        runner = self.json["run"]
-        if not runner:
-            return;
-        action_actuelle = runner[self.indexAction]
-        if not action_actuelle:
+        pass
+
+class Dialogue (Action):
+    
+    def __init__ (self, json):
+        super().__init__(json)
+        
+    def draw (self, screen):
+        pass
+        
+    def update (self, events):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
             self.complete = True
-            return
         
-        
-    def update (self):
+    def executer (self):
         pass
-
-    def draw (self):
-        pass
-
-    def est_complete (self):
-        return False; 
