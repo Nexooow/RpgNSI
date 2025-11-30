@@ -3,8 +3,6 @@ import networkx as nx
 import numpy as np
 import pygame
 
-from lib.render import screen
-
 class Graph:
     def __init__(self, sommets, aretes, pos, orientation=False, image="background.webp"):
         self.aretes = aretes
@@ -64,7 +62,7 @@ class Graph:
         # un graphe est complet quand la somme des degrés de tous les sommets est égale au double du nombre d'arêtes
         return somme_degres == 2 * len(self.aretes)
 
-    def affichage(self):
+    def affichage(self, screen):
         img = plt.imread(f"assets/{self.image}.webp")
         G = nx.DiGraph() if self.orientation else nx.Graph()
 

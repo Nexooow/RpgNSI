@@ -4,7 +4,7 @@ from lib.graph import Graph
 from Action import Action
 from JSONLoader import JSONLoader
 from lib.file import File
-from lib.render import draw_rectangle, text_render_centered, text_render, screen
+from menu.accueil import Accueil
 
 sommets = ["Auberge", "Mountain", "Ceilidh", "Dawn of the world", "Elder Tree"]
 aretes = [
@@ -27,14 +27,23 @@ positions_sommets = {
 
 class Jeu:
 
-    def __init__ (self, id: str, json: dict | None = None):
+    def __init__ (self):
         
-        self.identifiant = id
+        self.running = True
+        self.statut = "accueil"
+        self.accueil = Accueil(self)
+        self.clock = pygame.time.Clock()
         
+        self.fond = pygame.Surface((1280, 720), pygame.SRCALPHA)
+        self.ui_surface = pygame.Surface((1280, 720), pygame.SRCALPHA)
+        self.filter_surface = pygame.Surface((1280, 720), pygame.SRCALPHA)
+        
+        # affichage
         self.loader = JSONLoader(self)
         self.action_actuelle: Action | None = None
         self.actions = File()
-        
+
+        # carte et regions/lieux
         self.carte = Graph(
             sommets,
             aretes,
@@ -42,17 +51,35 @@ class Jeu:
             True,
             "background.webp"
         )
-        
         self.regions = {}
-        self.region = json["emplacement"]["region"] if json else "Auberge"
-        # self.lieu = json["emplacement"]["lieu"] if json else self.regions[self.region].lieu_depart
+        self.region = None
+        self.lieu = None
+        
+        # temps
         self.jour = 1
         self.heure = 12
         self.minute = 0
-
-    def gerer_evenement (self, evenement):
-        if self.action_actuelle is not None:
-            self.action_actuelle.update(evenement)
+        
+        # filtres pour affichage
+        self.fade = 0
+        
+    def demarrer (self, id: str, json = None):
+        self.statut = "jeu"
+        self.accueil.fermer()
+        self.identifiant = id
+        
+    def save (self):
+        pass
+        
+    def quitter (self):
+        self.running = False
+        
+    def gerer_evenement (self, evenements):
+        if self.statut == "accueil":
+            self.accueil.update(evenements)
+        else:
+            if self.action_actuelle is not None:
+                self.action_actuelle.update(evenements)
             
     def executer_sequence (self, id):
         sequence = self.loader.actions_sequences[id]
@@ -76,15 +103,27 @@ class Jeu:
                     self.action_actuelle = None
                     
     def scene (self):
-        if self.action_actuelle is not None:
-            self.action_actuelle.draw()
-        self.ui()
+        if self.statut == "accueil":
+            self.accueil.draw()
+        elif self.statut == "jeu":
+            if self.action_actuelle is not None:
+                self.action_actuelle.draw()
+            self.ui()
+        self.filters() # applique les filtres sur l'écran
         
     def ui (self):
-        pass
+        pygame.draw.rect(self.fond, (255, 255, 255), self.fond.get_rect())
+        pygame.draw.rect(self.fond, (0, 0, 255), (8, 8, 90, 90))
         
-    def deplacement (self, lieu_region, est_region = False):
-        pass
+    def filters (self):
+        if self.fade > 0:
+            pygame.draw.rect(self.filter_surface, (0, 0, 0, self.fade), self.filter_surface.get_rect())
+            self.fade -= 5
+        elif self.fade <= 0:
+            self.fade = 0
         
-    def save (self):
-        pass
+    def deplacement (self, destination, est_region = False):
+        if est_region: # est une region
+            pass
+        else: # est un lieu
+            pass

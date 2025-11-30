@@ -1,42 +1,36 @@
 import pygame
 
-from menu.accueil import Accueil
-from lib.render import screen, transparent_surface
-from lib.game import clock, jeu_en_cours, quitter, recuperer_partie
+from Jeu import Jeu
 
 pygame.init()
 pygame.display.set_caption("Game Name")
 
+screen = pygame.display.set_mode((1280, 720))
+
 if __name__ == "__main__":
     
-    accueil = Accueil()
-    accueil.ouvrir()
+    jeu = Jeu()
     
-    while jeu_en_cours():
+    while jeu.running:
         
-        jeu = recuperer_partie()
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                quitter()
-            if jeu is None:
-                accueil.update(event)
-            else:
-                jeu.gerer_evenement(event)
+                jeu.running = False
+        jeu.gerer_evenement(events)
         
         screen.fill((0, 0, 0))
-        transparent_surface.fill((0, 0, 0, 0))
+        jeu.fond.fill((0, 0, 0, 0))
+        jeu.ui_surface.fill((0, 0, 0, 0))
+        jeu.filter_surface.fill((0, 0, 0, 0))
         
-        center = screen.get_rect(center = (screen.get_width()/2, screen.get_height()/2))
+        jeu.scene()
         
-        if jeu is None:
-            accueil.draw()
-        else:
-            jeu.scene()
-            
-        screen.blit(transparent_surface, center)
+        screen.blit(jeu.fond, (0, 0))
+        screen.blit(jeu.ui_surface, (0, 0))
+        screen.blit(jeu.filter_surface, (0, 0))
     
         pygame.display.flip()
-        clock.tick(60)
+        jeu.clock.tick(60)
     
     pygame.quit()

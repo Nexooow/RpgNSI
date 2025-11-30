@@ -9,7 +9,7 @@ class Menu:
     def fermer (self):
         pass
         
-    def update (self, event):
+    def update (self, events):
         pass
         
     def draw (self):
