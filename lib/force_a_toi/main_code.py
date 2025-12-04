@@ -10,64 +10,9 @@ from random import randint,choice
 from meteor import *
 from boom import *
 from text_display import *
-class Graph:
-    def __init__(self,aretes,sommets,orientation):
-        self.sommets=sommets
-        self.orientation=orientation
-        if not self.orientation:
-            for i in list(set(aretes)):
-                aretes+=[(i[1],i[0],i[2])]
-        self.aretes_tuple=list(set(aretes))
-        self.aretes={}
-        for arete in self.aretes_tuple:
-            key,value=arete[0:2]
-            if key not in self.aretes:
-                self.aretes[key]=[value]
-            else:
-                self.aretes[key].append(value)
-    def voisin(self,nom_sommet):
-        return self.aretes[nom_sommet]
-    def def_graph(self):
-        G=nx.DiGraph() if self.orientation else nx.Graph()
-        for arete in self.aretes_tuple:
-            a,b,poids=arete
-            G.add_edge(a,b,weight=poids)
-        G.add_nodes_from(self.sommets)
-        return G
-    def affichage_graphe(self,b64,pos,formate,nodes_icons):
-        img_bytes = base64.b64decode(b64)
-        img = plt.imread(BytesIO(img_bytes),format=formate)
-        fig, ax = plt.subplots(figsize=(10, 7))
-        ax.imshow(img,extent=[0,1000,700,0])
-        G=self.def_graph()
-        nx.draw(G,pos,node_color ="none", with_labels =True ,node_size = 1000)
-        edge_labels=nx.get_edge_attributes(G,"weight")
-        edge_color='blue'
-        nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels,font_color=edge_color,ax=ax)
-        if nodes_icons:
-            for node,image in nodes_icons.items():
-                if node in pos:
-                    img_icon=plt.imread(BytesIO(base64.b64decode(image[0])),format=image[1])
-                    img_size=OffsetImage(img_icon,zoom=0.15)
-                    x,y=pos[node]
-                    off=offset_copy(ax.transData,fig=fig,x=0,y=30,units="points")
-                    box=AnnotationBbox(img_size,pos[node],xycoords=off,frameon=False)
-                    ax.add_artist(box)
-        fig.canvas.draw()
-        image = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-        image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        pygame_surface = pygame.surfarray.make_surface(np.transpose(image, (1, 0, 2)))
-        plt.close(fig)
-        return pygame_surface
-    def paths(self,a,b):
-        G=self.def_graph()
-        chemin=list(nx.shortest_path(G,source=a,target=b,weight='weight'))
-        poids=nx.shortest_path_length(G,source=a,target=b,weight='weight')
-        return chemin,poids
-class NPC:
-    def __init__(self,name,location):
-        self.name=name
-        self.location=location
+from classe_graphe import *
+from sound import *
+from npc import *
 def display_frames(image,frame_width,frame_height):
     frames=[]
     sheet_width=image.get_width()
@@ -107,6 +52,7 @@ nodes_icons={radahn.name:(b64_rad,'jpeg'),finger.name:(b64_hand,'jpeg'),castle.n
 graphe_mt=Graph([(bigfoot.name,giant.name,5),(giant.name,bigfoot.name,5)],[bigfoot.name,giant.name],True)
 graphe_caelid=Graph([(radahn.name,castle.name,2),(castle.name,finger.name,6),(finger.name, castle.name,5),(castle.name,radahn.name,1)],[castle.name,radahn.name,finger.name],True)
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((1000, 700))
 background = graphe.affichage_graphe(b64,{"Auberge": (200, 400), "Mountain": (600, 120),"Ceilidh": (660, 480),"Dawn of the world": (450, 500),"Elder Tree": (500, 230)},'webp',nodes_icons)
 screen.blit(background,(0,0))
@@ -121,7 +67,9 @@ half_radahn=pygame.image.load(BytesIO(base64.b64decode(b64_radahn))).convert_alp
 radahn_frames=display_frames(half_radahn,1200,1350)
 radahn_frame_index=0
 explosion_group=pygame.sprite.Group()
-
+start_ticks=pygame.time.get_ticks()
+font = pygame.font.SysFont('Cinzel Decorative', 30)
+music_playing=False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -143,9 +91,17 @@ while running:
                 main_img=background
     screen.blit(main_img,(0,0))
     if main_img==fight_zone:
+        if not music_playing:
+            play_music("/mnt/c/Users/peter/Downloads/Gloria_Gaynor_-_I_Will_Survive_Re-Recorded_Remastered_(SkySound.cc).mp3")
+            music_playing=True
+        seconds=(pygame.time.get_ticks()-start_ticks)/1000
+        counter=int(195-seconds)
+        text=str(counter).rjust(3) if counter>0 else ""
+        if counter>0:
+            stop_music()
         screen.blit(radahn_frames[radahn_frame_index],(0,-120))
         radahn_frame_index=(radahn_frame_index+1)%len(radahn_frames)
-        this=randint(1,100)
+        this=randint(1,200)
         if len(list_meteor)<10 and this<=10:
             if this>3:
                 list_meteor.append(Meteor((randint(25,910),-25)))
@@ -160,8 +116,9 @@ while running:
                 explosion=Explosion(meteor.rect.center[0],meteor.rect.center[1],meteor.size)
                 explosion_group.add(explosion)
             else:
-                screen.blit(meteor.frames[meteor.frame_index],meteor.rect)
-        text_render_centered_up(screen,"Survive","bold")
+                screen.blit(meteor.frame,meteor.rect)
+        text_render_centered_up(screen,"Survive","bold",color=(255,0,0),pos=(500,100))
+        screen.blit(font.render(text,True,(255,0,0)),(500,150))
     clock.tick(45)
     explosion_group.draw(screen)
     explosion_group.update()
