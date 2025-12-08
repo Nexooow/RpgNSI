@@ -1,13 +1,17 @@
 import pygame
 import math
 
-from boss.radahn import Radahn
-from lib.graph import Graph
-from Action import Action
-from JSONLoader import JSONLoader
 from lib.file import File
+from lib.graph import Graph
+
+from boss.radahn import Radahn
+
 from menu.carte import Carte
 from menu.accueil import Accueil
+
+from Action import Action
+from JSONLoader import JSONLoader
+from Joueur import Joueur
 from Region import Region
 
 sommets = ["Auberge", "Mountain", "Ceilidh", "Dawn of the world", "Elder Tree"]
@@ -34,7 +38,7 @@ class Jeu:
     def __init__ (self):
         
         self.running = True
-        self.statut = "accueil"
+        self.statut = "accueil" # accueil/jeu/deplacement
         self.menu = Accueil(self)
         self.clock = pygame.time.Clock()
         
@@ -64,7 +68,7 @@ class Jeu:
             "Elder Tree": Region(self, "Elder Tree")
         }
         self.region = None
-        self.lieu = None
+        self.lieu = self.region.entree if self.region else None
         
         # temps
         self.jour = 1
@@ -74,12 +78,17 @@ class Jeu:
         # filtres pour affichage
         self.fade = 0
         
+    def region_actuelle (self):
+        if self.region is None:
+            return None
+        return self.regions[self.region]
+        
     def demarrer (self, id: str, json = None):
         self.statut = "jeu"
-        self.menu.fermer()
         self.menu = None
         self.identifiant = id
-        #self.executer_sequence("test")
+        self.joueur = Joueur(self, json)
+        self.executer_sequence("test")
         #self.ajouter_action(Radahn(self))
         
     def save (self):
@@ -161,4 +170,18 @@ class Jeu:
             self.fade = 0
         
     def deplacement (self, region, lieu):
-        pass
+        region_actuelle = self.region_actuelle()
+        assert region_actuelle is not None
+        temps_deplacement = 0
+        if self.region == region:
+            if self.lieu == lieu:
+                return
+            deplacement_region = region_actuelle.carte.paths(self.lieu, lieu)
+            temps_deplacement += deplacement_region[1]
+        else:
+            deplacement_regions = self.carte.paths(self.region, region)
+            temps_deplacement += deplacement_regions[1]
+            if not (lieu == self.regions[region].entree):
+                deplacement_lieu = self.regions[region].carte.paths(self.regions[region].entree, lieu)
+                temps_deplacement += deplacement_lieu[1]
+        print(f"Temps de déplacement : {temps_deplacement} secondes")
