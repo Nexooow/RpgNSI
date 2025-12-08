@@ -1,5 +1,3 @@
-from ast import Not
-from tkinter.constants import N
 import pygame
 
 from lib.render import text_render_centered
@@ -40,10 +38,11 @@ class Dialogue (Action):
     
     def __init__ (self, jeu, json):
         super().__init__(jeu, json)
+        self.frame_relative = -100 # -100 = "l'action" est en train d'être démarrée, 0 = "l'action" est en cours d'exécution, 100 = "l'action" est terminée
         
     def draw (self):
-        for line in self.json["lines"]:
-            text_render_centered(self.jeu.ui_surface, line, "regular", (0, 0, 0, 255), (1000/2, 550))
+        for index, line in enumerate(self.json["lines"]):
+            text_render_centered(self.jeu.ui_surface, line, "regular", (0, 0, 0, 255), (1000/2, 550 - index * 50))
         
     def update (self, events):
         for event in events:
@@ -51,7 +50,7 @@ class Dialogue (Action):
                 self.complete = True
         
     def executer (self):
-        pass
+        self.frame_relative = -100
 
 class Selection (Action):
     
