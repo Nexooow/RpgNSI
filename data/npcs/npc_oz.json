@@ -1,0 +1,17 @@
+[
+    {
+        "id": "Oz",
+        "region": "Mountain",
+        "location": {
+            "x": 200,
+            "y": 400
+        },
+        "routes": [
+            {
+                "id": "Casan Famhair",
+                "temps": 5,
+                "bidirectionnel": true
+            }
+        ]
+    }
+]
