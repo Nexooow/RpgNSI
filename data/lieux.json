@@ -1,10 +1,10 @@
 [
     {
-        "id": "",
-        "region": "",
+        "id": "Elder Tree",
+        "region": "Main_map",
         "location": {
-            "x": 0,
-            "y": 0
+            "x": 500,
+            "y": 230
         },
         "routes": [
             {
@@ -12,6 +12,91 @@
                 "temps": 0,
                 "bidirectionnel": false
             }
+        ]
+    },
+        {
+        "id": "Mountain",
+        "region": "Main_map",
+        "location": {
+            "x": 600,
+            "y": 120
+        },
+        "routes": [
+            {
+                "id": "Cailidh",
+                "temps": 36,
+                "bidirectionnel": true
+            },
+          {
+            "id":"Auberge",
+            "temps":47,
+            "bidirectionnel":true
+          }
+        ]
+    },
+    {
+        "id": "Dawn of the world",
+        "region": "Main_map",
+        "location": {
+            "x": 450,
+            "y": 500
+        },
+        "routes": [
+            {
+                "id": "Auberge",
+                "temps": 21,
+                "bidirectionnel": true
+            }
+        ]
+    },
+    {
+        "id": "Auberge",
+        "region": "Main_map",
+        "location": {
+            "x": 200,
+            "y": 400
+        },
+        "routes": [
+            {
+                "id": "Mountain",
+                "temps": 47,
+                "bidirectionnel": true
+            },
+          {
+            "id":"Cailidh",
+            "temps":31,
+            "bidirectionnel":true
+          },
+          {
+            "id":"Dawn of the world",
+            "temps":21,
+            "bidirectionnel":true
+          },
+          {
+            "id":"Elder Tree",
+            "temps":21,
+            "bidirectionnel":false
+          }
+        ]
+    },
+    {
+        "id": "Cailidh",
+        "region": "Main_map",
+        "location": {
+            "x": 660,
+            "y": 480
+        },
+        "routes": [
+            {
+                "id": "Mountain",
+                "temps": 36,
+                "bidirectionnel": true
+            },
+          {
+            "id":"Auberge",
+            "temps":31,
+            "bidirectionnel":true
+          }
         ]
     }
 ]
