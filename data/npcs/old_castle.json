@@ -1,0 +1,21 @@
+[
+    {
+        "id": "Old Castle",
+        "region": "Cailidh",
+        "location": {
+            "x": 640,
+            "y": 570
+        },
+        "routes": [
+            {
+                "id": "Radahn, Consort of Joy",
+                "temps": 2,
+                "bidirectionnel": true
+            },
+          {
+            "id":"The Toucher",
+              "temps":6,
+              "bidirectionnel":true}
+        ]
+    }
+]
