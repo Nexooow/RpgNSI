@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Cailidh",
+        "region": "Main_map",
+        "location": {
+            "x": 660,
+            "y": 480
+        },
+        "routes": [
+            {
+                "id": "Mountain",
+                "temps": 36,
+                "bidirectionnel": true
+            },
+          {
+            "id":"Auberge",
+            "temps":31,
+            "bidirectionnel":true
+          }
+        ]
+    }
+]
