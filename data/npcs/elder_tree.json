@@ -1,0 +1,17 @@
+[
+    {
+        "id": "Elder Tree",
+        "region": "Main_map",
+        "location": {
+            "x": 500,
+            "y": 230
+        },
+        "routes": [
+            {
+                "id": "",
+                "temps": 0,
+                "bidirectionnel": false
+            }
+        ]
+    }
+]
