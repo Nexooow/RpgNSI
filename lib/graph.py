@@ -1,21 +1,20 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+from numpy.random.mtrand import f
 import pygame
 
 from lib.compatibility import get_canvas_buffer
 
 
 class Graph:
-    def __init__(self, sommets=None, aretes=None, pos=None, orientation=False):
-        # Avoid mutable default arguments by using None and creating new lists/dicts per instance
-        if sommets is None:
-            sommets = []
-        if aretes is None:
-            aretes = []
-        if pos is None:
-            pos = {}
-
+    def __init__(self, sommets, aretes, orientation=False, pos={}):
+        assert isinstance(sommets, list), (
+            f"sommets doit être une liste, reçu: {type(sommets)}"
+        )
+        assert isinstance(aretes, list), (
+            f"aretes doit être une liste, reçu: {type(aretes)}"
+        )
         self.aretes = aretes
         if not orientation:
             self.aretes = [
@@ -32,9 +31,6 @@ class Graph:
 
     def ajout_position(self, sommet, pos):
         self.pos[sommet] = pos
-
-    def ajout_sommet(self, sommet):
-        self.sommets.append(sommet)
 
     def ajout_arc(self, sommet1, sommet2, poids=0):
         self.aretes.append((sommet1, sommet2, poids))
@@ -84,51 +80,56 @@ class Graph:
         G = nx.DiGraph() if self.orientation else nx.Graph()
         G.add_nodes_from(self.sommets)
         for arrete in self.aretes:
-            G.add_edge(arrete[0], arrete[1], weight=arrete[2], label=arrete[2])
+            G.add_edge(
+                arrete[0], arrete[1], weight=int(arrete[2]), label=format_temps(int(arrete[2]))
+            )
         return G
 
-    def affichage(self, screen, image):
-        img = plt.imread(f"assets/maps/{image}")
-        G = self.get_graph()
-        print(len(self.sommets))
-
-        fig, ax = plt.subplots(figsize=(10, 7))
-        ax.imshow(img, extent=(0, 1000, 700, 0))
-        aretes_labels = {
-            (u, v): f"{data['weight']}h" for u, v, data in G.edges(data=True)
-        }
-
-        nx.draw(
-            G,
-            self.pos,
-            node_color="none",
-            with_labels=True,
-            font_family="Arial",
-            font_size=10,
-            node_size=1000,
-        )
-        nx.draw_networkx_edge_labels(
-            G,
-            self.pos,
-            edge_labels=aretes_labels,
-            label_pos=0.5,
-            rotate=False,
-            font_family="Arial",
-            bbox=dict(
-                facecolor="white", pad=0.2, edgecolor="none"
-            ),  # cache l'étiquette derrière le label
-        )
-        fig.canvas.draw()
-        buf = get_canvas_buffer(fig.canvas)
-        w, h = fig.canvas.get_width_height()
-        image = np.frombuffer(buf, dtype=np.uint8).reshape((h, w, 4))
-        image = image[..., :3]
-        pygame_surface = pygame.surfarray.make_surface(np.transpose(image, (1, 0, 2)))
-        plt.close(fig)
-        screen.blit(pygame_surface, (0, 0))
-
-    def paths(self, a, b):
+    def paths(self, a, b) -> tuple[list[str], int]:
         G = self.get_graph()
         chemin = list(nx.shortest_path(G, source=a, target=b, weight="weight"))
         poids = nx.shortest_path_length(G, source=a, target=b, weight="weight")
         return chemin, poids
+
+def format_temps (heures):
+    heures = int(heures)
+    jours = heures // 24
+    heures %= 24
+    return f"{f'{jours}j' if jours > 0 else ''}{heures}h"
+
+def affichage_graphe(graph: Graph, screen, image):
+    img = plt.imread(f"assets/maps/{image}")
+    G = graph.get_graph()
+
+    fig, ax = plt.subplots(figsize=(10, 7))
+    ax.imshow(img, extent=(0, 1000, 700, 0))
+    aretes_labels = {(u, v): format_temps(data['weight']) for u, v, data in G.edges(data=True)}
+
+    nx.draw(
+        G,
+        graph.pos,
+        node_color="none",
+        with_labels=True,
+        font_family="Arial",
+        font_size=10,
+        node_size=1000,
+    )
+    nx.draw_networkx_edge_labels(
+        G,
+        graph.pos,
+        edge_labels=aretes_labels,
+        label_pos=0.5,
+        rotate=False,
+        font_family="Arial",
+        bbox=dict(
+            facecolor="white", pad=0.2, edgecolor="none"
+        ),  # cache l'étiquette derrière le label
+    )
+    fig.canvas.draw()
+    buf = get_canvas_buffer(fig.canvas)
+    w, h = fig.canvas.get_width_height()
+    image = np.frombuffer(buf, dtype=np.uint8).reshape((h, w, 4))
+    image = image[..., :3]
+    pygame_surface = pygame.surfarray.make_surface(np.transpose(image, (1, 0, 2)))
+    plt.close(fig)
+    screen.blit(pygame_surface, (0, 0))

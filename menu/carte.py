@@ -1,5 +1,6 @@
 from matplotlib.backend_bases import LocationEvent
 import pygame
+from lib.graph import affichage_graphe
 from menu.Menu import Menu
 
 class Carte (Menu):
@@ -32,6 +33,6 @@ class Carte (Menu):
         
     def draw (self):
         if self.region is None:
-            self.jeu.carte.affichage(self.jeu.ui_surface, "background.webp")
+            affichage_graphe(self.jeu.carte, self.jeu.ui_surface, "background.webp")
         else:
             self.jeu.regions[self.region].afficher()

@@ -32,8 +32,8 @@ class Accueil(Menu):
 
     def fermer(self):
         pygame.mixer.music.stop()
-        
-    def update_page_main (self, events):
+
+    def update_page_main(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 if self.menu_selected_option != 0:
@@ -55,15 +55,14 @@ class Accueil(Menu):
                     self.jeu.demarrer(str(uuid.uuid4()))
                 elif self.menu_selected_option == 1 and len(self.saves) > 0:
                     self.menu_selected_option = 0
-                    self.jeu.fade = 200
+                    self.jeu.fade = 255
                     self.sous_page = "sauvegardes"
-                    self.jeu.fade = 150
                 elif self.menu_selected_option == 2:
                     pass
                 elif self.menu_selected_option == 3:
                     self.jeu.quitter()
-        
-    def update_page_sauvegardes (self, events):
+
+    def update_page_sauvegardes(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 self.menu_selected_option -= 1
@@ -84,6 +83,11 @@ class Accueil(Menu):
                 self.jeu.demarrer(partie_choisie["id"], partie_choisie)
 
     def update(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN and (
+                event.key == pygame.K_UP or event.key == pygame.K_DOWN
+            ):
+                pygame.mixer.Sound("./assets/sounds/menu-selection.mp3").play().set_volume(0.01)
         if self.sous_page == "main":
             self.update_page_main(events)
         elif self.sous_page == "sauvegardes":

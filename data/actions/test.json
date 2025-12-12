@@ -5,7 +5,8 @@
         {
             "type": "dialogue",
             "lines": [
-                "Bienvenue cher aventurier !"
+                "Bienvenue cher aventurier !",
+                "Ligne 2"
             ]
         },
         {
