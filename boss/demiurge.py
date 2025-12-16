@@ -25,8 +25,10 @@ class Fighter:
         self.attack_cooldown = 0
         self.alive = True
         self.hit = False
-        self.blocking = True
-        self.health = 500
+        self.blocking = False
+        self.health = 100
+        self.dash_cooldown=0
+        self.dash=False
         self.radiuspx = min(self.rect.width, self.rect.height)*9//2
 
     def load_frames(self, sprite, animation):
@@ -48,6 +50,8 @@ class Fighter:
         dy = 0
         self.running = False
         self.blocking = False
+        if self.dash_cooldown==0:
+            self.dash=False
         key = pygame.key.get_pressed()
         if allow_input and self.alive:
             if not self.attacking:
@@ -55,11 +59,16 @@ class Fighter:
                     self.flip = True
                 if key[pygame.K_RIGHT]:
                     self.flip = False
-                if key[pygame.K_e]:
-                    self.blocking = True
+                
                 if key[pygame.K_a]:
                     self.blocking = True
+                if key[pygame.K_e] and self.dash_cooldwon==0:
+                    self.dash=True
+                    dx= dx-speed*30 if self.flip else dx+speed*30
+                    self.dash_cooldown=300
                 else:
+                    if self.dash:
+                        self.dash_cooldown-=1
                     if key[pygame.K_q]:
                         dx -= speed
                         self.running = True
