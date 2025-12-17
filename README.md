@@ -9,7 +9,6 @@ pip install -r requirements.txt
 ```
 
 Puis pour démarrer le jeu, exécutez la commande suivante :
-
 ```
 python main.py
 ```
@@ -18,3 +17,4 @@ python main.py
 
 - Musiques:
   - Intro: "Sad Sorrowful Piano Music" - INPLUSMUSIC (pixabay)
+  - Radahn: "I Will Survive" - Gloria Gaynor

@@ -31,9 +31,9 @@ class JSONLoader:
                     self.actions_sequences[id] = []
                     for action in content["run"]:
                         self.actions_sequences[id].append(self.creer_action(action))
-            except Exception as e:
-                print("une erreur est survenue lors du chargement de la séquence ", file)
-                print(e)
+                    print(f"Séquence '{id}' chargée ({len(self.actions_sequences[id])} actions)")
+            except Exception:
+                print(f"impossible de charger la séquence '{file}'")
                 continue
 
     def charger_regions(self):

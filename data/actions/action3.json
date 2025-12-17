@@ -1,12 +1,10 @@
 {
-    "id": "action3",
-    "type": "neutre",
-    "run": [
-        {
-            "type": "dialogue",
-            "lines": [
-                "Action 3"
-            ]
-        }
-    ]
+  "id": "action3",
+  "type": "neutre",
+  "run": [
+    {
+      "type": "dialogue",
+      "lines": ["Action 3"]
+    }
+  ]
 }
