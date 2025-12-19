@@ -4,7 +4,7 @@ from time import time
 import pygame
 
 from Action import Action
-from lib.render import text_render_centered_up
+from lib.render import text_render_centered_up,text_render_centered
 from sprites.Explosion import Explosion
 from sprites.Meteor import Meteor
 from sprites.demiurge import Fighter
@@ -82,20 +82,26 @@ class Radahn(Action):
         pygame.draw.circle(self.jeu.fond, (0, 255, 0), player.rect.center, int(player.radiuspx), 1)
         self.explosion_group.draw(self.jeu.fond)
         self.explosion_group.update()
-        text_render_centered_up(
-            self.jeu.ui_surface, "Survive", "bold", color=(255, 0, 0), pos=(500, 100)
-        )
+        
+        temps=195 - round(time() - self.start_time)
         texte = (
             "Time: " + str(195 - round(time() - self.start_time))
             if 195 - round(time() - self.start_time) > 0
             else ""
         )
-        text_render_centered_up(
-            self.jeu.ui_surface,
-            texte,
-            "bold",
-            color=(255, 0, 0),
-            pos=(500, 150),
+        if player.health>0 and temps>0:
+            text_render_centered_up(
+            self.jeu.ui_surface, "Survive", "bold", color=(255, 0, 0), pos=(500, 100)
         )
+            text_render_centered_up(
+                self.jeu.ui_surface,
+                texte,
+                "bold",
+                color=(255, 0, 0),
+                pos=(500, 150),
+            )
+        if player.health<=0:
+            text_render_centered(self.jeu.ui_surface,"GIT GUD","extrabold",color=(255,0,0),pos=(500,350))
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()
+            text_render_centered(self.jeu.ui_surface,"Great Finger Obtained","bold",color=(255,215,0),pos=(500,350))
