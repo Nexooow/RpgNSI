@@ -30,7 +30,8 @@ class Fighter:
         self.dash_cooldown=0
         self.dash=False
         self.radiuspx = min(self.rect.width, self.rect.height)*9//2
-
+        self.mask=pygame.mask.from_surface(self.image)
+        self.img_pos=(self.rect.x-(self.offset[0]*self.image_scale),self.rect.y-(self.offset[1]*self.image_scale))
     def load_frames(self, sprite, animation):
         animation_list = []
         for y, anim in enumerate(animation):
@@ -183,6 +184,6 @@ class Fighter:
                 self.bubble, (self.size*self.image_scale, self.size*self.image_scale))
             self.image = self.bubble
         img = pygame.transform.flip(self.image, self.flip, False)
-        pygame.draw.rect(surface, (255, 0, 0), self.rect)
-        surface.blit(
-            img, (self.rect.x-(self.offset[0]*self.image_scale), self.rect.y-(self.offset[1]*self.image_scale)))
+        self.img_pos=(self.rect.x-(self.offset[0]*self.image_scale),self.rect.y-(self.offset[1]*self.image_scale))
+        surface.blit(img,self.img_pos)
+        self.mask=pygame.mask.from_surface(img)
