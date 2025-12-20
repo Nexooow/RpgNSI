@@ -1,14 +1,14 @@
-import pygame
-
-from Jeu import Jeu
-
 print("⚠️ La console ne sert qu'à déboguer le jeu.")
+
+import pygame
 
 pygame.init()
 pygame.mixer.init()
 pygame.display.set_caption("Game Name")
 
 screen = pygame.display.set_mode((1000, 700))
+
+from Jeu import Jeu
 
 if __name__ == "__main__":
     

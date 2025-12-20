@@ -5,6 +5,12 @@ import pygame
 
 from lib.compatibility import get_canvas_buffer
 
+# charger les assets pour optimisation
+images = {
+    "background": plt.imread("./assets/maps/background.webp"),
+    "mountain": plt.imread("./assets/maps/mountain.jpg"),
+    "ceilidh": plt.imread("./assets/maps/ceilidh.jpg")
+}
 
 class Graph:
     def __init__(self, sommets, aretes, orientation=False, pos={}):
@@ -97,7 +103,7 @@ def format_temps (heures):
     return f"{f'{jours}j' if jours > 0 else ''}{heures}h"
 
 def affichage_graphe(graph: Graph, screen, image):
-    img = plt.imread(f"assets/maps/{image}")
+    img = images[image or "background"]
     G = graph.get_graph()
 
     fig, ax = plt.subplots(figsize=(10, 7))

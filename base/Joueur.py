@@ -1,18 +1,22 @@
 class Joueur:
 
     def __init__ (self, jeu, json):
+        self.jeu = jeu
         if json is not None:
-            self.vie_max = json["vie_max"]
-            self.vie = json["vie"]
-            self.inventaire = json["inventaire"]
-            self.equipment = json["equipment"]
-            self.chance = json["chance"]
-            self.malchance = json["malchance"]
+            for key, valeur in json.items():
+                if key == "jeu":
+                    continue
+                else:
+                    setattr(self, key, valeur)
         else:
             self.vie_max = 100
             self.vie = 100
+
+            self.force = 10
+            self.vitesse = 10
+
             self.chance = 25
-            self.malchance = 10
+
             self.inventaire = {}
             self.equipment = {
                 "main": None,
@@ -23,8 +27,16 @@ class Joueur:
                 "pieds": None
             }
         
-    def save (self):
-        return self.__dict__
+    def sauvegarder (self):
+        return {
+            "vie_max": self.vie_max,
+            "vie": self.vie,
+            "force": self.force,
+            "vitesse": self.vitesse,
+            "chance": self.chance,
+            "inventaire": self.inventaire,
+            "equipment": self.equipment
+        }
     
     def infliger (self, degats):
         self.vie -= degats
@@ -44,5 +56,5 @@ class Joueur:
         if objet in self.inventaire:
             self.inventaire[objet] -= quantite
             if self.inventaire[objet] <= 0:
-                del self.inventaire[objet]
+                del self.inventaire[objet] # retire la clé du dictionnaire
         

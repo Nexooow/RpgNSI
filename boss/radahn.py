@@ -3,7 +3,7 @@ from time import time
 
 import pygame
 
-from Action import Action
+from base.Action import Action
 from lib.render import text_render_centered_up,text_render_centered
 from sprites.Explosion import Explosion
 from sprites.Meteor import Meteor
@@ -30,8 +30,6 @@ half_radahn = pygame.image.load("./assets/sprites/radahn.png")
 radahn_frames = display_frames(half_radahn, 1422 // 2, 1600 // 3)
 player_sheet=pygame.image.load("./assets/sprites/warrior.png")
 player=Fighter(500,480,[162,1,[72,56]],player_sheet,[10,8,1,7,7,3,7],hitbox_height=162)
-
-
 
 class Radahn(Action):
     def __init__(self, jeu):

@@ -1,5 +1,5 @@
 import pygame
-from Action import Action
+from base.Action import Action
 
 from sprites.demiurge import Fighter
 

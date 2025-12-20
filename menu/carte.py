@@ -4,8 +4,8 @@ from menu.Menu import Menu
 
 class Carte (Menu):
     
-    def __init__ (self, jeu):
-        self.jeu = jeu
+    def __init__(self, jeu):
+        super().__init__(jeu)
         self.region = None
         
     def update (self, events):
@@ -26,12 +26,9 @@ class Carte (Menu):
                         if pygame.Rect((location["x"]-50, location["y"]-50, 150, 150)).collidepoint(position):
                             self.fermer()
                             self.jeu.deplacement(self.region, lieu_nom)
-                        
-    def fermer (self):
-        self.jeu.fermer_menu()
         
     def draw (self):
         if self.region is None:
-            affichage_graphe(self.jeu.carte, self.jeu.ui_surface, "background.webp")
+            affichage_graphe(self.jeu.carte, self.jeu.ui_surface, "background")
         else:
             self.jeu.regions[self.region].afficher()

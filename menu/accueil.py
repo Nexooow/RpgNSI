@@ -8,14 +8,16 @@ import pygame
 from lib.render import text_render_centered
 from menu.Menu import Menu
 
+son_clique = pygame.mixer.Sound("./assets/sounds/accueil_clique.mp3")
+son_selection = pygame.mixer.Sound("./assets/sounds/menu-selection.mp3")
 
 class Accueil(Menu):
     def __init__(self, jeu):
-        self.jeu = jeu
+        super().__init__(jeu)
         try:
-            savesNames = os.listdir("./saves")
+            saves_names = os.listdir("./.data/saves")
             self.saves = [
-                json.load(open(f"./saves/{name}", "r")) for name in savesNames
+                json.load(open(f"./.data/saves/{name}", "r")) for name in saves_names
             ]
         except FileNotFoundError:
             self.saves = []
@@ -28,10 +30,11 @@ class Accueil(Menu):
         pygame.mixer.music.load("./assets/music/intro.mp3")
         pygame.mixer.music.set_volume(0.01)
         pygame.mixer.music.play(-1)
-        self.fade = 255
+        self.jeu.fade = 255
 
     def fermer(self):
         pygame.mixer.music.stop()
+        super().fermer()
 
     def update_page_main(self, events):
         for event in events:
@@ -76,10 +79,8 @@ class Accueil(Menu):
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE):
                 self.fermer()
                 self.jeu.fade = 1000
-                sound = pygame.mixer.Sound(
-                    "./assets/sounds/accueil_clique.mp3")
-                sound.set_volume(0.25)
-                sound.play()
+                son_clique.set_volume(0.25)
+                son_clique.play()
                 partie_choisie = self.saves[self.menu_selected_option]
                 assert isinstance(partie_choisie, dict)
                 self.jeu.demarrer(partie_choisie["id"], partie_choisie)
@@ -89,8 +90,7 @@ class Accueil(Menu):
             if event.type == pygame.KEYDOWN and (
                 event.key == pygame.K_UP or event.key == pygame.K_DOWN
             ):
-                pygame.mixer.Sound(
-                    "./assets/sounds/menu-selection.mp3").play().set_volume(0.01)
+                son_selection.play().set_volume(0.01)
         if self.sous_page == "main":
             self.update_page_main(events)
         elif self.sous_page == "sauvegardes":

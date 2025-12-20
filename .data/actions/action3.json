@@ -1,0 +1,10 @@
+{
+    "id": "action3",
+    "type": "event",
+    "run": [
+        {
+            "type": "dialogue",
+            "lines": ["Action 3"]
+        }
+    ]
+}

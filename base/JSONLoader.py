@@ -2,8 +2,8 @@ from glob import glob
 import json
 from random import randint, random
 
-from Action import Dialogue, Selection
-from Region import Region
+from base.Action import Dialogue, Selection, AjoutTemps, Damage, Deplacement, Combat
+from base.Region import Region
 
 class JSONLoader:
     def __init__(self, parent):
@@ -16,22 +16,22 @@ class JSONLoader:
         self.charger_regions()
 
     def charger_actions(self):
-        files = glob("./data/actions/**/*.json", recursive=True)
+        files = glob("./.data/actions/**/*.json", recursive=True)
         for file in files:
             try:
                 with open(file, "r", encoding="utf-8") as f:
                     content = json.load(f)
                     assert isinstance(content, dict)
-                    id = content["id"]
+                    identifiant = content["id"]
                     type_sequence = content["type"]
                     if type_sequence in self.actions_types.keys():
-                        self.actions_types[type_sequence].append(id)
+                        self.actions_types[type_sequence].append(identifiant)
                     else:
-                        self.actions_types[type_sequence] = [id]
-                    self.actions_sequences[id] = []
+                        self.actions_types[type_sequence] = [identifiant]
+                    self.actions_sequences[identifiant] = []
                     for action in content["run"]:
-                        self.actions_sequences[id].append(self.creer_action(action))
-                    print(f"Séquence '{id}' chargée ({len(self.actions_sequences[id])} actions)")
+                        self.actions_sequences[identifiant].append(self.creer_action(action))
+                    print(f"Séquence '{identifiant}' chargée ({len(self.actions_sequences[identifiant])} actions)")
             except Exception:
                 print(f"impossible de charger la séquence '{file}'")
                 continue
@@ -47,9 +47,9 @@ class JSONLoader:
         return {
             "Auberge": Region(self.parent, "Auberge", regions["Auberge"]),
             "Mountain": Region(
-                self.parent, "Mountain", regions["Mountain"], image="mountain.jpg"
+                self.parent, "Mountain", regions["Mountain"], image="mountain"
             ),
-            "Ceilidh": Region(self.parent, "Ceilidh", regions["Ceilidh"], image="ceilidh.jpg"),
+            "Ceilidh": Region(self.parent, "Ceilidh", regions["Ceilidh"], image="ceilidh"),
             "Dawn of the world": Region(
                 self.parent, "Dawn of the world", regions["Dawn of the world"]
             ),
@@ -57,13 +57,13 @@ class JSONLoader:
         }
 
     def charger_lieux(self):
-        with open("./data/lieux.json", "r") as f:
+        with open("./.data/lieux.json", "r") as f:
             content = json.load(f)
             assert isinstance(content, list)
             return content
         
     def charger_npcs (self):
-        files = glob("./data/actions/**/*.json", recursive=True)
+        files = glob("./.data/actions/**/*.json", recursive=True)
         for file in files:
             try:
                 with open(file) as f:
@@ -79,28 +79,30 @@ class JSONLoader:
             return None
 
     def creer_action(self, data: dict):
-        if data["type"] == "dialogue" or data["type"] == "dialog":
-            return Dialogue(self.parent, data)
-        elif data["type"] == "select":
-            return Selection(self.parent, data)
+        actions = {
+            "dialogue": Dialogue,
+            "select": Selection,
+            "damage": Damage,
+            "ajout-temps": AjoutTemps,
+            "deplacement": Deplacement,
+            "combat": Combat
+        }
+        try:
+            return actions[data["type"]](self.parent, data) # instancie l'action correspondante
+        except KeyError:
+            return None
 
-    def tirer_action(self, chance, chance_negative):
+    def tirer_action(self, chance):
         evenement = random() * 100 <= chance
         if evenement:
-            positive_part = ((chance - chance_negative) / 0.75) + chance_negative
-            rand = random() * 100
-            if rand <= chance_negative:
-                events_negatif = self.actions_types["negatif"]
-                index = randint(0, len(events_negatif)-1)
-                key = events_negatif[index]
-            if rand >= positive_part:
-                events_positifs = self.actions_types["positif"]
-                index = randint(0, len(events_positifs)-1)
-                key = events_positifs[index]
+            if randint(0, 100) <= chance:
+                key = self.actions_types["event-positif"][
+                    randint(0, len(self.actions_types["event-positif"]) - 1)
+                ]
             else:
-                events_neutre = self.actions_types["neutre"]
-                index = randint(0, len(events_neutre)-1)
-                key = events_neutre[index]
+                key = self.actions_types["event"][
+                    randint(0, len(self.actions_types["event"]) - 1)
+                ]
             return key
         else:
             return None
