@@ -1,5 +1,5 @@
 import pygame
-from Action import Action
+from base.Action import Action
 
 from sprites.demiurge import Fighter
 
@@ -21,6 +21,7 @@ demiurge_animation_steps = [8, 8, 1, 8, 8, 3, 7]
 class StreetFighter (Action):
 
     def __init__(self, jeu):
+        super().__init__(jeu, {})
         self.jeu = jeu
         self.desactive_ui = True
         warrior_sheet = pygame.image.load(

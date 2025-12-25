@@ -112,16 +112,16 @@ class Fighter:
             self.health=0
             self.alive=False
             self.update_action(6)
-        elif self.hit==True:
+        elif self.hit:
             self.update_action(5)
-        elif self.attacking==True:
-            if self.attack_type==1:
+        elif self.attacking:
+            if self.attack_type == 1:
                 self.update_action(3)
             elif self.attack_type==2:
                 self.update_action(4)
-        elif self.jump==True:
+        elif self.jump:
             self.update_action(2)
-        elif self.running==True:
+        elif self.running:
             self.update_action(1)
         else:
             self.update_action(0)

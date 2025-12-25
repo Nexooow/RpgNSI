@@ -1,13 +1,15 @@
 import pygame
+from contourpy.util import data
 
 from lib.render import text_render_centered, text_render_centered_left
 
-
 class Action:
-    def __init__(self, jeu, json={}):
+    def __init__(self, jeu, data=None):
+        if data is None:
+            data = {}
         self.complete = False
         self.jeu = jeu
-        self.json = json
+        self.data = data
         self.desactive_ui = False
 
     def draw(self):
@@ -24,15 +26,15 @@ class Action:
 
 
 class Dialogue(Action):
-    def __init__(self, jeu, json):
-        super().__init__(jeu, json)
+    def __init__(self, jeu, data):
+        super().__init__(jeu, data)
 
     def draw(self):
-        lines = self.json.get("lines", [])
-        speaker = self.json.get("speaker", "")
+        lines = self.data.get("lines", [])
+        speaker = self.data.get("speaker", "")
 
         if not lines:
-            return
+            self.complete = True
 
         # hauteur boite
         line_height = 30
@@ -59,7 +61,7 @@ class Dialogue(Action):
             text_render_centered_left(
                 self.jeu.ui_surface,
                 speaker,
-                "imregular",
+                "imitalic",
                 color=(255, 200, 100),
                 pos=(box_x + padding, current_y),
                 size=26,
@@ -97,22 +99,22 @@ class Dialogue(Action):
 
 
 class Selection(Action):
-    def __init__(self, jeu, json):
-        super().__init__(jeu, json)
+    def __init__(self, jeu, data):
+        super().__init__(jeu, data)
         self.option_choisie = 0
+        self.options = self.data.get("options", [])
+        self.question = self.data.get("question", "")
 
     def draw(self):
-        options = self.json.get("options", [])
-        question = self.json.get("question", "")
 
-        if not options:
+        if not self.options:
             self.complete = True
             return
 
         line_height = 35
         padding = 20
-        question_height = 40 if question else 0
-        total_height = len(options) * line_height + question_height + padding * 2
+        question_height = 40 if self.question else 0
+        total_height = len(self.options) * line_height + question_height + padding * 2
 
         # position boite
         box_width = 960
@@ -130,18 +132,18 @@ class Selection(Action):
 
         current_y = box_y + padding
 
-        if question:
+        if self.question:
             text_render_centered_left(
                 self.jeu.ui_surface,
-                question,
+                self.question,
                 "imregular",
                 color=(255, 255, 255),
                 pos=(box_x + padding, current_y + 15),
-                size=26,
+                size=24,
             )
             current_y += question_height
 
-        for index, choix in enumerate(options):
+        for index, choix in enumerate(self.options):
             est_choisi = index == self.option_choisie
 
             if est_choisi:
@@ -174,12 +176,14 @@ class Selection(Action):
                 if self.option_choisie > 0:
                     self.option_choisie -= 1
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if self.option_choisie < len(self.json["options"]) - 1:
+                if self.option_choisie < len(self.options) - 1:
                     self.option_choisie += 1
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.complete = True
-                valeur = self.json["options"][self.option_choisie]["valeur"]
-                print(self.json["actions"][valeur])
+                valeur = self.options[self.option_choisie]["valeur"]
+                action = self.data["actions"][valeur]
+                if isinstance(action, str):
+                    self.jeu.executer_sequence(action)
 
     def executer(self):
         super().executer()
@@ -187,33 +191,62 @@ class Selection(Action):
 
 
 class Damage(Action):
-    def __init__(self, jeu, json):
-        super().__init__(jeu, json)
+    def __init__(self, jeu, data):
+        super().__init__(jeu, data)
 
     def executer(self):
         super().executer()
-        self.jeu.joueur.infliger(self.json["degats"])
+        self.jeu.joueur.infliger(self.data.get("degats", 0))
         self.complete = True
 
 class AjoutTemps(Action):
     
-    def __init__ (self, jeu, json):
-        super().__init__(jeu, json)
+    def __init__ (self, jeu, data):
+        super().__init__(jeu, data)
     
     def executer(self):
         super().executer()
-        self.jeu.temps += self.json["temps"]
+        self.jeu.temps += self.data.get("temps", 1)
         self.complete = True
+        
+class Deplacement(Dialogue):
+    
+    def __init__ (self, jeu, data):
+        data["lines"] = [f"Vous arrivez à {data['lieu']} dans la région {data['region']}."]
+        super().__init__(jeu, data)
+
+    def executer(self):
+        super().executer()
+        self.jeu.region = self.data["region"]
+        self.jeu.lieu = self.data["lieu"]
         
 class Combat (Action):
     
-    def __init__ (self, jeu, json):
-        super().__init__(jeu, json)
-        self.windows = [] # (dmg, start, end)
+    def __init__ (self, jeu, data):
+        super().__init__(jeu, data)
+        self.desactive_ui = True
+        self.windows = [] # (dmg, start, end)[]
         self.frame = 0
+        self.turn = "player" # player/enemy (un seul ennemi max parce que je ne suis pas sadique) (pour l'instant :p)
+
+        vie_max = jeu.joueur.vie_max
+        self.player = {
+            "vie": vie_max,
+            "vie_max": vie_max
+        }
+        ennemi_data = data["enemy"]
+        self.ennemi = {
+            "vie_max": ennemi_data["vie"],
+            "vie": ennemi_data["vie"],
+            "nom": ennemi_data["nom"]
+        }
         
     def executer(self):
         super().executer()
+        self.jeu.fade = 300
+        if "music" in self.data:
+            pygame.mixer.music.load(self.data["music"])
+            pygame.mixer.music.play(-1)
         
     def update (self, events):
         self.frame += 1
@@ -222,5 +255,40 @@ class Combat (Action):
                 for window in self.windows:
                     if window[1] < self.frame:
                         self.windows.remove(window)
-                        # PARRY
-                        
+                        # PARRY (sound, give AP)
+    
+    def draw_ui (self):
+
+        # ennemi
+        ennemi_health_ratio = self.ennemi["vie"] / self.ennemi["vie_max"]
+        text_render_centered(self.jeu.ui_surface, self.ennemi["nom"], "regular", (255, 255, 255), (self.jeu.WIDTH / 2, 16), False, 16)
+        pygame.draw.rect(self.jeu.ui_surface, (255, 255, 255), (9, 6+20, self.jeu.WIDTH-18, 8))
+        pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0), (12, 7+20, self.jeu.WIDTH-24, 6))
+        pygame.draw.rect(self.jeu.ui_surface, (179, 32, 21), (12, 7+20, (self.jeu.WIDTH - 24)*ennemi_health_ratio, 6))
+
+        # player
+        pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0, 150), (9, 525, self.jeu.WIDTH-9*2, 175-9))
+
+    def draw (self):
+
+        if "background" in self.data:
+            # TODO: draw fight background
+            pass
+
+        self.draw_ui()
+
+
+class SelectionAction (Action):
+
+    def __init__ (self, jeu):
+        super().__init__(jeu, {})
+
+    def update (self, events):
+        pass
+
+    def draw (self):
+        pass
+
+    def executer(self):
+        super().executer()
+        pass

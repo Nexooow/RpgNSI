@@ -4,7 +4,7 @@ import pygame
 
 
 class Meteor:
-    def __init__(self, center, image=None, frame_index=0, object_density=3000.0):
+    def __init__(self, center, frame_index=0, object_density=3000.0):
         self.image = pygame.image.load(
             "./assets/sprites/meteor.png").convert_alpha()
         self.rect = self.image.get_rect()
@@ -42,7 +42,7 @@ class Meteor:
         self.has_hit = False
         self.mask=pygame.mask.from_surface(self.frame)
 
-    def deplace(self):
+    def deplace(self, target):
         v = self.speed
         traine = 0.5 * self.air_density * self.Cd * self.surface * v**2 / self.mass
         a = self.g - traine
@@ -64,6 +64,7 @@ class Meteor:
         if overlap and not self.has_hit:
             target.health-=self.impact_force()
             self.has_hit=True
+
     def impact_force(self):
         vx = self.x_speed
         vy = self.speed / self.mps

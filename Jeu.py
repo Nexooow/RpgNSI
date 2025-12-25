@@ -1,15 +1,17 @@
 import json
-
 import pygame
 
-from Action import Action
-from Joueur import Joueur
-from JSONLoader import JSONLoader
+from base.Action import Action, Deplacement, AjoutTemps, Combat
+from base.Joueur import Joueur
+from base.JSONLoader import JSONLoader
+
 from lib.file import File
 from lib.graph import Graph
 from lib.render import text_render_centered
+
 from menu.accueil import Accueil
 from menu.carte import Carte
+
 from boss.radahn import Radahn
 
 sommets = ["Auberge", "Mountain", "Ceilidh", "Dawn of the world", "Elder Tree"]
@@ -33,21 +35,29 @@ positions_sommets = {
     "Elder Tree": (500, 260),
 }
 
-
 class Jeu:
+
+    WIDTH = 1000
+    HEIGHT = 700
+
     def __init__(self):
+
         self.running = True
-        self.statut = "accueil"  # accueil/jeu/deplacement
+        self.debute = False # si le jeu a débuté ou non
         self.menu = Accueil(self)
         self.clock = pygame.time.Clock()
 
-        self.fond = pygame.Surface((1000, 700), pygame.SRCALPHA)
-        self.ui_surface = pygame.Surface((1000, 700), pygame.SRCALPHA)
-        self.filter_surface = pygame.Surface((1000, 700), pygame.SRCALPHA)
+        self.fond = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        self.ui_surface = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+        self.filter_surface = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
+
+        self.joueur = None
+        self.identifiant = None
 
         # carte et regions/lieux
         self.carte = Graph(sommets, aretes, True, positions_sommets)
         self.lieux_visite = set()
+        self.pnj_rencontres = set()
 
         self.loader = JSONLoader(self)
         self.action_actuelle: Action | None = None
@@ -62,86 +72,73 @@ class Jeu:
         # filtres pour affichage
         self.fade = 300
 
-    def obtenir_temps(self):
-        heures = self.temps
-        jours = heures // 24
-        heures %= 24
-        return jours, heures
+    # GETTERS
 
-    def region_actuelle(self):
+    def get_temps(self):
+        return divmod(self.temps, 24) # retourne (temps//24, temps%24) donc (jour, heure)
+
+    def get_region_actuelle(self):
         if self.region is None:
             return None
         return self.regions[self.region]
 
-    def demarrer(self, id: str, json=None):
-        self.statut = "jeu"
+    # GESTION PARTIES
+
+    def demarrer(self, identifiant, save_json=None):
+        self.debute = True
         self.menu = None
-        self.identifiant = id
+        self.identifiant = identifiant
+        print(f"Démarrage de la partie avec l'identifiant {self.identifiant}")
         self.joueur = Joueur(
-            self, json["joueur"] if json and "joueur" in json else None
+            self, save_json["joueur"] if save_json and "joueur" in save_json else None
         )
-        if json is not None:
-            self.restaurer(json)
+        if save_json is not None:
+            self.restaurer(save_json)
         else:
             self.region = "Auberge"
             self.lieu = self.regions["Auberge"].entree
             self.executer_sequence("debut")
-            self.ajouter_action(Radahn(self))
-        self.save()
+            #self.ajouter_action(Radahn(self)) # test radahn
+        self.sauvegarder()
 
-    def restaurer(self, json):
-        self.region = json["region"]
+    def restaurer(self, save_json):
+        self.region = save_json["region"]
         self.lieu = self.regions[self.region]
-        self.temps = json["temps"]
-        if json["actions"]:
-            for action in json["actions"]:
+        self.temps = save_json["temps"]
+        if save_json["actions"]:
+            for action in save_json["actions"]:
                 action_instance = self.loader.creer_action(action)
                 self.ajouter_action(action_instance)
-        if json["action_actuelle"]:
-            self.action_actuelle = self.loader.creer_action(json["action_actuelle"])
+        if save_json["action_actuelle"]:
+            self.action_actuelle = self.loader.creer_action(save_json["action_actuelle"])
+            self.action_actuelle.executer()
 
-    def save(self):
+    def sauvegarder(self):
+        actions = [action.data for action in self.actions.contenu]
         data = {
             "id": self.identifiant,
-            "joueur": self.joueur.save(),
+            "joueur": self.joueur.sauvegarder(),
             "temps": self.temps,
+            "region": self.region,
+            "lieu": self.lieu,
+            "lieux_visites": list(self.lieux_visite),
+            "pnj_rencontres": list(self.pnj_rencontres),
+            "actions": actions,
+            "action_actuelle": self.action_actuelle.data if self.action_actuelle else None
         }
-        json.dump(data, open(f"./saves/{self.identifiant}.json", "w"))
+        print(f"Sauvegarde de la partie avec l'identifiant {self.identifiant}")
+        json.dump(data, open(f"./.data/saves/{self.identifiant}.json", "w"))
 
     def quitter(self):
         self.running = False
 
+    # AFFICHAGE, ÉVÉNEMENTS ET GESTION DES ACTIONS
+
     def gerer_evenement(self, evenements):
         if self.menu is not None:
             self.menu.update(evenements)
-        if self.statut == "jeu":
-            for event in evenements:
-                if self.menu is None:
-                    if (
-                        event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_m
-                        and self.action_actuelle is None
-                    ):
-                        self.ouvrir_menu(Carte(self))
-            if self.action_actuelle is not None:
-                self.action_actuelle.update(evenements)
-
-    def ajouter_action(self, action):
-        assert isinstance(action, Action), f"type de l'action: {type(action)}"
-        self.actions.enfiler(action)
-
-    def executer_sequence(self, id):
-        sequence = self.loader.recuperer_sequence(id)
-        if sequence:
-            for action in sequence:
-                self.ajouter_action(action)
-
-    def fermer_menu(self):
-        self.menu = None
-
-    def ouvrir_menu(self, menu):
-        self.menu = menu
-        self.menu.ouvrir()
+        elif self.action_actuelle is not None:
+            self.action_actuelle.update(evenements)
 
     def executer(self):
         action = self.action_actuelle
@@ -162,18 +159,18 @@ class Jeu:
     def scene(self):
         if self.menu is not None:
             self.menu.draw()
-        elif self.statut == "jeu":
+        elif self.debute:
             self.fond.fill((255, 255, 255))
             if self.action_actuelle is not None:
                 self.action_actuelle.draw()
             self.ui()
-        self.filters()  # applique les filtres sur l'écran
+        self.filters() # applique les filtres sur l'écran
 
     def ui(self):
         if not self.action_actuelle or (
             self.action_actuelle and not self.action_actuelle.desactive_ui
         ):
-            (jour, heure) = self.obtenir_temps()
+            (jour, heure) = self.get_temps()
 
             # dimensions boite
             box_width = 220
@@ -222,7 +219,7 @@ class Jeu:
 
     def filters(self):
         if self.fade > 0:
-            if self.fade < 10:
+            if self.fade < 8:
                 self.fade = 2
             pygame.draw.rect(
                 self.filter_surface,
@@ -230,15 +227,33 @@ class Jeu:
                 self.filter_surface.get_rect(),
             )
             self.fade -= 2
+            
+    def ajouter_action(self, action):
+        assert isinstance(action, Action), f"L'action à ajouter n'est pas une instance de la classe Action"
+        self.actions.enfiler(action)
 
-    def deplacement(self, region, lieu):
-        region_actuelle = self.region_actuelle()
-        assert region_actuelle is not None
+    def executer_sequence(self, identifiant):
+        sequence = self.loader.recuperer_sequence(identifiant)
+        if sequence:
+            for action in sequence:
+                self.ajouter_action(action)
+        else:
+            print(f"⚠️ La séquence {identifiant} n'existe pas")
+
+    # GESTION MENU
+
+    def fermer_menu(self):
+        self.menu = None
+
+    def ouvrir_menu(self, menu):
+        self.menu = menu
+        self.menu.ouvrir()
+
+    # DEPLACEMENTS
+
+    def calcul_temps_deplacement (self, region, lieu):
         temps_deplacement = 0
-
-        print(f"deplacement vers {region}/{lieu}")
-        print(f"depuis {region_actuelle.nom}/{self.lieu}")
-
+        region_actuelle = self.get_region_actuelle()
         if region != region_actuelle.nom:  # destination dans une autre région
             if (
                 self.lieu != region_actuelle.entree
@@ -246,9 +261,7 @@ class Jeu:
                 temps_deplacement += region_actuelle.carte.paths(
                     self.lieu, region_actuelle.entree
                 )[1]
-
             temps_deplacement += self.carte.paths(region_actuelle.nom, region)[1]
-
             region_destination = self.regions[region]
             if lieu != region_destination.entree:
                 # si le lieu de destination n'est pas l'entrée de la région
@@ -256,22 +269,39 @@ class Jeu:
                 temps_deplacement += region_destination.carte.paths(
                     region_destination.entree, lieu
                 )[1]
-
         else:  # si le lieu de destination est dans la région actuelle
-            chemin = self.carte.paths(self.lieu, lieu)
-            temps_deplacement += chemin[1]
+            chemin, temps = self.carte.paths(self.lieu, lieu)
+            temps_deplacement += temps
+
+        return temps_deplacement
+
+    def deplacement(self, region, lieu):
+
+        region_actuelle = self.get_region_actuelle()
+        assert region_actuelle is not None
+
+        print(f"deplacement vers {region}/{lieu}")
+        print(f"depuis {region_actuelle.nom}/{self.lieu}")
+
+        temps_deplacement = self.calcul_temps_deplacement(region, lieu)
+        simulation_temps = self.temps
 
         for heure in range(temps_deplacement):
+
+            chance = self.joueur.chance
+            jour_sim, heure_sim = divmod(simulation_temps, 24)
+            if heure_sim <= 5 or heure_sim >= 22: # moins de chance pendant la nuit
+                chance = chance * 0.75
+            # TODO: chance différente selon la région
+
             sequence = self.loader.tirer_action(
-                self.joueur.chance, self.joueur.malchance
+                chance
             )
             if sequence is not None:
                 self.executer_sequence(sequence)
-            # TODO: chance différente selon la région
+
+            simulation_temps += 1
+            self.ajouter_action(AjoutTemps(self, { "type": "ajout-temps", "temps": 1 })) # permet l'ajout de temps progressivement
 
         print(f"temps du trajet : {temps_deplacement}")
-        self.temps += temps_deplacement
-        print(self.temps)
-
-        self.lieu = lieu
-        self.region = region
+        self.ajouter_action(Deplacement(self, { "region": region, "lieu": lieu, "type": "deplacement" }))

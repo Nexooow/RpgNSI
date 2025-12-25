@@ -6,9 +6,9 @@ class Menu:
         
     def ouvrir (self):
         pass
-        
+
     def fermer (self):
-        self.jeu.menu = None
+        self.jeu.fermer_menu()
         
     def update (self, events):
         pass

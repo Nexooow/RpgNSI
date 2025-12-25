@@ -1,11 +1,11 @@
 {
-    "id": "action1",
-    "type": "positif",
+    "id": "action2",
+    "type": "event",
     "run": [
         {
             "type": "dialogue",
             "lines": [
-                "Action 1"
+                "Action 2"
             ]
         }
     ]

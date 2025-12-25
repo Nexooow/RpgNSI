@@ -1,4 +1,4 @@
 pygame
 networkx
 matplotlib
-glob
+numpy

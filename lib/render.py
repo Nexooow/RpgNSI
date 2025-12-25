@@ -3,18 +3,17 @@ import pygame
 # mettre en "cache" les polices pour optimiser les performances
 fonts = {}
 
-def font_render(text, fontName, color=(0, 0, 0), size=None):
+def font_render(text, font_name, color=(0, 0, 0), size=None):
     global fonts
-    key = f"{fontName}_{size or 36}"
+    key = f"{font_name}_{size or 36}"
     if key in fonts:
         font = fonts[key]
     else:
         font = pygame.font.Font(
-            f"./assets/fonts/{fontName}.ttf", size or 36
+            f"./assets/fonts/{font_name}.ttf", size or 36
         )
         fonts[key] = font
     return font.render(text, True, color)
-
 
 def underline_text(surface, text_surface, color, pos=(0, 0)):
     underline_color = (color[0], color[1], color[2], 120)
@@ -22,7 +21,6 @@ def underline_text(surface, text_surface, color, pos=(0, 0)):
     underline_start = (pos[0] - text_largueur / 2, pos[1] + text_hauteur / 2)
     underline_end = (pos[0] + text_largueur / 2, pos[1] + text_hauteur / 2)
     pygame.draw.line(surface, underline_color, underline_start, underline_end, 2)
-
 
 def text_render_centered(
     surface, text, font, color=(0, 0, 0), pos=(0, 0), underline=False, size=None
