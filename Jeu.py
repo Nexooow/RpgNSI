@@ -1,7 +1,7 @@
 import json
 import pygame
 
-from base.Action import Action, Deplacement, AjoutTemps
+from base.Action import Action, Deplacement, AjoutTemps, Combat
 from base.Joueur import Joueur
 from base.JSONLoader import JSONLoader
 
@@ -11,6 +11,8 @@ from lib.render import text_render_centered
 
 from menu.accueil import Accueil
 from menu.carte import Carte
+
+from boss.radahn import Radahn
 
 sommets = ["Auberge", "Mountain", "Ceilidh", "Dawn of the world", "Elder Tree"]
 aretes = [
@@ -41,7 +43,7 @@ class Jeu:
     def __init__(self):
 
         self.running = True
-        self.statut = "accueil"  # accueil/jeu/deplacement
+        self.debute = False # si le jeu a débuté ou non
         self.menu = Accueil(self)
         self.clock = pygame.time.Clock()
 
@@ -55,6 +57,7 @@ class Jeu:
         # carte et regions/lieux
         self.carte = Graph(sommets, aretes, True, positions_sommets)
         self.lieux_visite = set()
+        self.pnj_rencontres = set()
 
         self.loader = JSONLoader(self)
         self.action_actuelle: Action | None = None
@@ -82,9 +85,10 @@ class Jeu:
     # GESTION PARTIES
 
     def demarrer(self, identifiant, save_json=None):
-        self.statut = "jeu"
+        self.debute = True
         self.menu = None
         self.identifiant = identifiant
+        print(f"Démarrage de la partie avec l'identifiant {self.identifiant}")
         self.joueur = Joueur(
             self, save_json["joueur"] if save_json and "joueur" in save_json else None
         )
@@ -94,12 +98,6 @@ class Jeu:
             self.region = "Auberge"
             self.lieu = self.regions["Auberge"].entree
             self.executer_sequence("debut")
-            #self.ajouter_action(Combat(self, {
-            #    "enemy": {
-            #        "nom": "test",
-            #        "vie": 100
-            #    }
-            #}))
             #self.ajouter_action(Radahn(self)) # test radahn
         self.sauvegarder()
 
@@ -123,10 +121,12 @@ class Jeu:
             "temps": self.temps,
             "region": self.region,
             "lieu": self.lieu,
+            "lieux_visites": list(self.lieux_visite),
+            "pnj_rencontres": list(self.pnj_rencontres),
             "actions": actions,
             "action_actuelle": self.action_actuelle.data if self.action_actuelle else None
         }
-        print(data)
+        print(f"Sauvegarde de la partie avec l'identifiant {self.identifiant}")
         json.dump(data, open(f"./.data/saves/{self.identifiant}.json", "w"))
 
     def quitter(self):
@@ -137,17 +137,8 @@ class Jeu:
     def gerer_evenement(self, evenements):
         if self.menu is not None:
             self.menu.update(evenements)
-        if self.statut == "jeu":
-            for event in evenements:
-                if self.menu is None:
-                    if (
-                        event.type == pygame.KEYDOWN
-                        and event.key == pygame.K_m
-                        and self.action_actuelle is None
-                    ):
-                        self.ouvrir_menu(Carte(self))
-            if self.action_actuelle is not None:
-                self.action_actuelle.update(evenements)
+        elif self.action_actuelle is not None:
+            self.action_actuelle.update(evenements)
 
     def executer(self):
         action = self.action_actuelle
@@ -168,12 +159,12 @@ class Jeu:
     def scene(self):
         if self.menu is not None:
             self.menu.draw()
-        elif self.statut == "jeu":
+        elif self.debute:
             self.fond.fill((255, 255, 255))
             if self.action_actuelle is not None:
                 self.action_actuelle.draw()
             self.ui()
-        self.filters()  # applique les filtres sur l'écran
+        self.filters() # applique les filtres sur l'écran
 
     def ui(self):
         if not self.action_actuelle or (
@@ -228,7 +219,7 @@ class Jeu:
 
     def filters(self):
         if self.fade > 0:
-            if self.fade < 10:
+            if self.fade < 8:
                 self.fade = 2
             pygame.draw.rect(
                 self.filter_surface,
@@ -246,6 +237,8 @@ class Jeu:
         if sequence:
             for action in sequence:
                 self.ajouter_action(action)
+        else:
+            print(f"⚠️ La séquence {identifiant} n'existe pas")
 
     # GESTION MENU
 
@@ -277,8 +270,8 @@ class Jeu:
                     region_destination.entree, lieu
                 )[1]
         else:  # si le lieu de destination est dans la région actuelle
-            chemin = self.carte.paths(self.lieu, lieu)
-            temps_deplacement += chemin[1]
+            chemin, temps = self.carte.paths(self.lieu, lieu)
+            temps_deplacement += temps
 
         return temps_deplacement
 
@@ -308,8 +301,7 @@ class Jeu:
                 self.executer_sequence(sequence)
 
             simulation_temps += 1
-            self.ajouter_action(AjoutTemps(self, { "temps": 1 })) # permet l'ajout de temps progressivement
+            self.ajouter_action(AjoutTemps(self, { "type": "ajout-temps", "temps": 1 })) # permet l'ajout de temps progressivement
 
         print(f"temps du trajet : {temps_deplacement}")
-
-        self.ajouter_action(Deplacement(self, { "region": region, "lieu": lieu }))
+        self.ajouter_action(Deplacement(self, { "region": region, "lieu": lieu, "type": "deplacement" }))

@@ -1,4 +1,5 @@
 import pygame
+from contourpy.util import data
 
 from lib.render import text_render_centered, text_render_centered_left
 
@@ -101,19 +102,19 @@ class Selection(Action):
     def __init__(self, jeu, data):
         super().__init__(jeu, data)
         self.option_choisie = 0
+        self.options = self.data.get("options", [])
+        self.question = self.data.get("question", "")
 
     def draw(self):
-        options = self.data.get("options", [])
-        question = self.data.get("question", "")
 
-        if not options:
+        if not self.options:
             self.complete = True
             return
 
         line_height = 35
         padding = 20
-        question_height = 40 if question else 0
-        total_height = len(options) * line_height + question_height + padding * 2
+        question_height = 40 if self.question else 0
+        total_height = len(self.options) * line_height + question_height + padding * 2
 
         # position boite
         box_width = 960
@@ -131,18 +132,18 @@ class Selection(Action):
 
         current_y = box_y + padding
 
-        if question:
+        if self.question:
             text_render_centered_left(
                 self.jeu.ui_surface,
-                question,
+                self.question,
                 "imregular",
                 color=(255, 255, 255),
                 pos=(box_x + padding, current_y + 15),
-                size=26,
+                size=24,
             )
             current_y += question_height
 
-        for index, choix in enumerate(options):
+        for index, choix in enumerate(self.options):
             est_choisi = index == self.option_choisie
 
             if est_choisi:
@@ -175,12 +176,14 @@ class Selection(Action):
                 if self.option_choisie > 0:
                     self.option_choisie -= 1
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if self.option_choisie < len(self.data["options"]) - 1:
+                if self.option_choisie < len(self.options) - 1:
                     self.option_choisie += 1
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.complete = True
-                valeur = self.data["options"][self.option_choisie]["valeur"]
-                print(self.data["actions"][valeur])
+                valeur = self.options[self.option_choisie]["valeur"]
+                action = self.data["actions"][valeur]
+                if isinstance(action, str):
+                    self.jeu.executer_sequence(action)
 
     def executer(self):
         super().executer()
@@ -193,7 +196,7 @@ class Damage(Action):
 
     def executer(self):
         super().executer()
-        self.jeu.joueur.infliger(self.data["degats"])
+        self.jeu.joueur.infliger(self.data.get("degats", 0))
         self.complete = True
 
 class AjoutTemps(Action):
@@ -203,7 +206,7 @@ class AjoutTemps(Action):
     
     def executer(self):
         super().executer()
-        self.jeu.temps += self.data["temps"]
+        self.jeu.temps += self.data.get("temps", 1)
         self.complete = True
         
 class Deplacement(Dialogue):
@@ -255,7 +258,6 @@ class Combat (Action):
                         # PARRY (sound, give AP)
     
     def draw_ui (self):
-        pygame.draw.rect(self.jeu.ui_surface, (150, 150, 150), (0, 0, self.jeu.WIDTH, self.jeu.HEIGHT))
 
         # ennemi
         ennemi_health_ratio = self.ennemi["vie"] / self.ennemi["vie_max"]
@@ -267,7 +269,26 @@ class Combat (Action):
         # player
         pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0, 150), (9, 525, self.jeu.WIDTH-9*2, 175-9))
 
-
-                    
     def draw (self):
+
+        if "background" in self.data:
+            # TODO: draw fight background
+            pass
+
         self.draw_ui()
+
+
+class SelectionAction (Action):
+
+    def __init__ (self, jeu):
+        super().__init__(jeu, {})
+
+    def update (self, events):
+        pass
+
+    def draw (self):
+        pass
+
+    def executer(self):
+        super().executer()
+        pass

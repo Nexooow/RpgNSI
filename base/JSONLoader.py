@@ -12,8 +12,9 @@ class JSONLoader:
         self.actions_sequences = {}
         self.actions_types = {}
 
+        self.pnj = {}
+
         self.charger_actions()
-        self.charger_regions()
 
     def charger_actions(self):
         files = glob("./.data/actions/**/*.json", recursive=True)
@@ -31,7 +32,7 @@ class JSONLoader:
                     self.actions_sequences[identifiant] = []
                     for action in content["run"]:
                         self.actions_sequences[identifiant].append(self.creer_action(action))
-                    print(f"Séquence '{identifiant}' chargée ({len(self.actions_sequences[identifiant])} actions)")
+                    print(f"Loader | Actions | séquence '{identifiant}' chargée ({len(self.actions_sequences[identifiant])} actions)")
             except Exception:
                 print(f"impossible de charger la séquence '{file}'")
                 continue
@@ -40,6 +41,7 @@ class JSONLoader:
         lieux_json = self.charger_lieux()
         regions = {}
         for lieu in lieux_json:
+            print(f"Loader | Lieux | {lieu['region']} > {lieu["id"]}")
             if lieu["region"] not in regions:
                 regions[lieu["region"]] = [lieu]
             else:
@@ -62,13 +64,14 @@ class JSONLoader:
             assert isinstance(content, list)
             return content
         
-    def charger_npcs (self):
+    def charger_pnj (self):
         files = glob("./.data/actions/**/*.json", recursive=True)
         for file in files:
             try:
                 with open(file) as f:
                     content = json.load(f)
                     assert isinstance(content, dict)
+                    self.pnj[content["id"]] = content
             except Exception:
                 continue
 
@@ -93,7 +96,7 @@ class JSONLoader:
             return None
 
     def tirer_action(self, chance):
-        evenement = random() * 100 <= chance
+        evenement = random() * 100 <= 15
         if evenement:
             if randint(0, 100) <= chance:
                 key = self.actions_types["event-positif"][

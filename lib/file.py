@@ -1,6 +1,8 @@
 class File:
 
-    def __init__ (self, content = []):
+    def __init__ (self, content = None):
+        if content is None:
+            content = []
         self.contenu = content
 
     def defiler (self):
@@ -8,6 +10,14 @@ class File:
     
     def enfiler (self, valeur):
         self.contenu.append(valeur)
+
+    def inserer (self, liste):
+        """
+        Force l'insertion au début de la file
+        :param liste: liste à insérer
+        :return: None
+        """
+        self.contenu = liste + self.contenu
 
     def sommet (self):
         return self.contenu[0]

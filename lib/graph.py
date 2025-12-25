@@ -13,7 +13,9 @@ images = {
 }
 
 class Graph:
-    def __init__(self, sommets, aretes, orientation=False, pos={}):
+    def __init__(self, sommets, aretes, orientation=False, pos=None):
+        if pos is None: # empêche que pos soit modifié suite aux différentes instanciations
+            pos = {}
         assert isinstance(sommets, list), (
             f"sommets doit être une liste, reçu: {type(sommets)}"
         )
@@ -82,18 +84,18 @@ class Graph:
         return somme_degres == 2 * len(self.aretes)
 
     def get_graph(self):
-        G = nx.DiGraph() if self.orientation else nx.Graph()
-        G.add_nodes_from(self.sommets)
+        g = nx.DiGraph() if self.orientation else nx.Graph()
+        g.add_nodes_from(self.sommets)
         for arrete in self.aretes:
-            G.add_edge(
+            g.add_edge(
                 arrete[0], arrete[1], weight=int(arrete[2]), label=format_temps(int(arrete[2]))
             )
-        return G
+        return g
 
     def paths(self, a, b):
-        G = self.get_graph()
-        chemin = list(nx.shortest_path(G, source=a, target=b, weight="weight"))
-        poids = nx.shortest_path_length(G, source=a, target=b, weight="weight")
+        g = self.get_graph()
+        chemin = list(nx.shortest_path(g, source=a, target=b, weight="weight"))
+        poids = nx.shortest_path_length(g, source=a, target=b, weight="weight")
         return chemin, poids
 
 def format_temps (heures):
@@ -104,14 +106,14 @@ def format_temps (heures):
 
 def affichage_graphe(graph: Graph, screen, image):
     img = images[image or "background"]
-    G = graph.get_graph()
+    g = graph.get_graph()
 
     fig, ax = plt.subplots(figsize=(10, 7))
     ax.imshow(img, extent=(0, 1000, 700, 0))
-    aretes_labels = {(u, v): format_temps(data['weight']) for u, v, data in G.edges(data=True)}
+    aretes_labels = {(u, v): format_temps(data['weight']) for u, v, data in g.edges(data=True)}
 
     nx.draw(
-        G,
+        g,
         graph.pos,
         node_color="none",
         with_labels=True,
@@ -120,21 +122,21 @@ def affichage_graphe(graph: Graph, screen, image):
         node_size=1000,
     )
     nx.draw_networkx_edge_labels(
-        G,
+        g,
         graph.pos,
         edge_labels=aretes_labels,
         label_pos=0.5,
         rotate=False,
         font_family="Arial",
-        bbox=dict(
-            facecolor="white", pad=0.2, edgecolor="none"
-        ),  # cache l'étiquette derrière le label
+        bbox = {
+            "facecolor": "white", "pad": 0.2, "edgecolor": None, "alpha": 0, "linewidth": 0.5, "antialiased": True
+        },
     )
     fig.canvas.draw()
     buf = get_canvas_buffer(fig.canvas)
     w, h = fig.canvas.get_width_height()
+    plt.close(fig)
     image = np.frombuffer(buf, dtype=np.uint8).reshape((h, w, 4))
     image = image[..., :3]
     pygame_surface = pygame.surfarray.make_surface(np.transpose(image, (1, 0, 2)))
-    plt.close(fig)
     screen.blit(pygame_surface, (0, 0))

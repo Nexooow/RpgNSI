@@ -12,21 +12,21 @@ python main.py
 # Carte
 
 Voir image jointe
-A noter que chaque région sur cette carte dispose elle même d'une carte qui permet de naviguer entre les lieux de la région.
+À noter que chaque région sur cette carte dispose elle-même d'une carte qui permet de naviguer entre les lieux de la région.
 
 # Univers & but
 
 Toute resemblance avec le jeu "Elden Ring" est purement fortuite.
 
 Le jeu se déroule dans le monde d'un ancien empire qui a été détruit par une guerre interne.
-Le but est de retrouver *insérer nom de grand méchant* et de le vaincre.
+Le but est de retrouver, *insérer nom de grand méchant* et de le vaincre.
 
 # Comment se déroule la partie ?
 
 Le joueur se déplace entre régions, puis entre lieux dans chaque région.
 Cependant, chaque trajet est une aventure qui peut changer la suite de la partie.
 Le joueur doit aussi gérer le temps, et ses ressources.
-En effet, chaque trajet prend du temps, et vous ne voulez pas vous déplacer en pleine nuit ...
+En effet, chaque trajet prend du temps, et vous ne voulez pas vous déplacer en pleine nuit...
 Le joueur peut également explorer les lieux et rencontrer des PNJ pour obtenir des informations ou des objets.
 
 # Diagramme de classe

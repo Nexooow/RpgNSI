@@ -21,6 +21,7 @@ demiurge_animation_steps = [8, 8, 1, 8, 8, 3, 7]
 class StreetFighter (Action):
 
     def __init__(self, jeu):
+        super().__init__(jeu, {})
         self.jeu = jeu
         self.desactive_ui = True
         warrior_sheet = pygame.image.load(

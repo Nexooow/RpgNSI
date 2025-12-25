@@ -40,6 +40,9 @@ class Joueur:
     
     def infliger (self, degats):
         self.vie -= degats
+        if self.vie <= 0:
+            # TODO: fin du jeu
+            pass
         
     def soigner (self, points):
         self.vie += points
