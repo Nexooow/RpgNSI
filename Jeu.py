@@ -12,6 +12,8 @@ from lib.render import text_render_centered
 
 from menu.accueil import Accueil
 from menu.carte import Carte
+from menu.inventaire import Inventaire
+from menu.boutique import Boutique
 
 sommets = ["Auberge", "Mountain", "Ceilidh", "Dawn of the world", "Elder Tree"]
 aretes = [
@@ -70,7 +72,7 @@ class Jeu:
         self.lieu = self.regions["Auberge"].entree
 
         self.temps = 24 + 12
-
+        self.marchant = None
         # filtres pour affichage
         self.fade = 300
 
@@ -318,3 +320,5 @@ class Jeu:
 
         print(f"temps du trajet : {temps_deplacement}")
         self.ajouter_action(Deplacement(self, { "region": region, "lieu": lieu, "type": "deplacement" }))
+    def ouvrir_boutique(self):
+        self.ouvrir_menu(Boutique(self))

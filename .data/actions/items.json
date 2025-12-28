@@ -1,0 +1,11 @@
+
+    {
+        "id": "poutine",
+        "type":"ajout-items",
+        "items":[
+            {
+                "item_id":"poutine",
+                "quantity":1
+            }
+        ]
+    }

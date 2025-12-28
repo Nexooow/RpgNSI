@@ -1,16 +1,13 @@
 import pygame
 from menu.Menu import Menu
-
-from lib.render import text_render_centered_left, text_render_centered
-
-class Inventaire(Menu):
-
+from lib.render import text_render_centered,text_render_centered_left
+class Boutique(Menu):
     def __init__(self, jeu):
         super().__init__(jeu)
         self.selection = 0
 
     def update(self, events):
-        items_ids = list(self.jeu.joueur.inventaire.keys())
+        items_ids = list(self.jeu.marchant.inventaire.keys())
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
@@ -22,47 +19,36 @@ class Inventaire(Menu):
                 elif event.key == pygame.K_SPACE:
                     if items_ids:
                         self.utiliser_item(items_ids[self.selection])
-                elif event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
                     self.fermer()
-    def ajouter_item(self,item_id, quantite=1):
-        if item_id in self.jeu.joueur.inventaire:
-            self.jeu.joueur.inventaire[item_id] += quantite
-        else:
-            self.jeu.joueur.inventaire[item_id] = quantite
-    def utiliser_item(self, item_id):
+                    
+    def acheter_item(self, item_id):
         item_data = self.jeu.items.get(item_id)
         if not item_data:
             return
-
-        # TODO: utilisation item (+ selon type: consommable, armure, arme...)
-
-
+        prix = item_data.get("prix", 0)
+        if self.jeu.joueur.argent >= prix:
+            self.jeu.joueur.argent -= prix
+            self.jeu.joueur.inventaire.ajouter_item(item_id)
+            self.jeu.marchant.inventaire.retirer_item(item_id)
     def draw(self):
-
-        text_render_centered(self.jeu.ui_surface, "INVENTAIRE", "bold", color=(255, 255, 255), pos=(self.jeu.WIDTH // 2, 50), size=40)
-
-        items_ids = list(self.jeu.joueur.inventaire.keys())
-
+        text_render_centered(self.jeu.ui_surface, "BOUTIQUE", "bold", color=(255, 255, 255), pos=(self.jeu.WIDTH // 2, 50), size=40)
+        items_ids = list(self.jeu.marchant.inventaire.keys())
         start_x = 50
         start_y = 120
-
         for i, item_id in enumerate(items_ids):
-
-            item_data = self.jeu.items.get(item_id, {"nom": item_id})
-            quantite = self.jeu.joueur.inventaire[item_id]
+            item_data = self.jeu.items.get(item_id, {"nom": item_id, "prix": 0})
+            quantite = self.jeu.marchant.inventaire[item_id]
             couleur = (255, 255, 255) if i != self.selection else (255, 200, 100)
             prefixe = "> " if i == self.selection else "  "
-            
-            text_render_centered_left(
+            text_render_centered(
                 self.jeu.ui_surface, 
-                f"{prefixe}{item_data['nom']} (x{quantite})", 
+                f"{prefixe}{item_data['nom']} (x{quantite}) - {item_data['prix']} pièces", 
                 "regular", 
                 color=couleur, 
                 pos=(start_x, start_y + i * 40), 
                 size=24
             )
-
-
         if items_ids and self.selection < len(items_ids):
 
             item_id = items_ids[self.selection]
