@@ -6,3 +6,6 @@ from .AjoutTemps import AjoutTemps
 from .Deplacement import Deplacement
 from .Combat import Combat
 from .SelectionAction import SelectionAction
+from .RandomAction import RandomAction
+from .AjoutItems import AjoutItems
+from .Boutique import Boutique
