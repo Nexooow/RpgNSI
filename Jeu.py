@@ -4,6 +4,7 @@ import pygame
 from base.action import Action, Deplacement, AjoutTemps, Combat
 from base.Joueur import Joueur
 from base.JSONLoader import JSONLoader
+from base.Equipe import Equipe
 
 from lib.file import File
 from lib.graph import Graph
@@ -56,6 +57,8 @@ class Jeu:
         # carte et regions/lieux
         self.carte = Graph(sommets, aretes, True, positions_sommets)
 
+        self.equipe = Equipe()
+
         self.lieux_visite = set()
         self.pnj_rencontres = set()
 
@@ -63,8 +66,8 @@ class Jeu:
         self.actions = File()
 
         self.regions = self.loader.charger_regions()
-        self.region = None
-        self.lieu = self.region.entree if self.region else None
+        self.region = "Auberge"
+        self.lieu = self.regions["Auberge"].entree
 
         self.temps = 24 + 12
 
@@ -95,19 +98,8 @@ class Jeu:
         self.menu = None
         self.identifiant = identifiant
         print(f"Démarrage de la partie avec l'identifiant {self.identifiant}")
-        self.joueur = Joueur(
-            self, save_json["joueur"] if save_json and "joueur" in save_json else None
-        )
         if save_json is not None:
             self.restaurer(save_json)
-        else:
-            self.region = "Auberge"
-            self.lieu = self.regions["Auberge"].entree
-            self.joueur.ajouter_objet("potion_test", 3)
-            self.joueur.ajouter_objet("arme_test", 1)
-            #self.executer_sequence("combat_test")
-            self.executer_sequence("casan_famhair")
-            #self.ajouter_action(Radahn(self)) # test radahn
         self.sauvegarder()
 
     def restaurer(self, save_json):
@@ -242,9 +234,11 @@ class Jeu:
                 self.filter_surface.get_rect(),
             )
             self.fade -= 2
+
+    # GESTION ACTIONS
             
     def ajouter_action(self, action):
-        assert isinstance(action, Action), f"L'action à ajouter n'est pas une instance de la classe Action"
+        assert isinstance(action, Action), f"L'action à ajouter n'est pas une instance de la classe Action mais est de type {type(action)}"
         self.actions.enfiler(action)
 
     def executer_sequence(self, identifiant, priority=False):
