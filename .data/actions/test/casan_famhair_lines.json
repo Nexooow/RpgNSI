@@ -1,0 +1,25 @@
+{
+  "type":"dialogue",
+  "speaker":"Casan Famhair",
+  "lines":["Oooh...","*splash*"]
+},
+{
+  "type":"dialogue",
+  "speaker":"Casan Famhair",
+  "lines":["Welcome, ye who yearns for power.","Approach, child"]
+},
+#si oui
+{
+  "type":"dialogue",
+  "speaker":"Casan Famhair",
+  "lines":["*The 'midget but his feet giant' hands you a cup of water from his bathtub*"]
+},
+#else
+{
+  "type":"dialogue",
+  "speaker":"Casan Famhair",
+  "lines":["Well that's a shame"]
+}
+  
+
+  
