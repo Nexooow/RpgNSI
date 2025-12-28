@@ -21,5 +21,6 @@ class Arbre:
     def set_left (self, arbre):
         self.left = arbre
 
-def afficher_arbre (arbre):
+def afficher_arbre (arbre, surface, competences_debloques):
+    # TODO: dessiner l'arbre sur la fenêtre
     print(arbre.get_data())
