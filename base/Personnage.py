@@ -246,3 +246,48 @@ class Vous(Personnage):
 
             }
         })
+class Fachan(Personnage):
+    def __init__(self,equipe,data=None):
+        super().__init__(equipe,{
+            "nom":"Fachan",
+            "competences":{
+                "Regard jugeur":{
+                    "nom":"Regard jugeur",
+                    "description":"Lance un regard jugeur aux ennemis, encaissant 90% des dégâts au prochain tour. Gagne un stack de mitigation.",
+                    "cost":{"pa":2}                },
+                
+                    "Caisteal":{
+                        "nom":"Caisteal",
+                        "description":"Concentre toutes les attaques ennemies sur lui jusqu'à son prochain tour, gagne 30% de degats encaisses.",
+                        "cost":{"pa":4,"mitigation":1}
+                    },
+                    "Caber":{
+                        "nom":"Caber",
+                        "description":"lance sa massue sur un ennemi, 50% de chances de l'étourdir et 15% de chances que l'attaque se transmette à un autre ennemi",
+                        "cost":{
+                            "pa":3
+                    }
+                },
+                "Fureur de Fachan":{
+                    "nom":"Fureur de Fachan",
+                    "description":"Diminue de 20% les dégâts pour chaque stack de mitigation possédé",
+                    "cost":{
+                        "pa":0
+                    }
+                },
+                "Tignasse":{
+                    "nom":"Tignasse",
+                    "description":"Protège toute l'equipe avec sa chevelure. 15% de dommages en moins,
+                    "cost":{"pa":3}},
+                "Stalin":{
+                    "nom":"Stalin",
+                    "description":"Deviens l'Homme de Fer et encaisse tous les dégâts physiques pendant les trois prochains tours. Gagne un stack de mitigation",
+                    "cost":{"pa":4}
+                },
+                "Où sont mes pieds":{
+                    "nom":"Où sont mes pieds",
+                    "description":"Cherche sa deuxième jambe, devient incapable d'attaquer mais récupère 50% de ses pv",
+                    "cost":{"pa":4}
+                }
+            }
+        }
