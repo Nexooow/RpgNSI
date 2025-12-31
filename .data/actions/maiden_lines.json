@@ -41,7 +41,7 @@
         
       ],
       "actions":{"1":[{"type":"execution",
-                    "code":"jeu.variables_jeu[Termine] = true"
+                    "code":"jeu.variables_jeu['Termine'] = true"
                    }],
                 "2":[{
                   "type":"dialogue",
