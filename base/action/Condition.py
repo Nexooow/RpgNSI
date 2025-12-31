@@ -12,7 +12,9 @@ class Condition(Action):
             "jeu": self.jeu,
         })
         for condition, action in self.data.get("actions", {}).items():
-            if result == condition:
+            condition_remplie = eval(condition, {"jeu": self.jeu, "result": result})
+            if condition_remplie:
+                print("condition remplie")
                 self.jeu.actions.inserer(
                     list(
                         map(self.jeu.loader.creer_action, action)

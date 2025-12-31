@@ -11,32 +11,23 @@
             ]
         },
         {
-            "type": "select",
-            "question": "test ?",
-            "options": [
-                {
-                    "name": "1",
-                    "valeur": "1"
-                },
-                {
-                    "name": "2",
-                    "valeur": "2"
-                }
-            ],
+            "type": "condition",
+            "name": "test",
+            "code": "jeu.equipe.argent",
             "actions": {
-                "1": [
+                "result >= 100": [
                     {
                         "type": "dialogue",
                         "lines": [
-                            "tu as répondu 1"
+                            "tu as plus de 100 argent !"
                         ]
                     }
                 ],
-                "2": [
+                "result < 100": [
                     {
                         "type": "dialogue",
                         "lines": [
-                            "tu as répondu 2"
+                            "tu as moins de 100 argent !"
                         ]
                     }
                 ]

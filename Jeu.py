@@ -102,6 +102,7 @@ class Jeu:
             self.restaurer(save_json)
         else:
             self.equipe.ajouter_personnage(Vous(self.equipe))
+        self.executer_sequence("debut")
         self.sauvegarder()
 
     def restaurer(self, save_json):
@@ -151,7 +152,7 @@ class Jeu:
                 self.action_actuelle = self.actions.defiler()
                 assert self.action_actuelle is not None
                 self.action_actuelle.executer()
-            else:
+            elif self.debute:
                 self.action_actuelle = SelectionAction(self, {"type": "selection-action"})
                 self.action_actuelle.executer()
         else:
