@@ -8,8 +8,14 @@ class Condition(Action):
 
     def executer(self):
         super().executer()
-        result = eval(self.data.get("condition", False), {
+        result = eval(self.data.get("code", False), {
             "jeu": self.jeu,
         })
-        if self.data["type-condition"] == "if" and result:
-            self.complete = True
+        for condition, action in self.data.get("actions", {}).items():
+            if result == condition:
+                self.jeu.actions.inserer(
+                    list(
+                        map(self.jeu.loader.creer_action, action)
+                    )
+                )
+        self.complete = True

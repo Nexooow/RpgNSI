@@ -59,15 +59,15 @@ class Equipe:
             self.ajouter_personnage(
                 perso(self, personnage)
             )
-            # TODO: charger les personnages selon le json indiqué
-            pass
 
     def sauvegarder(self):
         return {
             "argent": self.argent,
             "chance": self.chance,
             "inventaire": self.inventaire,
-            "personnages": []  # TODO: sauvegarder les personnages
+            "personnages": [
+                personnage.sauvegarder() for personnage in self.personnages
+            ]
         }
 
     def infliger(self, degats):
