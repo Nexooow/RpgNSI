@@ -1,24 +1,6 @@
-{
-  "id": "Barman",
-  "type": "npc",
-  "run": [
-    {
-      "type": "dialogue",
-      "speaker": "Barman",
-      "lines": [
-        "Bienvenue cher aventurier!",
-        "Vous n'avez pas l'air du coin,",
-        "vous voulez goûter à notre spécialité locale?"
-      ]
-    },
-    {
-      "type": "dialogue",
-      "speaker": "Barman",
-      "lines": [
-        "Et une poutine, une!"
-      ]
-    },
-    {
+{"id": "Tale teller",
+    "type": "npc",
+    "run": [{
       "type": "dialogue",
       "speaker": "Tale-teller",
       "lines": [

@@ -1,0 +1,55 @@
+{
+  "id": "Barman",
+  "type": "npc",
+  "run": [
+    {
+      "type":"condition",
+      "name":"check_thune",
+      "code":"jeu.equipe.argent",
+      "actions":{
+        "result >= 100":[{
+      
+      "type": "select",
+      "speaker": "Barman",
+      "lines": [
+        "Bienvenue cher aventurier!",
+        "Vous n'avez pas l'air du coin,",
+        "vous voulez goûter à notre spécialité locale?"
+        ],
+
+      "options":[
+        {
+          "name":"Oui",
+          "valeur":"1"
+        },
+        {"name":"Non",
+         "valeur":"2"
+        }
+      ],
+      "actions":{
+      "1":[{
+      "type": "dialogue",
+      "speaker": "Barman",
+      "lines": [
+        "Et une poutine, une!"
+      ]
+    }],
+    "2":[{
+      "type":"dialogue",
+      "speaker":"Barman",
+      "lines":[
+        "Ah, c'est bin de valeur!"
+      ]
+    }]
+      }}],
+        "result < 100":[{
+          "type":"dialogue",
+          "speaker":"Barman",
+          "lines":[
+            "Bin dommage, vous avez pas de foin"
+          ]
+        }]
+    }
+  }
+  ]
+}
