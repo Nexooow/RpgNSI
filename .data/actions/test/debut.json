@@ -5,24 +5,32 @@
         {
             "type": "dialogue",
             "speaker": "Test",
-            "lines": ["Bienvenue cher aventurier !", "ligne 2"]
+            "lines": [
+                "Bienvenue cher aventurier !",
+                "ligne 2"
+            ]
         },
         {
-            "type": "select",
-            "question": "test ?",
-            "options": [
-                {
-                    "name": "1",
-                    "valeur": "1"
-                },
-                {
-                    "name": "2",
-                    "valeur": "2"
-                }
-            ],
+            "type": "condition",
+            "name": "test",
+            "code": "jeu.equipe.argent",
             "actions": {
-                "1": "action1",
-                "2": "action2"
+                "result >= 100": [
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "tu as plus de 100 argent !"
+                        ]
+                    }
+                ],
+                "result < 100": [
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "tu as moins de 100 argent !"
+                        ]
+                    }
+                ]
             }
         }
     ]

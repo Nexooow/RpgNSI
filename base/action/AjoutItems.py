@@ -1,6 +1,7 @@
 import pygame
 from .Action import Action
-from base.JSONLoader import JSONLoader
+
+
 class AjoutItems(Action):
     """
     Action qui ajoute des items à l'inventaire du joueur.
@@ -19,4 +20,4 @@ class AjoutItems(Action):
     def executer(self):
         super().executer()
         for item in self.items:
-            self.jeu.joueur.inventaire.ajouter_item(item)
+            self.jeu.equipe.ajouter_item(item["item_id"], item.get("quantity", 1))

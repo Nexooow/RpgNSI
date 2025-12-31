@@ -1,11 +1,15 @@
-
-    {
-        "id": "poutine",
-        "type":"ajout-items",
-        "items":[
-            {
-                "item_id":"poutine",
-                "quantity":1
-            }
-        ]
-    }
+{
+    "id": "poutine",
+    "type": "action",
+    "run": [
+        {
+            "type": "ajout-items",
+            "items": [
+                {
+                    "item_id": "poutine",
+                    "quantity": 1
+                }
+            ]
+        }
+    ]
+}

@@ -1,1 +1,20 @@
-{"id": "Door", "nom": "Door", "rencontre": "", "interaction": ""}
+{
+    "id": "Door",
+    "nom": "Door",
+    "rencontre": [
+        {
+            "type": "dialogue",
+            "lines": [
+                "rencontre avec Door"
+            ]
+        }
+    ],
+    "interaction": [
+        {
+            "type": "dialogue",
+            "lines": [
+                "interaction avec Door"
+            ]
+        }
+    ]
+}

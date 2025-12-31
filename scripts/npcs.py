@@ -11,8 +11,8 @@ with open(".data/lieux.json") as f:
         npcData = {
             "id": lieu["id"],
             "nom": lieu["id"],
-            "rencontre": "", # ajouter l'identifiant de l'action lors de la première interaction
-            "interaction": "" # ajouter l'identifiant de l'action lors d'une interaction
+            "rencontre": [],
+            "interaction": []
         }
         print(f"Json pour le npc {id} créer")
         json.dump(npcData, open(file_path, "w"))

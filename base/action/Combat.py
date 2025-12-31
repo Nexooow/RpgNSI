@@ -2,9 +2,11 @@ import pygame
 import random
 from lib.render import text_render_centered, text_render_centered_left
 from .Action import Action
+from lib.file import File
 
 parrysound = pygame.mixer.Sound("assets/sounds/parry.mp3")
 parrysound.set_volume(0.05)
+
 
 class Combat(Action):
     """
@@ -14,157 +16,85 @@ class Combat(Action):
     def __init__(self, jeu, data):
         super().__init__(jeu, data)
         self.desactive_ui = True
-        self.windows = []
-        self.frame = 0
-        self.turn = "player"  # player/enemy
-        self.statut = "selection"  # selection/attack/victory/game_over
-        self.option_choisie = 0
-        self.ap = 3
 
-        ennemi_data = data["enemy"]
-        self.ennemi = {
-            "vie_max": ennemi_data["vie"],
-            "vie": ennemi_data["vie"],
-            "nom": ennemi_data["nom"],
-            "actions": ennemi_data.get("actions", [])
-        }
+        self.action = "demarrage"  # demarrage/selection/attaque
+        self.tour_actuel = None
+        self.tours = File()
+
+        self.ennemis = data.get("ennemis", [])
+        self.personnages = []
+
+        self.menu_actuel = None  # None/principal/competences/items
+        self.selection = 0
+
+    def maj_tours(self):
+        self.tours.contenu = []
+        combatants = []
+
+        for personnage in self.personnages:
+            if personnage["vie"] <= 0:
+                continue
+            combatants.append({
+                "index": self.personnages.index(personnage),
+                "type": "personnages",
+                "vitesse": personnage["vitesse"]
+            })
+        for ennemi in self.ennemis:
+            if ennemi["vie"] <= 0:
+                continue
+            combatants.append({
+                "index": self.ennemis.index(ennemi),
+                "type": "ennemis",
+                "vitesse": ennemi.get("vitesse", 0)
+            })
+
+        combatants.sort(key=lambda x: (x.get("vitesse", 0), x["type"] == "personnages"), reverse=True)
+
+        for combatant in combatants:
+            self.tours.enfiler((combatant["type"], combatant["index"]))
 
     def executer(self):
-        super().executer()
-        vie_max = self.jeu.joueur.vie_max
-        self.player = {
-            "vie": self.jeu.joueur.vie,
-            "vie_max": vie_max
-        }
-        self.jeu.fade = 300
-        if "music" in self.data:
-            pygame.mixer.music.load(self.data["music"])
-            pygame.mixer.music.play(-1)
+        for personnage in self.jeu.equipe.personnages:
+            self.personnages.append({
+                "nom": personnage.nom,
+                "vie": personnage.vie,
+                "vie_max": personnage.vie_max,
+                "force": personnage.force,
+                "vitesse": personnage.vitesse,
+                "arme": self.jeu.loader.items.get(personnage.arme, None),
+                "effets": {},  # key: nom effet, val: (niveau, durée)
+                "competences": [
+                    {**competence, "id": id_competence}
+                    for id_competence, competence in personnage.competences.items()
+                    if id_competence in personnage.competences_debloques
+                ]  # filtre les compétences pour ne renvoyer que les competences débloquées
+            })
 
-    def charger_attaque_ennemi(self):
-        if not self.ennemi["actions"]:
-            self.turn = "player"
-            self.statut = "selection"
-            return
-
-        action = random.choice(self.ennemi["actions"])
-        self.windows = []
-        start_frame = self.frame + 60  # Délai avant le début de l'attaque
-
-        if action["type"] == "attaque":
-            for window in action.get("windows", []):
-                # w: {dmg: int, delay: int, duration: int}
-                window_start = start_frame + window.get("delay", 0)
-                window_end = window_start + window.get("duration", 30)
-                self.windows.append({
-                    "dmg": window.get("dmg", 10),
-                    "start": window_start,
-                    "end": window_end,
-                })
-
-        self.turn = "enemy"
-        self.statut = "attack"
+        self.maj_tours()
+        self.tour_actuel = self.tours.defiler()
 
     def update(self, events):
-        self.frame += 1
-
-        if self.statut == "selection" and self.turn == "player":
-
-            for event in events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        self.option_choisie = (self.option_choisie - 1) % 3
-                    elif event.key == pygame.K_DOWN:
-                        self.option_choisie = (self.option_choisie + 1) % 3
-                    elif event.key == pygame.K_SPACE:
-                        self.executer_choix_joueur()
-
-        elif self.statut == "attack" and self.turn == "enemy":
-
-            for window in self.windows:
-                if self.frame >= window["end"]:
-                    self.player["vie"] -= window["dmg"]
-                    self.windows.remove(window)
-
-            for event in events:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    for window in self.windows:
-                        if window["start"] <= self.frame < window["end"]:
-                            parrysound.play()
-                            self.windows.remove(window)
-
-            if self.windows == []:
-                self.turn = "player"
-                self.statut = "selection"
-
-        if self.ennemi["vie"] <= 0:
-            self.statut = "victory"
-        elif self.player["vie"] <= 0:
-            self.statut = "game_over"
-
-        if self.statut in ["victory", "game_over"]:
-            for event in events:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    self.complete = True
-
-    def executer_choix_joueur(self):
-        if self.option_choisie == 0:  # Attaque de base
-            degats = self.jeu.joueur.force
-            self.ennemi["vie"] -= degats
-            self.ap += 1
-        elif self.option_choisie == 1:  # Capacités
+        if self.tour_actuel[0] == "ennemis":
             pass
-        elif self.option_choisie == 2:  # Objets
-            pass
-        self.charger_attaque_ennemi()
+        elif self.tour_actuel[0] == "personnages" and self.action == "selection":
+            perso_actuel = self.personnages[self.tour_actuel[1]]
 
-    def draw_qte(self):
-        # dessiner qte
-        pass
+            if self.menu_actuel == "principal":  # menu principal (selection du type d'action)
+                for event in events:
 
-    def draw_ui(self):
-
-        # fond temp pour tests
-        pygame.draw.rect(self.jeu.fond, (0, 0, 255), (0, 0, self.jeu.WIDTH, self.jeu.HEIGHT))
-
-        # ennemi
-        ennemi_health_ratio = max(0, self.ennemi["vie"] / self.ennemi["vie_max"])
-        text_render_centered(self.jeu.ui_surface, self.ennemi["nom"], "regular", (255, 255, 255), (self.jeu.WIDTH / 2, 16), False, 16)
-        pygame.draw.rect(self.jeu.ui_surface, (255, 255, 255), (9, 6 + 20, self.jeu.WIDTH - 18, 8))
-        pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0), (12, 7 + 20, self.jeu.WIDTH - 24, 6))
-        pygame.draw.rect(self.jeu.ui_surface, (179, 32, 21), (12, 7 + 20, (self.jeu.WIDTH - 24) * ennemi_health_ratio, 6))
-
-        # barre de vie
-        player_health_ratio = max(0, self.player["vie"] / self.player["vie_max"])
-        pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0, 150), (9, 525, self.jeu.WIDTH - 9 * 2, 175 - 9))
-
-        text_render_centered_left(self.jeu.ui_surface, f"HP: {self.player['vie']}/{self.player['vie_max']}", "regular", (255, 255, 255), (20, 540), False, 20)
-        pygame.draw.rect(self.jeu.ui_surface, (255, 255, 255), (20, 560, 200, 10))
-        pygame.draw.rect(self.jeu.ui_surface, (0, 0, 0), (22, 562, 196, 6))
-        pygame.draw.rect(self.jeu.ui_surface, (46, 204, 113), (22, 562, 196 * player_health_ratio, 6))
-
-        # AP
-        text_render_centered_left(self.jeu.ui_surface, f"AP: {self.ap}/8", "regular", (255, 255, 0), (20, 590), False, 20)
-
-        # Menu de sélection
-        if self.statut == "selection" and self.turn == "player":
-
-            options = ["Attaque de base", "Capacités", "Objets"]
-            for i, opt in enumerate(options):
-                color = (255, 255, 255) if i == self.option_choisie else (150, 150, 150)
-                text_render_centered_left(self.jeu.ui_surface, opt, "regular", color, (300, 540 + i * 30), i == self.option_choisie, 24)
-
-        elif self.statut == "attack" and self.turn == "enemy":
-
-            self.draw_qte()
-
-        if self.statut == "victory":
-
-            text_render_centered(self.jeu.ui_surface, "VICTOIRE !", "bold", (255, 255, 0), (self.jeu.WIDTH / 2, self.jeu.HEIGHT / 2), False, 64)
-
-        elif self.statut == "game_over":
-
-            text_render_centered(self.jeu.ui_surface, "DEFAITE...", "bold", (255, 0, 0), (self.jeu.WIDTH / 2, self.jeu.HEIGHT / 2), False, 64)
+                    max_selection = 1 if "silence" not in perso_actuel.effets else 2
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                        self.selection = (self.selection + 1) % max_selection
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                        self.selection = (self.selection - 1) % max_selection
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        match self.selection:
+                            case 0:
+                                self.action = "attaque"
+                            case 1:
+                                self.action = "items"
+                            case 2:
+                                self.action = "competences"
 
     def draw(self):
-        self.draw_ui()
+        pass
