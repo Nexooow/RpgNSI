@@ -11,6 +11,7 @@ class Condition(Action):
         result = eval(self.data.get("code", False), {
             "jeu": self.jeu,
         })
+        self.jeu.variables_jeu['Termine'] = False
         for condition, action in self.data.get("actions", {}).items():
             condition_remplie = eval(condition, {"jeu": self.jeu, "result": result})
             if condition_remplie:
