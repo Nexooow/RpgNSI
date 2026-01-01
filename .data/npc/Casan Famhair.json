@@ -1,1 +1,52 @@
-{"id": "Casan Famhair", "nom": "Casan Famhair", "rencontre": [], "interaction": []}
+{
+    "id": "Casan Famhair",
+    "nom": "Casan Famhair",
+    "rencontre": [
+        [
+            {
+                "type": "dialogue",
+                "speaker": "Casan Famhair",
+                "lines": [
+                    "Oooh...",
+                    "*splash*"
+                ]
+            },
+            {
+                "type": "select",
+                "speaker": "Casan Famhair",
+                "question": "Welcome, ye who yearns for power. Approach, child",
+                "options": [
+                    {
+                        "name": "Yes",
+                        "valeur": "yes"
+                    },
+                    {
+                        "name": "Uhh ... no",
+                        "valeur": "no"
+                    }
+                ],
+                "actions": {
+                    "yes": [
+                        {
+                            "type": "dialogue",
+                            "speaker": "Casan Famhair",
+                            "lines": [
+                                "*The 'midget but his feet giant' hands you a cup of water from his bathtub*"
+                            ]
+                        }
+                    ],
+                    "no": [
+                        {
+                            "type": "dialogue",
+                            "speaker": "Casan Famhair",
+                            "lines": [
+                                "Well that's a shame"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    ],
+    "interaction": []
+}

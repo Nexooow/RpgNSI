@@ -1,0 +1,8 @@
+{
+    "id": "poutine",
+    "nom": "Poutine",
+    "description": "Une poutine (description à faire)",
+    "type": "consommable",
+    "effets": [],
+    "valeur": 10
+}

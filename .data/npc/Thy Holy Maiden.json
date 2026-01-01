@@ -1,1 +1,63 @@
-{"id": "Thy Holy Maiden", "nom": "Thy Holy Maiden", "rencontre": [], "interaction": []}
+{
+    "id": "Thy Holy Maiden",
+    "nom": "Thy Holy Maiden",
+    "rencontre": [
+        {
+            "type": "dialogue",
+            "speaker": "Thy Holy Maiden",
+            "lines": [
+                "Bienvenue, mon seigneur"
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Thy Holy Maiden",
+            "lines": [
+                "Vous et vos guerriers avez surmonté bien des épreuves",
+                "Voici venu le bout de votre aventure  "
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Thy Holy Maiden",
+            "lines": [
+                "Remettez-moi les doigts sacrés que vous avez rassemblés,",
+                "et j'accorderai au monde ma bénédiction éternelle"
+            ]
+        },
+        {
+            "type": "speaker",
+            "speaker": "Thy Holy Maiden",
+            "question": "Approchez, enfants du Paresseux sacré, et déposer les doigts en mon sein (DISCLAIMER: Pas sa poitrine, sur l'autel, le corps n'est qu'une représentation de la Terre/du Paresseux)",
+            "options": [
+                {
+                    "name": "Remettre les doigts sacrés",
+                    "valeur": "1"
+                },
+                {
+                    "name": "F**k the world",
+                    "valeur": "2"
+                }
+            ],
+            "actions": {
+                "1": [
+                    {
+                        "type": "execution",
+                        "code": "jeu.variables_jeu['Termine'] = true"
+                    }
+                ],
+                "2": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "Thy Holy Maiden",
+                        "lines": [
+                            "Vous osez défier la volonté sacrée?",
+                            "Alors subissez la colère du Paresseux éternel!"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "interaction": []
+}
