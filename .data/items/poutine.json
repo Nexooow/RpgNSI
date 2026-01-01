@@ -1,3 +1,4 @@
+{"items":[
 {
     "id": "poutine",
     "nom": "Poutine",
@@ -5,4 +6,15 @@
     "type": "consommable",
     "effets": [],
     "valeur": 10
+    
+    
+},
+{
+"id":"poutine",
+    "type":"action",
+    "run":[{"type":"ajout-item",
+    "items":[{"id":"poutine","quantite":1}]
+}]
+}
+]
 }

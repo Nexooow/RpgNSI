@@ -1,1 +1,121 @@
-{"id": "Wandering Merchant", "nom": "Wandering Merchant", "rencontre": [], "interaction": []}
+{"id": "Wandering Merchant", "nom": "Wandering Merchant", "rencontre": [
+    {
+        "type": "select",
+        "speaker": "Wandering Merchant",
+        "lines": [
+            "Salutations, voyageur!",
+            "Souhaitez-vous jeter un coup-d'oeil à mes marchandises?"
+        ],
+        "options": [
+            {
+                "name": "Jeter un coup d'oeil",
+                "valeur": "1"
+            },
+            {
+                "name": "Partir",
+                "valeur": "2"
+            }
+        ],
+        "actions": {
+            "1": [
+                {
+                    "type": "select",
+                    "options":[{
+                        "name":"health potion",
+                        "valeur":"hp"
+                    },
+                {
+                        "name":"stamina potion",
+                        "valeur":"sp"
+                    },{
+                        "name":"fire resistance potion",
+                        "valeur":"frp"
+                    },{
+                        "name":"strength potion",
+                        "valeur":"stp"
+                    },{
+                        "name":"Partir",
+                        "valeur":"Go"
+                    }],
+                    "actions":{
+                            "hp":[{"type":"condition",
+                            "name":"check_thune",
+                            "code":"jeu.equipe.argent",
+                            "actions":{"result >= 15":[
+                            {
+                                "type":"achat-item",
+                                "items":[{"id":"health potion","quantite":1}]
+
+                            },
+                            {
+                                "type":"execution",
+                                "code":"jeu.equipe.argent -= 15"
+                            }
+                        ]
+                    }
+                }],
+            "sp":[{"type":"condition",
+                    "name":"check_thune",
+                "code":"jeu.equipe.argent",
+                "actions":{"result >= 15":[
+                            {
+                                "type":"achat-item",
+                                "items":[{"id":"stamina potion","quantite":1}]
+
+                            },
+                            {
+                                "type":"execution",
+                                "code":"jeu.equipe.argent -= 15"
+                            }
+                        ]
+                    }
+                }],
+            "frp":[{"type":"condition",
+                    "name":"check_thune",
+                    "code":"jeu.equipe.argent",
+                    "actions":{"result >= 20":[
+                            {
+                                "type":"achat-item",
+                                "items":[{"id":"fire resistance potion","quantite":1}]
+
+                            },
+                            {
+                                "type":"execution",
+                                "code":"jeu.equipe.argent -= 20"
+                            }
+                        ]
+                    }
+                }],
+                "stp":[{"type":"condition",
+                "name":"check_thune",
+                "code":"jeu.equipe.argent",
+                "actions":{"result >= 25":[
+                            {
+                                "type":"achat-item",
+                                "items":[{"id":"strength potion","quantite":1}]
+
+                            },
+                            {
+                                "type":"execution",
+                                "code":"jeu.equipe.argent -= 25"
+                            }
+                        ]
+                    }
+                }],
+            "Go":[{"type":"dialogue",
+            "speaker":"Wandering Merchant",
+            "lines":["Bonne route"]}]}
+                
+        }],
+            "2": [
+                {
+                    "type": "dialogue",
+                    "speaker": "Wandering Merchant",
+                    "lines": [
+                        "Bonne route"
+                    ]
+                }
+            ]
+        }
+    }
+], "interaction": []}

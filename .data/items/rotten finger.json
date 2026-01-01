@@ -1,0 +1,20 @@
+{"items":[
+{
+    "id": "rotten finger",
+    "nom": "Doigt Pourri",
+    "description": "Un doigt pourri (description à faire)",
+    "type": "consommable",
+    "effets": [],
+    "valeur": 0
+    
+    
+},
+{
+"id":"rotten finger",
+    "type":"action",
+    "run":[{"type":"ajout-item",
+    "items":[{"id":"rotten finger","quantite":1}]
+}]
+}
+]
+}

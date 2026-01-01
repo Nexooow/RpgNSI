@@ -7,7 +7,7 @@
             "name": "check_thune",
             "code": "jeu.equipe.argent",
             "actions": {
-                "result >= 100": [
+                "result >= 10": [
                     {
                         "type": "select",
                         "speaker": "Barman",
@@ -34,8 +34,18 @@
                                     "lines": [
                                         "Et une poutine, une!"
                                     ]
+                                },
+                                {
+                                    "type": "execution",
+                                    "code": "jeu.equipe.argent -= 10"
+                                },
+                                {
+                                    "type":"ajout-item",
+                                    "items":[{"id":"poutine","quantite":1}]
                                 }
-                            ],
+                                ]
+                                
+                            ,
                             "2": [
                                 {
                                     "type": "dialogue",
@@ -48,7 +58,7 @@
                         }
                     }
                 ],
-                "result < 100": [
+                "result < 10": [
                     {
                         "type": "dialogue",
                         "speaker": "Barman",
