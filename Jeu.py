@@ -180,7 +180,7 @@ class Jeu:
         ):
             (jour, heure) = self.get_temps()
 
-            # dimensions boite
+            # dimensions boite temps
             box_width = 220
             box_height = 50
             box_x = 15
@@ -223,6 +223,55 @@ class Jeu:
                 color=(255, 255, 200),
                 pos=(box_x + 3 * box_width // 4, box_y + box_height // 2),
                 size=22,
+            )
+
+            # boite région/lieu et argent
+            info_box_width = 240
+            info_box_height = 75
+            info_box_x = self.WIDTH - info_box_width - 15
+            info_box_y = 15
+
+            # bordure
+            pygame.draw.rect(
+                self.fond,
+                (40, 40, 50),
+                (info_box_x - 2, info_box_y - 2, info_box_width + 4, info_box_height + 4),
+            )
+            pygame.draw.rect(
+                self.fond, (25, 25, 35), (info_box_x, info_box_y, info_box_width, info_box_height)
+            )
+
+            # région et lieu
+            region_lieu_text = f"{self.region}"
+            if self.lieu:
+                region_lieu_text += f" - {self.lieu}"
+            text_render_centered(
+                self.ui_surface,
+                region_lieu_text,
+                "imregular",
+                color=(200, 255, 200),
+                pos=(info_box_x + info_box_width // 2, info_box_y + 20),
+                size=18,
+            )
+
+            # séparateur horizontal
+            pygame.draw.line(
+                self.fond,
+                (100, 100, 120),
+                (info_box_x + 8, info_box_y + info_box_height // 2),
+                (info_box_x + info_box_width - 8, info_box_y + info_box_height // 2),
+                1,
+            )
+
+            # argent de l'équipe
+            argent_text = f"{self.equipe.argent} €"
+            text_render_centered(
+                self.ui_surface,
+                argent_text,
+                "imregular",
+                color=(255, 215, 100),
+                pos=(info_box_x + info_box_width // 2, info_box_y + info_box_height - 20),
+                size=20,
             )
 
     def filters(self):
@@ -274,31 +323,32 @@ class Jeu:
 
     # DEPLACEMENTS
 
-    def calcul_temps_deplacement(self, region, lieu):
-        temps_deplacement = 0
-        region_actuelle = self.get_region_actuelle()
-        if region != region_actuelle.nom:  # destination dans une autre région
-            if (
-                    self.lieu != region_actuelle.entree
-            ):  # se déplacer d'abord vers l'entrée de la région pour en sortir
-                temps_deplacement += region_actuelle.carte.paths(
-                    self.lieu, region_actuelle.entree
-                )[1]
-            temps_deplacement += self.carte.paths(region_actuelle.nom, region)[1]
-            region_destination = self.regions[region]
-            if lieu != region_destination.entree:
-                # si le lieu de destination n'est pas l'entrée de la région
-                # s'y déplacer.
-                temps_deplacement += region_destination.carte.paths(
-                    region_destination.entree, lieu
-                )[1]
-        else:  # si le lieu de destination est dans la région actuelle
-            chemin, temps = self.carte.paths(self.lieu, lieu)
-            temps_deplacement += temps
+    def simuler_segment(self, temps, r_dest, l_dest, simulation_temps, destination=False):
+        for _ in range(temps):
 
-        return temps_deplacement
+            chance = self.equipe.chance
+            jour_sim, heure_sim = divmod(simulation_temps, 24)
+            if heure_sim <= 5 or heure_sim >= 22:
+                chance = chance * 0.75
+
+            sequence = self.loader.tirer_action(chance)
+            if sequence is not None:
+                self.executer_sequence(sequence)
+
+            simulation_temps += 1
+            self.ajouter_action(AjoutTemps(self, {"type": "ajout-temps", "temps": 1}))
+
+        self.ajouter_action(
+            Deplacement(self, {
+                "region": r_dest,
+                "lieu": l_dest,
+                "type": "deplacement",
+                "destination": destination
+            })
+        )
 
     def deplacement(self, region, lieu):
+        self.action_actuelle.complete = True
 
         region_actuelle = self.get_region_actuelle()
         assert region_actuelle is not None
@@ -306,26 +356,44 @@ class Jeu:
         print(f"deplacement vers {region}/{lieu}")
         print(f"depuis {region_actuelle.nom}/{self.lieu}")
 
-        temps_deplacement = self.calcul_temps_deplacement(region, lieu)
         simulation_temps = self.temps
 
-        for heure in range(temps_deplacement):
+        if region != region_actuelle.nom:
+            # vers entree
+            if self.lieu != region_actuelle.entree:
+                chemin, temps = region_actuelle.carte.paths(self.lieu, region_actuelle.entree)
+                self.simuler_segment(
+                    temps,
+                    region_actuelle.nom,
+                    region_actuelle.entree,
+                    simulation_temps,
+                    destination=False
+                )
 
-            chance = self.equipe.chance
-            jour_sim, heure_sim = divmod(simulation_temps, 24)
-            if heure_sim <= 5 or heure_sim >= 22:  # moins de chance pendant la nuit
-                chance = chance * 0.75
-            # TODO: chance différente selon la région
+            # changement région
+            chemin, temps = self.carte.paths(region_actuelle.nom, region)
 
-            sequence = self.loader.tirer_action(
-                chance
+            est_destination_finale = (lieu == self.regions[region].entree)
+            self.simuler_segment(
+                temps,
+                region,
+                self.regions[region].entree,
+                simulation_temps,
+                destination=est_destination_finale
             )
-            if sequence is not None:
-                self.executer_sequence(sequence)
 
-            simulation_temps += 1
-            self.ajouter_action(
-                AjoutTemps(self, {"type": "ajout-temps", "temps": 1}))  # permet l'ajout de temps progressivement
-
-        print(f"temps du trajet : {temps_deplacement}")
-        self.ajouter_action(Deplacement(self, {"region": region, "lieu": lieu, "type": "deplacement"}))
+            # lieu final
+            if not est_destination_finale:
+                region_destination = self.regions[region]
+                chemin, temps = region_destination.carte.paths(region_destination.entree, lieu)
+                self.simuler_segment(
+                    temps,
+                    region,
+                    lieu,
+                    simulation_temps,
+                    destination=True
+                )
+        else:
+            # deplacement meme region
+            chemin, temps = region_actuelle.carte.paths(self.lieu, lieu)
+            self.simuler_segment(temps, region, lieu, simulation_temps, destination=True)

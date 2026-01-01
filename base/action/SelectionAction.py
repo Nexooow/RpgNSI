@@ -23,12 +23,12 @@ class SelectionAction(Action):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 match self.option_choisie:
                     case 0:
+                        self.complete = True
                         self.jeu.interagir()
                     case 1:
                         self.jeu.ouvrir_menu(Inventaire(self.jeu))
                     case 2:
                         self.jeu.ouvrir_menu(Carte(self.jeu))
-                self.complete = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 self.option_choisie = (self.option_choisie + 1) % len(self.options)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:

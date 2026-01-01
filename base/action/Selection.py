@@ -2,6 +2,7 @@ import pygame
 from lib.render import text_render_centered_left
 from .Action import Action
 
+
 class Selection(Action):
     """
     Propose une séléction à l'utilisateur et execute une action selon le choix.
@@ -91,7 +92,7 @@ class Selection(Action):
                 valeur = self.options[self.option_choisie]["valeur"]
                 action = self.data["actions"][valeur]
                 if isinstance(action, str):
-                    self.jeu.executer_sequence(action)
+                    self.jeu.executer_sequence(action, True)
                 elif isinstance(action, list):
                     # insérer les actions juste après l'action de selection
                     self.jeu.actions.inserer(list(map(self.jeu.loader.creer_action, action)))

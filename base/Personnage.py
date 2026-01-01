@@ -149,7 +149,7 @@ class Barman(Personnage):
                         "cost": {
                             "pa": 4
                         },
-                        "cible": "Ennemi"
+                        "cible": "ennemi"
                     },
                     "cuite_explosive": {
                         "nom": "Cuite Explosive",
@@ -165,7 +165,7 @@ class Barman(Personnage):
             data
         )
 
-    def utiliser_competence(self, competence, cibles):
+    def utiliser_competence(self, combat, competence, cibles=None):
         match competence:
             case "flameche":
                 pass
@@ -292,7 +292,7 @@ class Vous(Personnage):
             }
         }, data)
 
-    def utiliser_competence(self, competence, cibles):
+    def utiliser_competence(self, combat, competence, cibles=None):
         match competence:
             case "coup_de_poing":
                 pass
@@ -372,7 +372,7 @@ class Fachan(Personnage):
             }
         }, data)
 
-    def utiliser_competence(self, combat, competence, cible=None):
+    def utiliser_competence(self, combat, competence, cibles=None):
         match competence:
             case "regard_jugeur":
                 pass

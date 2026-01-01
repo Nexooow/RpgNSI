@@ -1,5 +1,6 @@
 from .Action import Action
 
+
 class AjoutTemps(Action):
     """
     Ajoute du temps au chrono de la région.
@@ -10,5 +11,5 @@ class AjoutTemps(Action):
 
     def executer(self):
         super().executer()
-        self.jeu.region.temps_restant += self.data.get("temps", 0)
+        self.jeu.temps += self.data.get("temps", 1)
         self.complete = True

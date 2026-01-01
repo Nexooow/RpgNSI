@@ -27,13 +27,13 @@ class Inventaire(Menu):
                     self.fermer()
 
     def ajouter_item(self, item_id, quantite=1):
-        if item_id in self.jeu.joueur.inventaire:
-            self.jeu.joueur.inventaire[item_id] += quantite
+        if item_id in self.jeu.equipe.inventaire:
+            self.jeu.equipe.inventaire[item_id] += quantite
         else:
-            self.jeu.joueur.inventaire[item_id] = quantite
+            self.jeu.equipe.inventaire[item_id] = quantite
 
     def utiliser_item(self, item_id):
-        item_data = self.jeu.items.get(item_id)
+        item_data = self.jeu.loader.items.get(item_id)
         if not item_data:
             return
 
@@ -50,7 +50,7 @@ class Inventaire(Menu):
         start_y = 120
 
         for i, item_id in enumerate(items_ids):
-            item_data = self.jeu.items.get(item_id, {"nom": item_id})
+            item_data = self.jeu.loader.items.get(item_id, {"nom": item_id})
             quantite = self.jeu.equipe.inventaire[item_id]
             couleur = (255, 255, 255) if i != self.selection else (255, 200, 100)
             prefixe = "> " if i == self.selection else "  "
@@ -67,7 +67,7 @@ class Inventaire(Menu):
         if items_ids and self.selection < len(items_ids):
 
             item_id = items_ids[self.selection]
-            item_data = self.jeu.items.get(item_id)
+            item_data = self.jeu.loader.items.get(item_id)
 
             if item_data:
                 detail_x = 500

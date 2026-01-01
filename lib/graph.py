@@ -12,9 +12,10 @@ images = {
     "ceilidh": plt.imread("./assets/maps/ceilidh.jpg")
 }
 
+
 class Graph:
     def __init__(self, sommets, aretes, orientation=False, pos=None):
-        if pos is None: # empêche que pos soit modifié suite aux différentes instanciations
+        if pos is None:  # empêche que pos soit modifié suite aux différentes instanciations
             pos = {}
         assert isinstance(sommets, list), (
             f"sommets doit être une liste, reçu: {type(sommets)}"
@@ -25,9 +26,9 @@ class Graph:
         self.aretes = aretes
         if not orientation:
             self.aretes = [
-                (s2, s1, p)
-                for s1, s2, p in self.aretes
-                if s1 != s2 and (s2, s1, p) not in self.aretes
+                (sommet2, sommet1, poids)
+                for sommet1, sommet2, poids in self.aretes
+                if sommet1 != sommet2 and (sommet2, sommet1, poids) not in self.aretes  # éviter doublons
             ]
         self.sommets = sommets
         self.pos = pos
@@ -94,15 +95,19 @@ class Graph:
 
     def paths(self, a, b):
         g = self.get_graph()
-        chemin = list(nx.shortest_path(g, source=a, target=b, weight="weight"))
+        chemin = list(
+            nx.shortest_path(g, source=a, target=b, weight="weight")
+        )
         poids = nx.shortest_path_length(g, source=a, target=b, weight="weight")
         return chemin, poids
 
-def format_temps (heures):
+
+def format_temps(heures):
     heures = int(heures)
     jours = heures // 24
     heures %= 24
     return f"{f'{jours}j' if jours > 0 else ''}{heures}h"
+
 
 def affichage_graphe(graph: Graph, screen, image):
     img = images[image or "background"]
@@ -128,7 +133,7 @@ def affichage_graphe(graph: Graph, screen, image):
         label_pos=0.5,
         rotate=False,
         font_family="Arial",
-        bbox = {
+        bbox={
             "facecolor": "white", "pad": 0.2, "edgecolor": None, "alpha": 0, "linewidth": 0.5, "antialiased": True
         },
     )
