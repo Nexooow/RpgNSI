@@ -1,0 +1,8 @@
+{
+    "id": "strength_potion",
+    "nom": "strength potion",
+    "description": "A potion that increases strength.",
+    "type": "consommable",
+    "effets": [],
+    "valeur": 25
+}

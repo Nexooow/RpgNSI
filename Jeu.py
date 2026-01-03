@@ -131,7 +131,7 @@ class Jeu:
             "actions": actions,
             "action_actuelle": self.action_actuelle.data if self.action_actuelle else None
         }
-        print(f"Sauvegarde de la partie avec l'identifiant {self.identifiant}")
+        # print(f"Sauvegarde de la partie avec l'identifiant {self.identifiant}")
         json.dump(data, open(f"./.data/saves/{self.identifiant}.json", "w"))
 
     def quitter(self):
@@ -146,8 +146,7 @@ class Jeu:
             self.action_actuelle.update(evenements)
 
     def executer(self):
-        action = self.action_actuelle
-        if action is None:
+        if self.action_actuelle is None:
             if not self.actions.est_vide():
                 self.action_actuelle = self.actions.defiler()
                 assert self.action_actuelle is not None
@@ -156,7 +155,7 @@ class Jeu:
                 self.action_actuelle = SelectionAction(self, {"type": "selection-action"})
                 self.action_actuelle.executer()
         else:
-            if action.get_complete():
+            if self.action_actuelle.get_complete():
                 if not self.actions.est_vide():
                     self.action_actuelle = self.actions.defiler()
                     assert self.action_actuelle is not None
@@ -290,9 +289,11 @@ class Jeu:
     def interagir(self, npc=None):
         if npc is None:
             npc = self.lieu
-        if f"{npc}:rencontre" not in self.variables_jeu:
+        if f"{npc}:rencontre" not in self.variables_jeu and self.loader.get_sequence(f"{npc}:rencontre"):
             self.executer_sequence(npc + ":rencontre")
         self.executer_sequence(npc + ":interaction")
+        print(f"interaction {npc}")
+        print(self.actions)
         self.variables_jeu[f"{npc}:rencontre"] = True
 
     def ajouter_action(self, action):

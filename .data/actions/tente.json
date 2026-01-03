@@ -1,0 +1,19 @@
+{
+    "id": "tente",
+    "type": "event",
+    "run": [
+        {
+            "type": "select",
+            "question": "todo",
+            "options": [
+                {
+                    "name": "installer une tente"
+                },
+                {
+                    "name": "ne pas installer de tente"
+                }
+            ]
+        },
+        "Faire en sorte que selon le choix, la personne perde de la vie (ex: attaque d'ours sur la tente ..)"
+    ]
+}

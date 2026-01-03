@@ -1,5 +1,6 @@
 import pygame
 
+
 class Action:
     """
     Classe représentant une action dans la file de la classe Jeu.
@@ -13,6 +14,12 @@ class Action:
         self.jeu = jeu
         self.data = data
         self.desactive_ui = False
+
+    def __str__(self):
+        """
+        Utiliser pour debug
+        """
+        return f"{self.__class__.__name__} ({str(self.data)})"
 
     def draw(self):
         """

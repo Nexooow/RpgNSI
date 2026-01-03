@@ -1,0 +1,8 @@
+{
+    "id": "health_potion",
+    "nom": "health potion",
+    "description": "A potion that restores health.",
+    "type": "consommable",
+    "effets": [],
+    "valeur": 15
+}

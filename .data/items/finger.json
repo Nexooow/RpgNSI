@@ -1,4 +1,3 @@
-{"items":[
 {
     "id": "finger",
     "nom": "finger",
@@ -6,15 +5,4 @@
     "type": "consommable",
     "effets": [],
     "valeur": 0
-    
-    
-},
-{
-"id":"finger",
-    "type":"action",
-    "run":[{"type":"ajout-item",
-    "items":[{"id":"rotten finger","quantite":1}]
-}]
-}
-]
 }

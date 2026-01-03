@@ -1,0 +1,8 @@
+{
+    "id": "stamina_potion",
+    "nom": "stamina potion",
+    "description": "A potion that increases stamina.",
+    "type": "consommable",
+    "effets": [],
+    "valeur": 15
+}

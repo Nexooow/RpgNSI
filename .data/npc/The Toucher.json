@@ -1,1 +1,64 @@
-{"id": "The Toucher", "nom": "The Toucher", "rencontre": [{"type":"condition","name":"check_finger","code":"'finger_radahn' in jeu.equipe.inventaire.keys()","actions":{"not result":[{"type":"dialogue","speaker":"The Toucher","lines":["*The Toucher, être surpuissant mais fort frêle, se tient devans vous*","Salutations, vous qui êtes en quête des Doigts. Ils ont à l'origine permis l'éclosion du monde,","mais ils sont désormais tâchés d'impuretés"]},{"type":"dialogue","speaker":"The Toucher","lines":["Ils m'ont rongé, tout comme ils ont rongé leur détenteur.","Je ne suis plus que l'ombre de moi-même.","Radahn en détient un. Il se trouve aux porte du vieux château, sans souvenirs de ce qu'il était, ","consommant les crânes des morts champ de bataille.","Lui aussi l'est, quelque part."]},{"type":"dialogue","speaker":"The Toucher","lines":["Vous devez mettre fin à ses souffrances.","Moi je ne peux plus, je n'ai plus la force de me déplacer.","Vous ne pouvez pas le tuer de vous-même, cependant je peux vous donner ceci.","A votre approche, le sort se déclenchera et vous n'aurez plus qu'à survivre jusqu'à ce qu'il s'effondre."]},{"type":"ajout-item","items":[{"id":"rotten finger","quantite":1}]}],"result":[{"type":"dialogue","speaker":"The Toucher","lines":["Merci de nous avoir purifié de ce fardeau"]}]}}], "interaction": []}
+{
+    "id": "The Toucher",
+    "nom": "The Toucher",
+    "rencontre": [
+        {
+            "type": "condition",
+            "name": "check_finger",
+            "code": "'finger_radahn' in jeu.equipe.inventaire.keys()",
+            "actions": {
+                "not result": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "The Toucher",
+                        "lines": [
+                            "*The Toucher, être surpuissant mais fort frêle, se tient devans vous*",
+                            "Salutations, vous qui êtes en quête des Doigts. Ils ont à l'origine permis l'éclosion du monde,",
+                            "mais ils sont désormais tâchés d'impuretés"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "The Toucher",
+                        "lines": [
+                            "Ils m'ont rongé, tout comme ils ont rongé leur détenteur.",
+                            "Je ne suis plus que l'ombre de moi-même.",
+                            "Radahn en détient un. Il se trouve aux porte du vieux château, sans souvenirs de ce qu'il était, ",
+                            "consommant les crânes des morts champ de bataille.",
+                            "Lui aussi l'est, quelque part."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "The Toucher",
+                        "lines": [
+                            "Vous devez mettre fin à ses souffrances.",
+                            "Moi je ne peux plus, je n'ai plus la force de me déplacer.",
+                            "Vous ne pouvez pas le tuer de vous-même, cependant je peux vous donner ceci.",
+                            "A votre approche, le sort se déclenchera et vous n'aurez plus qu'à survivre jusqu'à ce qu'il s'effondre."
+                        ]
+                    },
+                    {
+                        "type": "ajout-item",
+                        "items": [
+                            {
+                                "id": "rotten finger",
+                                "quantite": 1
+                            }
+                        ]
+                    }
+                ],
+                "result": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "The Toucher",
+                        "lines": [
+                            "Merci de nous avoir purifié de ce fardeau"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "interaction": []
+}

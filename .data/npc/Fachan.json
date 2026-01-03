@@ -1,1 +1,47 @@
-{"id": "Fachan", "nom": "Fachan", "rencontre": [{"type":"dialogue","speaker":"Vous","lines":["Sauriez-vous où trouver un doigt de paresseux?"]},{"type":"dialogue","speaker":"Fachan","lines":["Un doigt? J'en aurais bien besoin.","C'est pas avec celui-là que je vais pouvoir me...","manier cette massue"]},{"type":"dialogue","speaker":"Fachan","lines":["Que diriez-vous d'une petite course avant que je ne vous dise où il se trouve?"]},{"type":"dialogue","speaker":"Fachan","lines":["*Vous vous retrouvez à lui courir après, sautant de rochers en rochers, Fachan sautillant comme un bouc sur un son unique jambe et sa massue*"]},{"type":"dialogue","speaker":"Fachan","lines":["Vous commencez à le rattraper quand, soudain, le sol s'effondra sous vos pieds*"]},{"type":"street-fighter"}], "interaction": []}
+{
+    "id": "Fachan",
+    "nom": "Fachan",
+    "rencontre": [
+        {
+            "type": "dialogue",
+            "speaker": "Vous",
+            "lines": [
+                "Sauriez-vous où trouver un doigt de paresseux?"
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Fachan",
+            "lines": [
+                "Un doigt? J'en aurais bien besoin.",
+                "C'est pas avec celui-là que je vais pouvoir me...",
+                "manier cette massue"
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Fachan",
+            "lines": [
+                "Que diriez-vous d'une petite course avant que je ne vous dise où il se trouve?"
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Fachan",
+            "lines": [
+                "*Vous vous retrouvez à lui courir après, sautant de rochers en rochers, Fachan sautillant comme un bouc sur un son unique jambe et sa massue*"
+            ]
+        },
+        {
+            "type": "dialogue",
+            "speaker": "Fachan",
+            "lines": [
+                "Vous commencez à le rattraper quand, soudain, le sol s'effondra sous vos pieds*"
+            ]
+        },
+        {
+            "type": "street-fighter"
+        }
+    ],
+    "interaction": []
+}

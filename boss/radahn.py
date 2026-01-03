@@ -4,7 +4,7 @@ from time import time
 import pygame
 
 from base.action import Action
-from lib.render import text_render_centered_up,text_render_centered
+from lib.render import text_render_centered_up, text_render_centered
 from sprites.Explosion import Explosion
 from sprites.Meteor import Meteor
 from sprites.demiurge import Fighter
@@ -18,18 +18,22 @@ def display_frames(image, frame_width, frame_height):
         frame = image.subsurface((i * frame_width, 0, frame_width, frame_height))
         frames.append(frame)
     return frames
-def draw_health(screen,health,x,y):
-    ratio=health/100
-    pygame.draw.rect(screen,(255,255,255),(x-2,y-2,404,34))
-    pygame.draw.rect(screen,(255,0,0),(x,y,400,30))
-    pygame.draw.rect(screen,(0,255,255),(x,y,400*ratio,30))
+
+
+def draw_health(screen, health, x, y):
+    ratio = health / 100
+    pygame.draw.rect(screen, (255, 255, 255), (x - 2, y - 2, 404, 34))
+    pygame.draw.rect(screen, (255, 0, 0), (x, y, 400, 30))
+    pygame.draw.rect(screen, (0, 255, 255), (x, y, 400 * ratio, 30))
 
 
 background = pygame.image.load("./assets/sprites/radahn_fightzone.jpg")
 half_radahn = pygame.image.load("./assets/sprites/radahn.png")
 radahn_frames = display_frames(half_radahn, 1422 // 2, 1600 // 3)
-player_sheet=pygame.image.load("./assets/sprites/warrior.png")
-player=Fighter(500,480,[162,1,[72,56]],player_sheet,[10,8,1,7,7,3,7],hitbox_height=162)
+player_sheet = pygame.image.load("./assets/sprites/warrior.png")
+player = Fighter(500, 480, [162, 1, [72, 56]], player_sheet, [10, 8, 1, 7, 7, 3, 7], {1: [4], 2: [2]},
+                 hitbox_height=162)
+
 
 class Radahn(Action):
     def __init__(self, jeu):
@@ -59,8 +63,8 @@ class Radahn(Action):
                 border = choice([25, 910])
                 self.meteors.append(Meteor((border, randint(-25, 150))))
         self.jeu.fond.blit(background, (0, 0))
-        draw_health(self.jeu.fond,player.health,20,600)
-        player.move(1000,700,self.jeu.fond,target=None)
+        draw_health(self.jeu.fond, player.health, 20, 600)
+        player.move(1000, 700, self.jeu.fond, target=None)
         self.jeu.fond.blit(radahn_frames[self.radahn_frame_index], (150, 40))
         self.radahn_frame_index = (self.radahn_frame_index + 1) % len(radahn_frames)
         for meteor in self.meteors:
@@ -81,14 +85,14 @@ class Radahn(Action):
         pygame.draw.circle(self.jeu.fond, (0, 255, 0), player.rect.center, int(player.radiuspx), 1)
         self.explosion_group.draw(self.jeu.fond)
         self.explosion_group.update()
-        
-        temps=195 - round(time() - self.start_time)
+
+        temps = 195 - round(time() - self.start_time)
         texte = (
             "Time: " + str(195 - round(time() - self.start_time))
             if 195 - round(time() - self.start_time) > 0
             else ""
         )
-        if player.health>0 and temps>0:
+        if player.health > 0 and temps > 0:
             text_render_centered_up(
                 self.jeu.ui_surface, "Survive", "bold", color=(255, 0, 0), pos=(500, 100)
             )
@@ -99,8 +103,9 @@ class Radahn(Action):
                 color=(255, 0, 0),
                 pos=(500, 150),
             )
-        if player.health<=0:
-            text_render_centered(self.jeu.ui_surface,"GIT GUD","extrabold",color=(255,0,0),pos=(500,350))
+        if player.health <= 0:
+            text_render_centered(self.jeu.ui_surface, "GIT GUD", "extrabold", color=(255, 0, 0), pos=(500, 350))
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()
-            text_render_centered(self.jeu.ui_surface,"Great Finger Obtained","bold",color=(255,215,0),pos=(500,350))
+            text_render_centered(self.jeu.ui_surface, "Great Finger Obtained", "bold", color=(255, 215, 0),
+                                 pos=(500, 350))

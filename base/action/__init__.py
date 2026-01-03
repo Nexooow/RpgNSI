@@ -13,6 +13,9 @@ from .RandomAction import RandomAction
 from .Selection import Selection
 from .SelectionAction import SelectionAction
 
+from boss.radahn import Radahn
+from boss.street_fighter import StreetFighter
+
 actions_par_type = {
     "ajout-items": AjoutItems,
     "ajout-temps": AjoutTemps,
@@ -24,6 +27,9 @@ actions_par_type = {
     "dialogue": Dialogue,
     "execution": Execution,
     "random": RandomAction,
-    "select": SelectionAction,
-    "selection-action": SelectionAction
+    "select": Selection,
+    "selection-action": SelectionAction,
+
+    "street-fighter": StreetFighter,
+    "radahn": Radahn
 }

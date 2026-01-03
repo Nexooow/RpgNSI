@@ -2,73 +2,52 @@
     "id": "Barman",
     "nom": "Barman",
     "rencontre": [
+    ],
+    "interaction": [
         {
-            "type": "condition",
-            "name": "check_thune",
-            "code": "jeu.equipe.argent",
+            "type": "select",
+            "lines": [
+                "Vous voulez acheter quelque chose ?"
+            ],
+            "options": [
+                {
+                    "name": "Voir la boutique",
+                    "valeur": "boutique"
+                },
+                {
+                    "name": "Rien merci",
+                    "valeur": "quitter"
+                }
+            ],
             "actions": {
-                "result >= 10": [
+                "boutique": [
                     {
-                        "type": "select",
-                        "speaker": "Barman",
-                        "lines": [
-                            "Bienvenue cher aventurier!",
-                            "Vous n'avez pas l'air du coin,",
-                            "vous voulez goûter à notre spécialité locale?"
-                        ],
-                        "options": [
+                        "type": "boutique",
+                        "shop_id": "barman_shop",
+                        "items": [
                             {
-                                "name": "Oui",
-                                "valeur": "1"
+                                "id": "poutine",
+                                "prix": 10,
+                                "stock": 5
                             },
                             {
-                                "name": "Non",
-                                "valeur": "2"
+                                "id": "health_potion",
+                                "prix": 20,
+                                "stock": 3
                             }
-                        ],
-                        "actions": {
-                            "1": [
-                                {
-                                    "type": "dialogue",
-                                    "speaker": "Barman",
-                                    "lines": [
-                                        "Et une poutine, une!"
-                                    ]
-                                },
-                                {
-                                    "type": "execution",
-                                    "code": "jeu.equipe.argent -= 10"
-                                },
-                                {
-                                    "type":"ajout-item",
-                                    "items":[{"id":"poutine","quantite":1}]
-                                }
-                                ]
-                                
-                            ,
-                            "2": [
-                                {
-                                    "type": "dialogue",
-                                    "speaker": "Barman",
-                                    "lines": [
-                                        "Ah, c'est bin de valeur!"
-                                    ]
-                                }
-                            ]
-                        }
+                        ]
                     }
                 ],
-                "result < 10": [
+                "quitter": [
                     {
                         "type": "dialogue",
                         "speaker": "Barman",
                         "lines": [
-                            "Bin dommage, vous avez pas de foin"
+                            "À la prochaine !"
                         ]
                     }
                 ]
             }
         }
-    ],
-    "interaction": []
+    ]
 }

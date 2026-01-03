@@ -108,11 +108,15 @@ class JSONLoader:
                 with open(file) as f:
                     content = json.load(f)
                     assert isinstance(content, dict)
-                    self.npc[content["id"]] = content
+                    identifiant = content["id"]
+                    self.npc[identifiant] = content
                     if "rencontre" in content and content["rencontre"]:
                         # sequence premiere interaction
-                        self.creer_sequence(f"{content["id"]}:rencontre", content["rencontre"], "action")
-                    self.creer_sequence(f"{content['id']}:interaction", content["interaction"], "action")
+                        self.creer_sequence(f"{identifiant}:rencontre", content["rencontre"], "action")
+                        print(f"Loader | NPC | {identifiant} > action de rencontre créer")
+                    if "interaction" in content and content["interaction"]:
+                        self.creer_sequence(f"{identifiant}:interaction", content["interaction"], "action")
+                        print(f"Loader | NPC | {identifiant} > action d'interaction créer")
             except Exception:
                 continue
 
@@ -126,7 +130,7 @@ class JSONLoader:
         try:
             return actions_par_type[data["type"]](self.parent, data)  # instancie l'action correspondante
         except KeyError:
-            print(f"Action inconnue: {data["type"]}")
+            print(f"Action de type inconnu: {data["type"]}")
             return None
 
     def tirer_action(self, chance: int) -> str | None:

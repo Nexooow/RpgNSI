@@ -20,4 +20,4 @@ class AjoutItems(Action):
     def executer(self):
         super().executer()
         for item in self.items:
-            self.jeu.equipe.ajouter_item(item["item_id"], item.get("quantity", 1))
+            self.jeu.equipe.ajouter_item(item["id"], item.get("quantite", 1))

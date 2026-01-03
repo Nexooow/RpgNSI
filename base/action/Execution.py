@@ -9,5 +9,5 @@ class Execution(Action):
 
     def executer(self):
         super().executer()
-        eval(self.data.get("code"), {"jeu": self.jeu})
+        exec(self.data.get("code"), {"jeu": self.jeu})
         self.complete = True

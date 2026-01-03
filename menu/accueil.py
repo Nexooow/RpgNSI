@@ -11,9 +11,11 @@ from menu.Menu import Menu
 son_clique = pygame.mixer.Sound("./assets/sounds/accueil_clique.mp3")
 son_selection = pygame.mixer.Sound("./assets/sounds/menu-selection.mp3")
 
+
 class Accueil(Menu):
     def __init__(self, jeu):
         super().__init__(jeu)
+
         try:
             saves_names = os.listdir("./.data/saves")
             self.saves = [
@@ -21,6 +23,7 @@ class Accueil(Menu):
             ]
         except FileNotFoundError:
             self.saves = []
+
         self.menu_selected_option = 0
         self.sous_page = "main"
         self.particules = []
@@ -67,7 +70,6 @@ class Accueil(Menu):
                     self.jeu.quitter()
 
     def update_page_sauvegardes(self, events):
-        print("update sauvegardes")
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 self.menu_selected_option -= 1
@@ -89,7 +91,7 @@ class Accueil(Menu):
     def update(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN and (
-                event.key == pygame.K_UP or event.key == pygame.K_DOWN
+                    event.key == pygame.K_UP or event.key == pygame.K_DOWN
             ):
                 son_selection.play().set_volume(0.01)
         if self.sous_page == "main":

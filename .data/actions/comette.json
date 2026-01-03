@@ -1,0 +1,30 @@
+{
+    "id": "comette",
+    "type": "event-positif",
+    "run": [
+        {
+            "type": "condition",
+            "code": "jeu.get_temps()[1] <= 5 or jeu.get_temps()[1] >= 22",
+            "actions": {
+                "result == True": [
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Vous voyez passer dans le ciel une étoile filante."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Vous vous sentez un peu plus chanceux."
+                        ]
+                    },
+                    {
+                        "type": "execution",
+                        "code": "jeu.equipe.chance += 5"
+                    }
+                ]
+            }
+        }
+    ]
+}
