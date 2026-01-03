@@ -149,7 +149,7 @@ class Personnage:
                     self.attacking = False
                     self.attack_cooldown = 20
         if self.attacking and not self.has_hit:
-            if self.frame_index in self.attack_frame:
+            if self.frame_index in self.attack_frame[self.action]:
                 self.apply_attack(target, a_distance)
 
     def attack(self):
@@ -415,7 +415,7 @@ class Barman(Personnage):
             , [pygame.image.load("./assets/sprites/Barman_static.png"),
                pygame.image.load("./assets/sprites/Barman_throw_cocktail.png")],
             [1, 3],
-            {2},
+            {[0],[2]},
             data
         )
 

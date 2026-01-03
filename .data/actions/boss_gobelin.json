@@ -1,0 +1,29 @@
+{
+    "type": "action",
+    "id": "boss_gobelin",
+    "run": [
+        {
+            "type": "combat",
+            "ennemis": [
+                {
+                    "type": "ennemi",
+                    "nom": "Gobelin",
+                    "vie": 100,
+                    "dmg":10
+                },
+                {
+                    "type":"ennemi",
+                    "nom":"Gobelin d'elite",
+                    "vie":300,
+                    "dmg":30
+                },
+                {
+                    "type":"ennemi",
+                    "nom":"Gobelin",
+                    "vie":100,
+                    "dmg":10
+                }
+            ]
+        }
+    ]
+}

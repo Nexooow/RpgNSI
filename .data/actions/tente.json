@@ -7,13 +7,23 @@
             "question": "todo",
             "options": [
                 {
-                    "name": "installer une tente"
+                    "name": "installer une tente",
+                    "valeur":"tente_installee"
                 },
                 {
-                    "name": "ne pas installer de tente"
+                    "name": "ne pas installer de tente",
+                    "valeur":"pas_de_tente"
                 }
-            ]
+            ],
+            "actions":{
+                "tente_installee":[{"type":"condition",
+                "code":"jeu.get_temps()[1]>=23","actions":{"result==True":[{"type":"dialogue",
+                "lines":["Alors que vous alliez sombrer tranquillement dans les bras d'Orphée, un violent coup de patte déchire soudain votre tente!"]},{"type":"execution",
+                "code":"equipe.vie-=10"}]}}]
+            }
+
         },
+        
         "Faire en sorte que selon le choix, la personne perde de la vie (ex: attaque d'ours sur la tente ..)"
     ]
 }

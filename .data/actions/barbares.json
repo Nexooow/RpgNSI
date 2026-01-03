@@ -1,0 +1,23 @@
+{
+    "type": "action",
+    "id": "barbares",
+    "run": [
+        {
+            "type": "combat",
+            "ennemis": [
+                {
+                    "type": "ennemi",
+                    "nom": "Barbare",
+                    "vie": 50,
+                    "dmg": 50
+                },
+                {
+                    "type":"ennemi",
+                    "nom":"Barbare d'elite",
+                    "vie":80,
+                    "dmg":80
+                }
+            ]
+        }
+    ]
+}

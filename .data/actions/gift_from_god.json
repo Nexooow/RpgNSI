@@ -1,0 +1,78 @@
+{
+    "id": "gift_from_god",
+    "type": "event-positif",
+    "run": [
+        {
+            "type": "condition",
+            "code": "jeu.equipe.inventaire['finger']==2",
+            "actions": {
+                "result == True": [
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Vous voyez passer dans le ciel une étrange forme"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Est-ce un oiseau?",
+                            "Est-ce un dragon?"
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Non!",
+                            "C'est un Roch, créature légendaire arpentant les monts enneigés, bravant les blizzards depuis des millénaires",
+                            "Il est rare de n'en rencontrer ne serait-ce qu'un seul."
+                            
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Mais qu'a-t-il donc à la patte? Serait-ce...",
+                            "Mais oui! C'est un doigt! Le dernier doigt du Paresseux!"
+                        ]
+
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Soudain, un autre Roch surgit au-dessus de lui, en piqué, jusque-là masqué par le soleil",
+                            "Avec la célérité qui leur est propre, les Rochs se percutèrent en plein vol, le malheureux n'ayant pas eu le temps de réagir"
+
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Bouche-bée, vous ne faites pas attention au petit objet qui est en train de tomber...",
+                            "et vous le recevez en pleine face"
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Vous n'avez plus besoin de chercher le troisième doigt, mais à quel prix?"
+                        ]
+                    },
+                    {
+                        "type": "execution",
+                        "code": "jeu.equipe.vie-=5"
+                    },
+                    {
+                        "type":"ajout-item",
+                        "items":[
+                            {
+                                "id":"finger",
+                                "quantity":1
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
