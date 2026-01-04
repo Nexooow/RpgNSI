@@ -19,12 +19,92 @@
                 "tente_installee":[{"type":"random",
                 "actions_possibles":[{"type":"event-negatif","run":[{"type":"dialogue",
                 "lines":["Alors que vous alliez sombrer tranquillement dans les bras d'Orphée, un violent coup de patte déchire soudain votre tente!"]},{"type":"execution",
-                "code":"jeu.equipe.vie-=10"}]},{"type":"event-negatif",
-                "run":[{"type":"dialogue","lines":["Un scorpion dans vos draps!"]},{"type":"execution","code":"jeu.equipe.vie-=5"}]}]}]
+                "code":"jeu.equipe.infliger(10)"}]},{"type":"event-negatif",
+                "run":[{"type":"dialogue","lines":["Un scorpion dans vos draps!"]},{"type":"execution","code":"jeu.equipe.infliger(5)"}]},{"type":"event-positif","run":[{"type":"dialogue","lines":["Vous passez une bonne nuit de sommeil"]},{"type":"execution","code":"jeu.temps+=8"},{"type":"execution","code":"jeu.equipe.soigner(10)"}]},
+                {
+                    "type":"event",
+                    "run":[
+                        {
+                            "type":"dialogue",
+                            "lines":["Une nuit sans histoires se déploie sous le ciel étoilé"]
+                        }
+                    ]
+                }
+                ]}],
+                "pas_de_tente":[
+                    {
+                        "type":"random",
+                        "actions_possibles":[
+                            {
+                                "type":"event-negatif",
+                                "run":[
+                                    {
+                                        "type":"dialogue",
+                                        "lines":[
+                                            "Il pleut.",
+                                            "Vous attrapez un vilain rhume."
+                                        ]
+                                    },
+                                    {
+                                        "type":"execution",
+                                        "code":"jeu.equipe.infliger(5)"
+                                    }
+                                ]
+                            },
+                            {
+    "id": "comette",
+    "type": "event-positif",
+    "run": [
+        {
+            "type": "condition",
+            "code": "jeu.get_temps()[1] <= 5 or jeu.get_temps()[1] >= 22",
+            "actions": {
+                "result == True": [
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Vous voyez passer dans le ciel une étoile filante."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "lines": [
+                            "Vous vous sentez un peu plus chanceux."
+                        ]
+                    },
+                    {
+                        "type": "execution",
+                        "code": "jeu.equipe.chance += 5"
+                    }
+                ]
+            }
+        }
+    ]
+},{
+    "type":"event-negatif",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Oooh... il fait froid"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Vous gagnez des engelures"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.infliger(10)"
+        }
+    ]
+}
+                        ]
+                    }
+                ]
             }
 
-        },
-        
-        "Faire en sorte que selon le choix, la personne perde de la vie (ex: attaque d'ours sur la tente ..)"
-    ]
+        }]
 }

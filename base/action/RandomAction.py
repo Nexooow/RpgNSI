@@ -14,5 +14,12 @@ class RandomAction(Action):
 
     def executer(self):
         super().executer()
-        self.jeu.executer_action(random.choice(self.actions_possibles))
+        action_rdm=random.choice(self.actions_possibles)
+        if isinstance(action_rdm,list):
+            actions=list(map(self.jeu.loader.creer_action,action_rdm))
+            self.jeu.actions.inserer(actions)
+        else:
+            action=self.jeu.loader.creer_action(action_rdm)
+            self.jeu.actions.inserer([action])
+        
         self.complete = True
