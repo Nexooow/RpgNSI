@@ -16,10 +16,11 @@
                 }
             ],
             "actions":{
-                "tente_installee":[{"type":"condition",
-                "code":"jeu.get_temps()[1]>=23","actions":{"result==True":[{"type":"dialogue",
+                "tente_installee":[{"type":"random",
+                "actions_possibles":[{"type":"event-negatif","run":[{"type":"dialogue",
                 "lines":["Alors que vous alliez sombrer tranquillement dans les bras d'Orphée, un violent coup de patte déchire soudain votre tente!"]},{"type":"execution",
-                "code":"equipe.vie-=10"}]}}]
+                "code":"jeu.equipe.vie-=10"}]},{"type":"event-negatif",
+                "run":[{"type":"dialogue","lines":["Un scorpion dans vos draps!"]},{"type":"execution","code":"jeu.equipe.vie-=5"}]}]}]
             }
 
         },
