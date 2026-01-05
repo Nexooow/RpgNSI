@@ -1,0 +1,25 @@
+{
+    "type":"event-positif",
+    "id":"leprechaun",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Au détour d'un bosquet, vous entendez un bruissement depuis les ténèbres.",
+                "Curieux, vous allez voir ce dont il s'agit."
+            ]
+            
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Surprise! Il s'agit d'un petit leprechaun s'apprêtant à enterrer sa marmite d'or.",
+                "A votre vue, effrayé par tant de majesté, il prend ses jambes à son cou"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.argent+=10"
+        }
+    ]
+}

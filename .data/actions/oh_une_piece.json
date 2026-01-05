@@ -1,0 +1,20 @@
+{
+    "type":"event-positif",
+    "id":"oh_une_piece",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":["Oh, un sou!"]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Vous trouvez une pièce d'or au sol"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.argent+=1"
+        }
+    ]
+}

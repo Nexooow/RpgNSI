@@ -250,7 +250,12 @@ class Combat(Action):
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        self.select_competence(self.competence_en_cours, ennemis_vivants[self.selection])
+                        target_dict=self.ennemis[ennemis_vivants[self.selection]]
+                        target_obj=self.jeu.equipe.get_personnage(target_dict["nom"])
+
+                        self.select_competence(self.competence_en_cours["id"], target_dict)
+                        attacker_obj=self.jeu.equipe.get_personnage(self.tour["nom"])
+                        attacker_obj.target=target_obj
                     elif event.key == pygame.K_ESCAPE:
                         self.changer_menu("competences")
 
@@ -493,8 +498,8 @@ class Combat(Action):
             self.draw_menu()
 
     def draw(self):
+        
         self.draw_ui()
-
         for perso in self.personnages:
             perso_obj = self.jeu.equipe.get_personnage(perso["nom"])
             if perso_obj:
@@ -511,3 +516,4 @@ class Combat(Action):
                         attacker.move(target_obj.rect.x - 50, target_obj.rect.y)
                     attacker.draw()
                     attacker.rect = original_pos
+        

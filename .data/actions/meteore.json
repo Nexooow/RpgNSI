@@ -1,0 +1,12 @@
+{
+    "type":"event-negatif",
+    "id":"meteore",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Ô météore, démon des cieux et famille du diable"
+            ]
+        }
+    ]
+}

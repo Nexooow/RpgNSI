@@ -1,0 +1,22 @@
+{
+    "type":"event-negatif",
+    "id":"trou",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Alors que vous réaliser une petite promenade digestive, vous êtes rêveur, et ne voyez pas le terrier à vos pieds"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Vous trébuchez, votre estomac en est tout chamboulé"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.infliger(5)"
+        }
+    ]
+}

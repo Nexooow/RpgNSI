@@ -1,0 +1,25 @@
+{
+    "type":"event-negatif",
+    "run":[{
+        "type":"conditon",
+        "code":"jeu.equipe.argent>=10",
+        "actions":{
+            "result==True":[
+                {
+            "type":"dialogue",
+            "lines":[
+                "Trois petits rats s'en allèrent gaiement,",
+                "Transportant une bourse quelque peu remplie,",
+                "Pendant que le géant endormi",
+                "Se retournait dans son lit"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.argent-=10"
+        }
+            ]
+        }
+        }
+    ]
+}

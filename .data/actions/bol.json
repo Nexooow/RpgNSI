@@ -1,0 +1,24 @@
+{
+    "type":"event-negatif",
+    "id":"bol",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Vous passez au ras des murs d'un village abandonné, consumé par le mal qui ronge la région",
+                "Boum!",
+                "Cette poutre n'était pas toute neuve"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Manque de bol, la casserole qui vous faisait office de couvre-chef était dans votre main"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.chance-=5"
+        }
+    ]
+}

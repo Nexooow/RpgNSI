@@ -1,0 +1,25 @@
+{
+    "type":"event-positif",
+    "id":"dirlos",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Trois dirlos, mains dans la main, chantant,",
+                "Vous passent devant",
+                "Oh Hosannah! Dansons les Bulgars!",
+                "Dansons, dansons!"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Serait-ce un heureux présage?"
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.chance+=5"
+        }
+    ]
+}

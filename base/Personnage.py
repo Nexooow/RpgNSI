@@ -34,7 +34,7 @@ class Personnage:
         self.frame_index = 0
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
-        self.rect = pygame.Rect((x, y, self.size / 8 * self.image_scale, 180))
+        self.rect = self.image.get_rect(topleft=(x,y))
         self.bubble = pygame.image.load('./assets/sprites/blocking.png')
         self.x = x
         self.y = y
@@ -103,12 +103,17 @@ class Personnage:
     def load_frames(self, sprite, animation_steps):
         animation_list = []
         for y, anim in enumerate(sprite):
+            width,height=anim.get_size()
+            
+            frame_width=width//animation_steps[y]
+            frame_height=height
             temp_img_list = []
             for i in range(animation_steps[y]):
-                temp_img = anim.subsurface(i * self.size, 0, self.size, self.size)
+                temp_img = anim.subsurface(i * frame_width, 0, frame_width,frame_height)
                 temp_img = pygame.transform.scale(temp_img,
-                                                  (self.size * self.image_scale, self.size * self.image_scale))
+                                                  (int(frame_width * self.image_scale), int(frame_height * self.image_scale)))
                 temp_img_list.append(temp_img)
+                print(anim.get_size())
             animation_list.append(temp_img_list)
         return animation_list
 
@@ -121,6 +126,12 @@ class Personnage:
         self.img_pos = (self.rect.x - (self.offset[0] * self.image_scale),
                         self.rect.y - (self.offset[1] * self.image_scale))
         self.equipe.jeu.fond.blit(img, self.img_pos)
+        pygame.draw.rect(
+        self.equipe.jeu.fond,
+        (255, 0, 0),
+        self.rect,
+        2
+    )
         self.mask = pygame.mask.from_surface(img)
 
     def move(self, x, y):
@@ -148,9 +159,11 @@ class Personnage:
                     self.hit = False
                     self.attacking = False
                     self.attack_cooldown = 20
+                self.update_action(0)
         if self.attacking and not self.has_hit:
             if self.frame_index in self.attack_frame[self.action]:
                 self.apply_attack(target, a_distance)
+        
 
     def attack(self):
         self.attacking = True
@@ -176,135 +189,6 @@ class Personnage:
         else:
             target.health -= self.attributs["force"]
             self.has_hit = True
-
-
-class Vous(Personnage):
-
-    def __init__(self, equipe, data=None):
-        super().__init__(equipe, {
-            "nom": "Vous",
-            "competences": {
-                "coup_de_poing": {
-                    "nom": "Coup de Poing",
-                    "description": "Frappe physique basique. Gagne 1 d'élan. Si la cible est Marquée, réapplique la marque.",
-                    "cost": {
-                        "pa": 2
-                    },
-                    "cible": "ennemi"
-                },
-                "marque": {
-                    "nom": "Frappe marquante",
-                    "description": "Applique une marque sur l'ennemi visé. Gagne 1 stack d'Élan.",
-                    "cost": {
-                        "pa": 2
-                    },
-                    "cible": "ennemi"
-                },
-                "charge_devastatrice": {
-                    "nom": "Charge Dévastatrice",
-                    "description": "Charge risquée vers un ennemi, infligeant des dégâts physiques importants. Passe la vie à 30%. Dégâts +15% par "
-                                   "élan. Applique Étourdissement si +3 d'élan. Consomme tout l'élan.",
-                    "cost": {
-                        "pa": 3
-                    },
-                    "cible": "ennemi"
-                },
-                "broyeur": {
-                    "nom": "Broyeur",
-                    "description": "Frappe puissante qui applique vulnérabilité pour 2 tour. Si la cible "
-                                   "est Marquée ou Étourdie, applique vulnérabilité 2. Gagne 2 stacks d'Élan.",
-                    "cost": {
-                        "pa": 4
-                    },
-                    "cible": "ennemi"
-                },
-                "riposte": {
-                    "nom": "Riposte",
-                    "description": "Posture défensive pour 2 tours. Contre-attaque automatiquement les ennemis qui vous "
-                                   "frappent, infligeant 50% des dégâts reçu et appliquant Marqué I. Gagne 1 stack "
-                                   "d'Élan par riposte.",
-                    "cost": {
-                        "pa": 3
-                    },
-                    "cible": None
-                },
-                "enchainement": {
-                    "nom": "Enchaînement",
-                    "description": "Série de 3 frappes rapides sur un ennemi. Chaque frappe inflige 20% de dégats en plus"
-                                   "que la précédente. Si la cible est Marquée, la 3ème frappe applique "
-                                   "Saignement II.",
-                    "cost": {
-                        "pa": 5
-                    },
-                    "cible": "ennemi"
-                },
-                "frappe_tactique": {
-                    "nom": "Frappe tactique",
-                    "description": "Attaque de précision qui inflige 50% de dégâts supplémentaires et ignore les boucliers. Si la cible est"
-                                   "vulnérable, inflige 50% de dégats suplémentaires. Gagne 1 stack d'Élan.",
-                    "cost": {
-                        "pa": 4
-                    },
-                    "cible": "ennemi"
-                },
-                "furie_guerriere": {
-                    "nom": "Furie Guerrière",
-                    "description": "Augmente vos dégâts physiques de 30% et votre vitesse de 20% pour 3 tours."
-                                   "Lors de l'activation, gagne immédiatement 2 stacks d'Élan.",
-                    "cost": {
-                        "pa": 5
-                    },
-                    "cible": "ennemi"
-                },
-                "execution": {
-                    "nom": "Exécution",
-                    "description": "Attaque dévastatrice qui inflige des dégâts massifs (+200% si la cible a moins de 30%"
-                                   "PV). Coûte 5 d'élan.",
-                    "cost": {
-                        "pa": 8,
-                        "elan": 5
-                    },
-                    "cible": "ennemi"
-                },
-                "onde_de_choc": {
-                    "nom": "Onde de Choc",
-                    "description": "Frappe le sol, créant une onde qui inflige des dégâts physiques à tous les "
-                                   "ennemis. Dégâts +10% par stack d'Élan possédé. Applique Marqué I à toutes les "
-                                   "cibles touchées. Consomme tous les stacks d'Élan (minimum 2 requis).",
-                    "cost": {
-                        "pa": 6,
-                        "elan": 2
-                    },
-                    "cible": None
-                },
-
-            }
-        }, data)
-
-    def utiliser_competence(self, combat, competence, cibles=None):
-        match competence:
-            case "coup_de_poing":
-                pass
-            case "marque":
-                pass
-            case "charge_devastatrice":
-                pass
-            case "broyeur":
-                pass
-            case "riposte":
-                pass
-            case "enchainement":
-                pass
-            case "frappe_tactique":
-                pass
-            case "furie_guerriere":
-                pass
-            case "execution":
-                pass
-            case "onde_de_choc":
-                pass
-
-
 class Barman(Personnage):
 
     def __init__(self, equipe, data=None):
@@ -408,18 +292,18 @@ class Barman(Personnage):
                     }
                 }
             },
-            0,  # TODO: définir la position
-            0,
+            300,  # TODO: définir la position
+            300,
             [100, 0.2, [0, 0]]
             # Respectivement: la taille du perso, le scaling par rapport à l'image de base (500px de haut pour le barman), et l'offset à modifier si y a des petits problèmes au niveau de la diff d'affichage/hitbox
             , [pygame.image.load("./assets/sprites/Barman_static.png"),
                pygame.image.load("./assets/sprites/Barman_throw_cocktail.png")],
             [1, 3],
-            {[0],[2]},
+            {0:[0],1:[2]},
             data
         )
 
-        self.competences_equipes = ["cocktail_molotov"]
+        self.competences_equipes = ["double_shot","cocktail_molotov"]
 
     def utiliser_competence(self, competence_id, target=None):
         match competence_id:
@@ -432,7 +316,8 @@ class Barman(Personnage):
             case "cocktail_molotov":
                 self.start_attack(action=1, a_distance=True, target=target)
             case "double_shot":
-                pass
+                self.start_attack(action=1,a_distance=True,target=target)
+                
             case "happy_hour":
                 pass
             case "gueule_de_bois":
@@ -443,6 +328,140 @@ class Barman(Personnage):
                 pass
             case "cuite_explosive":
                 pass
+
+
+class Vous(Personnage):
+
+    def __init__(self, equipe, data=None):
+        super().__init__(equipe, {
+            "nom": "Vous",
+            "competences": {
+                "coup_de_poing": {
+                    "nom": "Coup de Poing",
+                    "description": "Frappe physique basique. Gagne 1 d'élan. Si la cible est Marquée, réapplique la marque.",
+                    "cost": {
+                        "pa": 2
+                    },
+                    "cible": "ennemi"
+                },
+                "marque": {
+                    "nom": "Frappe marquante",
+                    "description": "Applique une marque sur l'ennemi visé. Gagne 1 stack d'Élan.",
+                    "cost": {
+                        "pa": 2
+                    },
+                    "cible": "ennemi"
+                },
+                "charge_devastatrice": {
+                    "nom": "Charge Dévastatrice",
+                    "description": "Charge risquée vers un ennemi, infligeant des dégâts physiques importants. Passe la vie à 30%. Dégâts +15% par "
+                                   "élan. Applique Étourdissement si +3 d'élan. Consomme tout l'élan.",
+                    "cost": {
+                        "pa": 3
+                    },
+                    "cible": "ennemi"
+                },
+                "broyeur": {
+                    "nom": "Broyeur",
+                    "description": "Frappe puissante qui applique vulnérabilité pour 2 tour. Si la cible "
+                                   "est Marquée ou Étourdie, applique vulnérabilité 2. Gagne 2 stacks d'Élan.",
+                    "cost": {
+                        "pa": 4
+                    },
+                    "cible": "ennemi"
+                },
+                "riposte": {
+                    "nom": "Riposte",
+                    "description": "Posture défensive pour 2 tours. Contre-attaque automatiquement les ennemis qui vous "
+                                   "frappent, infligeant 50% des dégâts reçu et appliquant Marqué I. Gagne 1 stack "
+                                   "d'Élan par riposte.",
+                    "cost": {
+                        "pa": 3
+                    },
+                    "cible": None
+                },
+                "enchainement": {
+                    "nom": "Enchaînement",
+                    "description": "Série de 3 frappes rapides sur un ennemi. Chaque frappe inflige 20% de dégats en plus"
+                                   "que la précédente. Si la cible est Marquée, la 3ème frappe applique "
+                                   "Saignement II.",
+                    "cost": {
+                        "pa": 5
+                    },
+                    "cible": "ennemi"
+                },
+                "frappe_tactique": {
+                    "nom": "Frappe tactique",
+                    "description": "Attaque de précision qui inflige 50% de dégâts supplémentaires et ignore les boucliers. Si la cible est"
+                                   "vulnérable, inflige 50% de dégats suplémentaires. Gagne 1 stack d'Élan.",
+                    "cost": {
+                        "pa": 4
+                    },
+                    "cible": "ennemi"
+                },
+                "furie_guerriere": {
+                    "nom": "Furie Guerrière",
+                    "description": "Augmente vos dégâts physiques de 30% et votre vitesse de 20% pour 3 tours."
+                                   "Lors de l'activation, gagne immédiatement 2 stacks d'Élan.",
+                    "cost": {
+                        "pa": 5
+                    },
+                    "cible": "ennemi"
+                },
+                "execution": {
+                    "nom": "Exécution",
+                    "description": "Attaque dévastatrice qui inflige des dégâts massifs (+200% si la cible a moins de 30%"
+                                   "PV). Coûte 5 d'élan.",
+                    "cost": {
+                        "pa": 8,
+                        "elan": 5
+                    },
+                    "cible": "ennemi"
+                },
+                "onde_de_choc": {
+                    "nom": "Onde de Choc",
+                    "description": "Frappe le sol, créant une onde qui inflige des dégâts physiques à tous les "
+                                   "ennemis. Dégâts +10% par stack d'Élan possédé. Applique Marqué I à toutes les "
+                                   "cibles touchées. Consomme tous les stacks d'Élan (minimum 2 requis).",
+                    "cost": {
+                        "pa": 6,
+                        "elan": 2
+                    },
+                    "cible": None
+                },
+                
+
+            }
+        },50,150,[100,0.6,[0,0]],[pygame.image.load("./assets/sprites/Idle.png"),pygame.image.load("./assets/sprites/Run.png"),pygame.image.load("./assets/sprites/Jump.png"),pygame.image.load("./assets/sprites/Attack1.png"),pygame.image.load("./assets/sprites/Attack3.png"),pygame.image.load("./assets/sprites/Take hit.png"),pygame.image.load("./assets/sprites/Death.png")],
+                         [10,8,1,7,8,3,7],{0:[0],3:[4],4:[4]},
+            #0:idle,1:running,2:jumping,3:slash from downwards,4:slash from upwards,5:getting hit,6:dying
+                         data)
+        self.competences_equipes=["onde_de_choc"]
+
+    def utiliser_competence(self,competence, target=None):
+        match competence:
+            case "coup_de_poing":
+                pass
+            case "marque":
+                pass
+            case "charge_devastatrice":
+                pass
+            case "broyeur":
+                pass
+            case "riposte":
+                pass
+            case "enchainement":
+                pass
+            case "frappe_tactique":
+                pass
+            case "furie_guerriere":
+                pass
+            case "execution":
+                pass
+            case "onde_de_choc":
+                self.start_attack(action=4,a_distance=True,target=target)
+
+
 
 
 class Fachan(Personnage):

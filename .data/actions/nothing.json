@@ -1,0 +1,29 @@
+{
+    "type":"event",
+    "id":"nothing",
+    "run":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Vous marchez depuis plusieurs heures.",
+                "Alors que vous vous apprêtez à faire une petite sous l'ombre d'un rocher, ",
+                "vous entendez un grondement sourd qui vous secoue jusqu'aux entrailles"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Surpris, vous vous relevez prestement et dégainez.",
+                "Cependant, rien n'a changé autour de vous"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Ha! Vous croyiez qu'il allait se passer quelque-chose n'est-ce pas?",
+                "Ce n'était que votre ventre qui gargouillait,",
+                "c'est qu'il commence à faire faim tout de même"
+            ]
+        }
+    ]
+}

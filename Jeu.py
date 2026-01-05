@@ -104,7 +104,7 @@ class Jeu:
             # self.equipe.ajouter_personnage(Vous(self.equipe))
             self.equipe.ajouter_personnage(Barman(self.equipe))
         self.executer_sequence("test_combat")
-        self.sauvegarder()
+        #self.sauvegarder()
 
     def restaurer(self, save_json):
         self.region = save_json["region"]
