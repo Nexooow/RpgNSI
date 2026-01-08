@@ -9,10 +9,21 @@
                     "type": "ennemi",
                     "nom": "Gobelin",
                     "vie": 100,
+                    "attributs": {
+                        "vitesse": 50
+                    },
                     "attaques": [
                         {
                             "nom": "Poings",
-                            "actions": []
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "window": {
+                                        "start": 300,
+                                        "end": 400
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }

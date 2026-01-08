@@ -70,6 +70,7 @@ class Combat(Action):
         self.personnages = []
 
         self.attaques = []
+        self.sub_frame_count = None
 
         self.menu_actuel = "principal"
         self.selection = 0
@@ -181,9 +182,20 @@ class Combat(Action):
         ennemi = self.tour
 
         if self.action == "selection":
-            pass
+            
+            attaque = random.choice(ennemi["attaques"])
+            self.attaques = [
+                {**action, "focus": False, "processed": False}
+                for action in attaque["actions"]
+            ]
+            self.action == "attaque"
+            
         elif self.action == "attaque":
-            pass
+            
+            for window in self.attaques:
+                
+                pass
+            
 
     def update_selection(self, events):
         perso_actuel = self.tour
@@ -301,8 +313,8 @@ class Combat(Action):
     # AFFICHAGE
 
     def draw_qte(self, current_frame, window_start, window_end, pos=(500, 300)):
-        if window_start <= current_frame <= window_end:
-            pass
+        if not (window_start <= current_frame <= window_end):
+            return
 
         pygame.draw.rect(self.jeu.ui_surface, (118, 129, 171), (pos[0] - 10, pos[1] - 10, 20, 20))
 
