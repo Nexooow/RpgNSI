@@ -1,0 +1,24 @@
+{
+  "id":"cow",
+  "type":"event",
+  "run":[
+    {
+      "type":"dialogue",
+      "lines":[
+        "Une nouvelle journée magnifique se profile",
+        "Vous vous préparez à vous diriger vers votre prochaine destination",
+        "Soudain, vous remarquez une étrange bête et vous exclamez:"
+      ]
+    },
+    {
+      "type":"executer",
+      "code":"pygame.image.load('./assets/sprites/holy_cow.png')"
+    },
+    {
+      "type":"dialogue",
+      "lines":[
+        "HOLY COW!"
+      ]
+    }
+  ]
+}
