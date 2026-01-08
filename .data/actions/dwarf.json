@@ -1,0 +1,46 @@
+{
+  "id":"dwarf greet",
+  "type":"event",
+  "run":[
+    {
+      "type":"dialogue",
+      "lines":[
+        "*Vous entrez dans le domaine des nains, bienvenue aux visiteurs!*",
+        "Voilà ce que lit le panneau à l'entree du petit bois."
+      ]
+    },
+    {
+      "type":"dialogue",
+      "lines":[
+        "Vous avez entendu dire que les nains etaient très accueillants.",
+        "Soulagé par la présence du panneau, vous vous décidez à vous aventurer à l'intérieur de la forêt."
+      ]
+    },
+    {
+      "type":"dialogue",
+      "lines":[
+        "Il y fait très sombre. Les arbres touffus entremêlent leurs branches, formant une cloison laissant à peine filtrer la lumière du soleil,",
+        "créant une atmosphère éérique"
+      ]
+    },
+    {
+      "type":"dialogue",
+      "lines":[
+        "Vous vous avancez de plus en plus dans les profondeurs obscures de la forêt.",
+        "Influencé par l'ambiance, vous craignez une mauvaise rencontre."
+      ]
+    },
+    {
+      "type":"execution",
+      "code":"pygame.image.load('./assets/sprites/nain-de-jardin-qui-montre-ses-fesse.png')"
+    },
+    {
+      "type":"dialogue",
+      "lines":[
+        "Vous vous êtes fait flasher par un nain.",
+        "Quel bel accueil ils réservent aux visiteurs."
+      ]
+    }
+    
+  ]
+}
