@@ -18,10 +18,9 @@
                             "actions": [
                                 {
                                     "type": "parry",
-                                    "window": {
-                                        "start": 300,
-                                        "end": 400
-                                    }
+                                    "w_start": 300,
+                                    "w_end": 400,
+                                    "damage": 10
                                 }
                             ]
                         }
