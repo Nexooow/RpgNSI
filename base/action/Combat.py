@@ -135,7 +135,7 @@ class Combat(Action):
                 perso["attributs"]["vie"] -= effet[0]
             elif nom_effet == "regeneration":
                 perso["attributs"]["vie"] += perso["attributs"]["vie_max"] * (
-                            effet[0] * 5 / 100)  # soigner 5% de la vie max par niveau de regeneration
+                        effet[0] * 5 / 100)  # soigner 5% de la vie max par niveau de regeneration
             elif nom_effet == "etourdissement":
                 skip_tour = True
                 del effets["etourdissement"]
@@ -182,20 +182,44 @@ class Combat(Action):
         ennemi = self.tour
 
         if self.action == "selection":
-            
+
             attaque = random.choice(ennemi["attaques"])
             self.attaques = [
                 {**action, "focus": False, "processed": False}
                 for action in attaque["actions"]
             ]
-            self.action == "attaque"
-            
+            self.sub_frame_count = 0
+            self.action = "attaque"
+
         elif self.action == "attaque":
-            
-            for window in self.attaques:
-                
-                pass
-            
+
+            self.sub_frame_count += 1
+            all_processed = True
+            found_focused = False
+
+            for attaque in self.attaques:
+
+                if attaque["processed"]:
+                    continue
+                all_processed = False
+
+                if attaque["w_end"] <= self.sub_frame_count:
+                    attaque["processed"] = True
+                    # TODO: appliquer l'attaque (dégâts, effets, etc...)
+                    continue
+
+                if attaque["w_start"] <= self.sub_frame_count:
+                    if not attaque["focus"] and not found_focused:
+                        attaque["focus"] = True
+                        found_focused = True
+                    for event in events:
+                        if event.type == pygame.KEYDOWN and (event.key == pygame.K_e or event.key == pygame.K_SPACE):
+                            if attaque.get("type") == "parry":
+                                parrysound.play()
+                                attaque["processed"] = True
+
+            if all_processed:
+                self.prochain_tour()
 
     def update_selection(self, events):
         perso_actuel = self.tour
@@ -229,9 +253,10 @@ class Combat(Action):
                         self.changer_menu("principal")
 
         elif self.menu_actuel == "items":
+
             items_disponibles = [
-                (id, qte) for id, qte in self.jeu.equipe.inventaire.items()
-                if (item_data := self.jeu.loader.items.get(id)) and item_data.get("type", "") == "consommable"
+                (identifiant, qte) for identifiant, qte in self.jeu.equipe.inventaire.items()
+                if (item_data := self.jeu.loader.items.get(identifiant)) and item_data.get("type", "") == "consommable"
             ]
             self.options = items_disponibles
             for event in events:
@@ -245,6 +270,7 @@ class Combat(Action):
                         self.changer_menu("principal")
 
         elif self.menu_actuel == "competences":
+
             competences = perso_actuel["competences"]
             self.options = competences
             for event in events:
@@ -259,17 +285,20 @@ class Combat(Action):
                             self.changer_menu("cible_ennemi")
                     elif event.key == pygame.K_ESCAPE:
                         self.changer_menu("principal")
+
         elif self.menu_actuel == "cible_ennemi":
+
             self.options = ennemis_vivants
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+
                         target_dict = self.ennemis[ennemis_vivants[self.selection]]
                         target_obj = self.jeu.equipe.get_personnage(target_dict["nom"])
-
                         self.select_competence(self.competence_en_cours["id"], target_dict)
                         attacker_obj = self.jeu.equipe.get_personnage(self.tour["nom"])
                         attacker_obj.target = target_obj
+
                     elif event.key == pygame.K_ESCAPE:
                         self.changer_menu("competences")
 
@@ -312,38 +341,49 @@ class Combat(Action):
 
     # AFFICHAGE
 
-    def draw_qte(self, current_frame, window_start, window_end, pos=(500, 300)):
-        if not (window_start <= current_frame <= window_end):
-            return
+    def draw_qte(self, window):
+        pos = [500, 350]
+        is_focused = window.get("focus", False)
+        window_end = window["w_end"]
+        window_start = window["w_start"]
+        current_frame = self.sub_frame_count
 
-        pygame.draw.rect(self.jeu.ui_surface, (118, 129, 171), (pos[0] - 10, pos[1] - 10, 20, 20))
+        total_frames = window_end - window_start
 
         # Calculer la progression de l'indicateur (0.0 à 1.0)
-        total_frames = window_end - window_start
         progress = (current_frame - window_start) / total_frames if total_frames > 0 else 0
         progress = max(0, min(1, progress))  # Limiter entre 0 et 1
 
-        # Périmètre total du carré (4 côtés de 20 pixels)
-        indicator_pos = progress * (4 * 20)
+        if progress == 0:
+            return;
+
+        # Périmètre total du carré (4 côtés de 50 pixels)
+        indicator_pos = progress * (4 * 50)
 
         # Déterminer la position de l'indicateur sur le carré
-        if indicator_pos < 20:  # cote haut (gauche -> droite)
-            indicator_x = pos[0] - 10 + indicator_pos
-            indicator_y = pos[1] - 10
-        elif indicator_pos < 40:  # cote droit (haut -> bas)
-            indicator_x = pos[0] + 10
-            indicator_y = pos[1] - 10 + (indicator_pos - 20)
-        elif indicator_pos < 60:  # cote bas (droite -> gauche)
-            indicator_x = pos[0] + 10 - (indicator_pos - 40)
-            indicator_y = pos[1] + 10
+        if indicator_pos < 50:  # cote haut (gauche -> droite)
+            indicator_x = pos[0] - 25 + indicator_pos
+            indicator_y = pos[1] - 25
+        elif indicator_pos < 100:  # cote droit (haut -> bas)
+            indicator_x = pos[0] + 25
+            indicator_y = pos[1] - 25 + (indicator_pos - 50)
+        elif indicator_pos < 150:  # cote bas (droite -> gauche)
+            indicator_x = pos[0] + 25 - (indicator_pos - 100)
+            indicator_y = pos[1] + 25
         else:  # cote gauche (bas -> haut)
-            indicator_x = pos[0] - 10
-            indicator_y = pos[1] + 10 - (indicator_pos - 60)
+            indicator_x = pos[0] - 25
+            indicator_y = pos[1] + 25 - (indicator_pos - 150)
+
+        color = (0, 0, 0) if is_focused else (150, 150, 150)
+
+        # Dessiner le carré principal
+        pygame.draw.rect(self.jeu.ui_surface, color, (pos[0] - 25, pos[1] - 25, 50, 50))
+
+        pygame.draw.line(self.jeu.ui_surface, (245, 205, 0), (pos[0] - 25, pos[1] - 25), (pos[0] - 25, pos[1] + 25), 3)
 
         # Dessiner l'indicateur
-        pygame.draw.circle(self.jeu.ui_surface, (255, 255, 255), (int(indicator_x), int(indicator_y)), 3)
-
-        pygame.draw.line(self.jeu.ui_surface, (245, 205, 0), (pos[0], pos[1]), (pos[0], pos[1] + 20), 2)
+        pygame.draw.circle(self.jeu.ui_surface, (0, 0, 0), (int(indicator_x), int(indicator_y)),
+                           3)
 
     def draw_selection(self, options):
         option_height = total_height / len(options)
@@ -444,21 +484,21 @@ class Combat(Action):
                 (box_x + 5 + ratio, box_y + 125),
                 (box_x + 5 + ratio, box_y + 125 + bar_height),
             )
-            
+
         if self.menu_actuel == "principal":
-            
+
             options = ["Attaque", "Items", "Compétences"]
             if "silence" in self.tour["effets"]:
                 options = ["Attaque", "Items"]
             self.draw_selection(options)
-        
+
         elif self.menu_actuel == "attaque":
-            
+
             ennemis_vivants = [ennemi for ennemi in self.ennemis if ennemi["vie"] > 0]
             self.draw_selection([ennemi["nom"] for ennemi in ennemis_vivants])
-            
+
         elif self.menu_actuel == "items":
-            
+
             items_disponibles = [
                 (identifiant, qte) for identifiant, qte in self.jeu.equipe.inventaire.items()
                 if
@@ -471,7 +511,7 @@ class Combat(Action):
                     "imitalic",
                     (150, 150, 150),
                     (separator_x + 20, box_y + 37),
-                    size=18                    
+                    size=18
                 )
             else:
                 option_height = total_height / len(items_disponibles)
@@ -492,14 +532,14 @@ class Combat(Action):
                         (separator_x + 20, box_y + i * option_height + option_height / 2),
                         size=18
                     )
-                    
+
         elif self.menu_actuel == "competence":
-            
+
             competences = self.tour["competences"]
             self.draw_selection([comp["nom"] for comp in competences])
-            
+
         elif self.menu_actuel == "cible_ennemi":
-            
+
             ennemis_vivants = [ennemi for ennemi in self.ennemis if ennemi["vie"] > 0]
             self.draw_selection([ennemi["nom"] for ennemi in ennemis_vivants])
 
@@ -507,6 +547,10 @@ class Combat(Action):
         # menu
         if self.action == "selection" and self.tour["type"] == "personnage":
             self.draw_menu()
+        elif self.action == "attaque" and self.tour["type"] == "ennemi":
+            for attaque in self.attaques:
+                if attaque.get("type") == "parry":
+                    self.draw_qte(attaque)
 
     def draw(self):
 
