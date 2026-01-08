@@ -24,6 +24,7 @@ class Menu(Action):
         self.displaying=False
         self.description_text=""
         self.choice=None
+        self.selection=0
     def executer(self):
         super().executer()
         self.menu_actuel="principal"
@@ -34,11 +35,12 @@ class Menu(Action):
     def update(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    self.selection = (self.selection + 1) % len(self.options)
-                elif event.key == pygame.K_UP:
-                    self.selection = (self.selection - 1) % len(self.options)
-                
+                if self.options:
+                    if event.key == pygame.K_DOWN:
+                        self.selection = (self.selection + 1) % len(self.options)
+                    elif event.key == pygame.K_UP:
+                        self.selection = (self.selection - 1) % len(self.options)
+                    
 
     def update_selection(self, events):
         if self.menu_actuel=="principal":
@@ -48,25 +50,10 @@ class Menu(Action):
                     if event.key == pygame.K_SPACE:
                         self.perso_selectionne=self.jeu.equipe.personnages[self.selection]
                         self.changer_menu(self.perso_selectionne.nom)
-        elif self.menu_actuel=="items":
-            items_dispos=[(id,quantity) for id,quantity in self.jeu.equipe.inventaire.items()]
-            self.options=items_dispos
-            for event in events:
-                if event.type==pygame.KEYDOWN:
-                    if event.key==pygame.K_SPACE and not self.displaying:
-                        
-                        self.displaying=True
-                        self.description_text=self.jeu.loader.items.get(list(self.jeu.inventaire.keys())[self.selection])['description']
-                    elif event.key==pygame.K_ESCAPE:
-                        if self.displaying:
-                            self.displaying=False
-                            self.description_text=""
-                        else:
-                            
-                            self.changer_menu("principal")
+        
                         
         elif self.menu_actuel==self.perso_selectionne.nom:
-            self.options=self.perso_selectionne["competences"]
+            self.options=self.perso_selectionne.competences
             for event in events:
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_SPACE:
@@ -79,7 +66,7 @@ class Menu(Action):
             #prix_accessible permet de recuperer un dico des competences achetables avec le budget
             
             prix_accessible={competence:self.perso_selectionne.competences[competence] for competence in self.perso_selectionne.competences.keys() if (self.perso_selectionne.competences[competence]["points"]<=self.perso_selectionne.points_competences or (competence in self.perso_selectionne.competences_achetees and not competence in self.perso_selectionne.competences_equipes))}
-            self.options=prix_accessible
+            self.options=list(prix_accessible.keys())
             competence_selectionnee=list(prix_accessible.keys())[self.selection]
             self.display_text=self.perso_selectionne.competences[competence_selectionnee]
             #self.options=self.perso_selectionne.competences
@@ -96,7 +83,7 @@ class Menu(Action):
                         self.changer_menu(self.perso_selectionne.nom)
                     elif event.key == pygame.K_ESCAPE:
                         if self.displaying:
-                            self.displaying=True
+                            self.displaying=False
                             self.display_text=""
                         self.changer_menu("principal")
     def draw_selection(self, options):
@@ -120,6 +107,10 @@ class Menu(Action):
 
                 options = [perso.nom for perso in self.jeu.equipe.personnages]
                 self.draw_selection(options)
+            case self.perso_selectionne.nom:
+                options=self.perso_selectionne.competences_equipees
+                self.draw_selection(options)
+                
 
             
 
@@ -129,7 +120,7 @@ class Menu(Action):
 
             case "competences":
                 
-                competences = self.perso_selectionne["competences"]
+                competences = self.perso_selectionne.competences
                 
                 self.draw_selection([comp["nom"] for comp in competences])
                 if self.displaying:
