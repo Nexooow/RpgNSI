@@ -1,5 +1,5 @@
 from .Action import Action
-
+import pygame
 
 class Execution(Action):
 
@@ -9,5 +9,5 @@ class Execution(Action):
 
     def executer(self):
         super().executer()
-        exec(self.data.get("code"), {"jeu": self.jeu})
+        exec(self.data.get("code"), {"jeu": self.jeu, "pygame": pygame})
         self.complete = True

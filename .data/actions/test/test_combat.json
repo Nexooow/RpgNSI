@@ -18,9 +18,50 @@
                             "actions": [
                                 {
                                     "type": "parry",
-                                    "w_start": 300,
-                                    "w_end": 400,
+                                    "w_start": 100,
+                                    "w_end": 150,
                                     "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 10
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 20
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 30
                                 }
                             ]
                         }

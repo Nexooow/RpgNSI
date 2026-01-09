@@ -192,18 +192,7 @@ class Personnage:
         self.update_action(action)
 
     def apply_attack(self, target, a_distance):
-        if target is None:
-            return
-        if not a_distance:
-            offset_x = target.img_pos[0] - self.rect.left
-            offset_y = target.img_pos[1] - self.rect.top
-            overlap = self.mask.overlap(target.mask, (offset_x, offset_y))
-            if overlap and not self.has_hit:
-                self.has_hit = True
-                self.jeu.equipe.combat.on_hit(self, target)
-        else:
-            target.health -= self.attributs["force"]
-            self.has_hit = True
+        self.has_hit = True
 
 
 class Barman(Personnage):
@@ -545,7 +534,9 @@ class Fachan(Personnage):
                     "cible": None
                 }
             }
-        },,50,450,[100,0.25,[0,0]],[
+        },
+            50,
+                         450,[100,0.25,[0,0]],[
             pygame.transform.flip(pygame.transform.scale(pygame.image.load('./assets/sprites/fachan_static_steel.png'),(int((408/1024)*1536),408)),False,True),
             pygame.transform.flip(pygame.transform.scale(pygame.image.load("./assets/sprites/fachan_static.png"),(int((408/1024)*1536),408)),False,True),
             pygame.transform.flip(pygame.image.load("./assets/sprites/fachan_attacking.png"),False,True),
@@ -560,17 +551,17 @@ class Fachan(Personnage):
 
     def utiliser_competence(self, combat, competence, cibles=None):
         if competence == "regard_jugeur":
-            self.start_attack(1,a_distance=True,target=target) if self.steel_form else self.start_attack(0,a_distance=True,target=target)
+            self.start_attack(1,a_distance=True,target=cibles) if self.steel_form else self.start_attack(0,a_distance=True,target=cibles)
         elif competence == "caisteal":
-            self.start_attack(1,a_distance=True,target=target) if self.steel_form else self.start_attack(0,a_distance=True,target=target)
+            self.start_attack(1,a_distance=True,target=cibles) if self.steel_form else self.start_attack(0,a_distance=True,target=cibles)
         elif competence == "caber":
-            self.start_attack(3,a_distance=True,target=target) if self.steel_form else self.start_attack(2,a_distance=True,target=target)
+            self.start_attack(3,a_distance=True,target=cibles) if self.steel_form else self.start_attack(2,a_distance=True,target=cibles)
         elif competence == "fureur_de_fachan":
-            self.start_attack(1,a_distance=True,target=target) if self.steel_form else self.start_attack(0,a_distance=True,target=target)
+            self.start_attack(1,a_distance=True,target=cibles) if self.steel_form else self.start_attack(0,a_distance=True,target=cibles)
         elif competence == "tignasse":
-            self.start_attack(1,a_distance=True,target=target) if self.steel_form else self.start_attack(0,a_distance=True,target=target)
+            self.start_attack(1,a_distance=True,target=cibles) if self.steel_form else self.start_attack(0,a_distance=True,target=cibles)
         elif competence == "stalin":
             self.steel_form=True
         elif competence == "ou_sont_mes_pieds":
-            self.start_attack(5,a_distance=True,target=target) if self.steel_form else self.start_attack(4,a_distance=True,target=target)
+            self.start_attack(5,a_distance=True,target=cibles) if self.steel_form else self.start_attack(4,a_distance=True,target=cibles)
 

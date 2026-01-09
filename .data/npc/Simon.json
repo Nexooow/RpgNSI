@@ -1,0 +1,82 @@
+{
+    "id": "Simon",
+    "nom": "Simon",
+    "rencontre": [
+        {
+            "type": "dialogue",
+            "lines": [
+                "Vous vous trouvez devant une grande porte.",
+                "Devant, des centaines de soldats gisent dans un lac de sang,",
+                "une odeur de sang et de putrefaction immonde s'en échappe."
+            ]
+        }
+    ],
+    "interaction": [
+        {
+            "type": "dialogue",
+            "lines": [
+                "Vous vous rapprochez de la porte."
+            ]
+        },
+        {
+            "type": "select",
+            "question": "Voulez-vous ouvrir la porte ?",
+            "options": [
+                {
+                    "name": "Oui",
+                    "valeur": "yes"
+                },
+                {
+                    "name": "Non",
+                    "valeur": "no"
+                }
+            ],
+            "actions": {
+                "yes": [
+                    {
+                        "type": "select",
+                        "question": "Voulez-vous vraiment ouvrir la porte ?",
+                        "options": [
+                            {
+                                "name": "Oui",
+                                "valeur": "sure"
+                            },
+                            {
+                                "name": "Tout compte fait, Non",
+                                "valeur": "cancel"
+                            }
+                        ],
+                        "actions": {
+                            "yes": [
+                                {
+                                    "type": "combat",
+                                    "ennemis": [
+                                        {
+                                            "type": "ennemi",
+                                            "nom": "Simon",
+                                            "vie": 5000,
+                                            "attributs": {
+                                                "vitesse": 75
+                                            },
+                                            "attaques": [
+                                                {
+                                                    "nom": "Poings",
+                                                    "actions": [
+                                                        {
+                                                            
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "no": []
+            }
+        }
+    ]
+}

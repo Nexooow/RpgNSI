@@ -26,3 +26,10 @@ musiques_regions = {
     "Dawn of the world": "clair_obscur_yellow_forest",
     "Elder Tree": "clair_obscur_linen_and_cotton",
 }
+fonds_regions = {
+    "Auberge": "",
+    "Mountain": "",
+    "Ceilidh": "",
+    "Dawn of the world": "",
+    "Elder Tree": "",
+}

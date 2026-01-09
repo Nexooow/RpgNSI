@@ -13,7 +13,9 @@ class Action:
         self.complete = False
         self.jeu = jeu
         self.data = data
+        
         self.desactive_ui = False
+        self.utilise_fond = False # si oui, le fond de la région sera arrêté pendant l'action
         self.utilise_musique = False  # si oui, le theme de la région sera arrêté pendant l'action
 
     def __str__(self):

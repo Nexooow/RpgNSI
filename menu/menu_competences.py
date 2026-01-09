@@ -65,7 +65,11 @@ class Menu(Action):
         elif self.menu_actuel=="competences possibles":
             #prix_accessible permet de recuperer un dico des competences achetables avec le budget
             
-            prix_accessible={competence:self.perso_selectionne.competences[competence] for competence in self.perso_selectionne.competences.keys() if (self.perso_selectionne.competences[competence]["points"]<=self.perso_selectionne.points_competences or (competence in self.perso_selectionne.competences_achetees and not competence in self.perso_selectionne.competences_equipes))}
+            prix_accessible={
+                competence:self.perso_selectionne.competences[competence] 
+                for competence in self.perso_selectionne.competences.keys() 
+                if (self.perso_selectionne.competences[competence]["points"]<=self.perso_selectionne.points_competences or (competence in self.perso_selectionne.competences_achetees and not competence in self.perso_selectionne.competences_equipes))
+            }
             self.options=list(prix_accessible.keys())
             competence_selectionnee=list(prix_accessible.keys())[self.selection]
             self.display_text=self.perso_selectionne.competences[competence_selectionnee]
@@ -102,26 +106,15 @@ class Menu(Action):
             )
     def draw_menu(self):
         self.jeu.ui_surface.fill((0,0,0,0))
-        match self.menu_actuel:
-            case "principal":
-
+        if self.menu_actuel == "principal":
                 options = [perso.nom for perso in self.jeu.equipe.personnages]
                 self.draw_selection(options)
-            case self.perso_selectionne.nom:
+        elif self.menu_actuel == self.perso_selectionne.nom:
                 options=self.perso_selectionne.competences_equipees
                 self.draw_selection(options)
-                
-
-            
-
-            
-                
-                        
-
-            case "competences":
-                
-                competences = self.perso_selectionne.competences
-                
+        elif self.menu_actuel == "competences":
+    
+                competences = self.perso_selectionne.competences            
                 self.draw_selection([comp["nom"] for comp in competences])
                 if self.displaying:
                     text_render_centered(

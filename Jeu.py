@@ -151,6 +151,8 @@ class Jeu:
         elif self.debute:
             self.fond.fill((255, 255, 255))
             if self.action_actuelle is not None:
+                if not self.action_actuelle.utilise_fond:
+                    pass
                 self.action_actuelle.draw()
             self.ui()
         self.filters()  # applique les filtres sur l'écran

@@ -132,6 +132,21 @@
         "entree": true
     },
     {
+        "id": "Simon",
+        "region": "Dawn of the world",
+        "location": {
+            "x": 200,
+            "y": 100
+        },
+        "routes": [
+            {
+                "id": "Liurnia Gate",
+                "temps": 3,
+                "bidirectionnel": true
+            }
+        ]
+    },
+    {
         "id": "The Holy Maiden",
         "region": "Elder Tree",
         "location": {
