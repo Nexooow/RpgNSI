@@ -36,5 +36,51 @@
             ]
         }
     ],
-    "interaction": []
+    "interaction": [
+        [
+            {
+                "type":"dialogue",
+                "speaker":"Oz",
+                "lines":[
+                    "Radahn est l'engeance de Radagon, un être créé par la chair de Marika, lorsque son fidèle, Godfrey, était trop occupé à nous combattre, nous les Géants.",
+                    "Il y a eu de nombreuses batailles entre les factions, mais la plus connue, tant sa violence était sans pareille, est sans doute celle qui s'est déroulée à Ceilidh, dans les dunes Aeonian, entre Radahn et son frère, The Toucher."
+                ]
+            },
+            {
+                "type":"dialogue",
+                "speaker":"Oz",
+                "lines":[
+                    "Le combat entre les deux armées fut un bain de sang, et les deux êtres s'affrontèrent dans une lutte sans fin.",
+                    "Cependant, ils avaient beau descendre de divinités, ils n'étaient pas immortels pour autant.",
+                    "Lorsque Radahn commença à prendre le dessus, The Toucher, être incomplet, dut ôter le sceau qui le restreignait, et contamina le Doigt."
+                ]
+                
+            },
+            {
+                "type":"dialogue",
+                "speaker":"Oz",
+                "lines":[
+                    "La putréfaction commença alors à s'en échapper, et explosa, transformant la région de Ceilidh en un vaste cimetière, à jamais inhabitable.",
+                    "Radahn ne put résister à la putréfaction et perdit la raison, le laissant seul sur les dunes d’Aeonia, dévorant la chair de ses amis comme de ses ennemis, et combattant n’importe qui l’approchant.",
+                    "Quant à The Toucher, affaibli, il dut se retirer, et se confina dans un canyon de Ceilidh."
+                ]
+            },
+            {
+                "type":"dialogue",
+                "speaker":"Oz",
+                "lines":[
+                    "Nous n'avons pu qu'assister avec impuissance devant ces événements. Notre peuple est hors de combat depuis des décennies, la plupart ont été exterminés par l'armée de Godwyn durant la Grande Guerre,",
+                    "puis par Radahn lui-même, lorsqu'il s'empara de l'un des Doigts qui avait atterri dans les Montagnes."
+                ]
+            },
+            {
+                "type":"dialogue",
+                "speaker":"Oz",
+                "lines":[
+                    "Bonne chance dans votre quête des Doigts, cette guerre pour eux n'a que trop duré."
+                ]
+                
+            }
+        ]
+    ]
 }
