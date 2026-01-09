@@ -86,8 +86,11 @@
             }
         ]
     ],
-    "interaction": [
-        [{
+    "interaction": [{
+        "type":"condition",
+        "code":"met_twice==False",
+        "actions":{
+            "result==True":[{
             "type":"dialogue",
             "speaker":"Tale-teller",
             "lines":[
@@ -105,7 +108,7 @@
                 "Marika, membre du peuple Numen, race dont on sait peu de choses si ce n'est que ce sont des Etrangers à l'Entre-Terre, a été choisie par Elle pour relayer Sa voix." 
             ]
         }],
-        [
+            "result==False":[
             {
                 "type":"dialogue",
                 "speaker":"Tale-teller",
@@ -150,5 +153,9 @@
                 ]
             }
         ]
+        }
+    }
+        
+        
     ]
 }
