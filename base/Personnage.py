@@ -453,14 +453,15 @@ class Vous(Personnage):
             50,
             150,
             [100, 0.6, [0, 0]],
-            [pygame.image.load("./assets/sprites/Idle.png"), pygame.image.load("./assets/sprites/Run.png"),
+            [pygame.image.load("./assets/sprites/Idle.png"),
+             pygame.image.load("./assets/sprites/Run.png"),
              pygame.image.load("./assets/sprites/Jump.png"),
              pygame.image.load("./assets/sprites/Attack1.png"),
              pygame.image.load("./assets/sprites/Attack3.png"),
-             pygame.image.load("./assets/sprites/Take hit.png"),
+             pygame.image.load("./assets/sprites/blocking.png"),
              pygame.image.load("./assets/sprites/Death.png")],
-            [10, 8, 1, 7, 8, 3, 7],
-            {0: [0], 3: [4], 4: [4]},
+            [10, 8, 1, 7, 8, 1, 7],
+            {0: [0], 3: [4], 4: [4],5:[0]},
             # 0:idle, 1:running, 2:jumping, 3:slash from downwards, 4:slash from upwards, 5:getting hit,6:dying
             data
         )
@@ -477,7 +478,7 @@ class Vous(Personnage):
         elif competence == "broyeur":
             pass
         elif competence == "riposte":
-            self.start_attack(action=0, a_distance=True, target=target)
+            self.start_attack(action=5, a_distance=True, target=target)
         elif competence == "enchainement":
             self.start_attack(action=3, a_distance=True, target=target)
         elif competence == "frappe_tactique":
