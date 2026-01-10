@@ -1,11 +1,12 @@
 import pygame
 from .Action import Action
 from lib.render import text_render_centered_left, text_render_centered
+from lib.sounds import son_selection
 
 
 class Boutique(Action):
     """
-    Action qui représente la boutique directement (sans passer par un menu).
+    Action qui représente la boutique.
     """
 
     def __init__(self, jeu, data):
@@ -14,6 +15,7 @@ class Boutique(Action):
         self.items = data.get("items", [])
         self.shop_id = data.get("shop_id", "default_shop")
         self.selection = 0
+        self.mode = "achat"  # "achat"/"vente"
 
         # ajouter les stocks aux variables jeu (si non présentes)
         for item in self.items:
@@ -25,39 +27,59 @@ class Boutique(Action):
     def update(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    if self.items:
-                        self.selection = (self.selection + 1) % len(self.items)
+                if event.key == pygame.K_TAB:
+                    self.mode = "vente" if self.mode == "achat" else "achat"
+                    self.selection = 0
+                elif event.key == pygame.K_DOWN:
+                    items = self.get_items()
+                    if items:
+                        son_selection.play()
+                        self.selection = (self.selection + 1) % len(items)
                 elif event.key == pygame.K_UP:
-                    if self.items:
-                        self.selection = (self.selection - 1) % len(self.items)
+                    items = self.get_items()
+                    if items:
+                        son_selection.play()
+                        self.selection = (self.selection - 1) % len(items)
                 elif event.key == pygame.K_SPACE:
-                    if self.items:
-                        self.acheter_item(self.items[self.selection])
+                    items = self.get_items()
+                    if items:
+                        if self.mode == "achat":
+                            self.acheter_item(items[self.selection])
+                        elif self.mode == "vente":
+                            self.vendre_item(items[self.selection])
                 elif event.key == pygame.K_ESCAPE:
                     self.complete = True
 
-    def acheter_item(self, item_info):
-        item_id = item_info["id"]
-        prix = item_info["prix"]
-        stock_key = item_info.get("stock_key")
+    def get_items(self):
+        if self.mode == "achat":
+            return self.items
+        elif self.mode == "vente":
+            return [item for item in self.jeu.equipe.inventaire if "valeur" in self.jeu.loader.items.get(item, {})]
 
-        # verifier argent
+    def vendre_item(self, item_id):
+        item_data = self.jeu.loader.items.get(item_id, {})
+        valeur = item_data.get("valeur", 0)
+
+        if valeur > 0:
+            self.jeu.equipe.argent += valeur
+            self.jeu.equipe.retirer_item(item_id, 1)
+            print(f"Vendu {item_data.get('nom', item_id)} pour {valeur}€")
+        else:
+            print("Cet item ne peut pas être vendu")
+
+    def acheter_item(self, item):
+        item_id = item["id"]
+        prix = item["prix"]
+        stock_key = item.get("stock_key")
+
         if self.jeu.equipe.argent >= prix:
-            # verifier stock
-            if stock_key:
-                stock = self.jeu.variables_jeu.get(stock_key, 0)
-                if stock <= 0:
-                    print("Plus de stock !")
-                    return
+            if stock_key and self.jeu.variables_jeu.get(stock_key, 0) > 0:
                 self.jeu.variables_jeu[stock_key] -= 1
-
-            # ajout item
             self.jeu.equipe.argent -= prix
             self.jeu.equipe.ajouter_item(item_id, 1)
             print(f"Acheté {item_id} pour {prix}€")
         else:
-            print("Pas assez d'argent !")
+            print("Pas assez d'argent pour acheter cet item")
 
     def draw(self):
 
@@ -65,69 +87,52 @@ class Boutique(Action):
         overlay.fill((0, 0, 0, 180))
         self.jeu.ui_surface.blit(overlay, (0, 0))
 
-        text_render_centered(self.jeu.ui_surface, "BOUTIQUE", "bold", color=(255, 255, 255),
+        titre = "BOUTIQUE - ACHAT" if self.mode == "achat" else "BOUTIQUE - VENTE"
+        text_render_centered(self.jeu.ui_surface, titre, "bold", color=(255, 255, 255),
                              pos=(self.jeu.WIDTH // 2, 50), size=40)
 
         text_render_centered(self.jeu.ui_surface, f"Votre argent: {self.jeu.equipe.argent} €", "regular",
-                             color=(255, 215, 100),
-                             pos=(self.jeu.WIDTH // 2, 90), size=24)
+                             color=(255, 215, 100), pos=(self.jeu.WIDTH // 2, 90), size=24)
 
         start_x = 50
         start_y = 150
 
-        for i, item_info in enumerate(self.items):
-            item_id = item_info["id"]
-            prix = item_info["prix"]
-            stock_key = item_info.get("stock_key")
+        items = self.get_items()
+        for i, item_info in enumerate(items):
+            if self.mode == "achat":
+                item_id = item_info["id"]
+                prix = item_info["prix"]
+                stock_key = item_info.get("stock_key")
+                item_data = self.jeu.loader.items.get(item_id, {"nom": item_id})
+                stock = self.jeu.variables_jeu.get(stock_key, "∞") if stock_key else "∞"
+                couleur = (255, 255, 255) if i != self.selection else (255, 200, 100)
+                if stock != "∞" and stock <= 0:
+                    couleur = (100, 100, 100)
+                prefixe = "> " if i == self.selection else "  "
+                text_render_centered_left(
+                    self.jeu.ui_surface,
+                    f"{prefixe}{item_data['nom']} - {prix}€ (Stock: {stock})",
+                    "regular",
+                    color=couleur,
+                    pos=(start_x, start_y + i * 40),
+                    size=24
+                )
+            elif self.mode == "vente":
+                item_data = self.jeu.loader.items.get(item_info, {"nom": item_info})
+                valeur = item_data.get("valeur", 0)
+                couleur = (255, 255, 255) if i != self.selection else (255, 200, 100)
+                prefixe = "> " if i == self.selection else "  "
+                text_render_centered_left(
+                    self.jeu.ui_surface,
+                    f"{prefixe}{item_data['nom']} - {valeur}€",
+                    "regular",
+                    color=couleur,
+                    pos=(start_x, start_y + i * 40),
+                    size=24
+                )
 
-            item_data = self.jeu.loader.items.get(item_id, {"nom": item_id})
-            stock = self.jeu.variables_jeu.get(stock_key, "∞") if stock_key else "∞"
-
-            couleur = (255, 255, 255) if i != self.selection else (255, 200, 100)
-            if stock != "∞" and stock <= 0:
-                couleur = (100, 100, 100)
-
-            prefixe = "> " if i == self.selection else "  "
-
-            text_render_centered_left(
-                self.jeu.ui_surface,
-                f"{prefixe}{item_data['nom']} - {prix}€ (Stock: {stock})",
-                "regular",
-                color=couleur,
-                pos=(start_x, start_y + i * 40),
-                size=24
-            )
-
-        if self.items and self.selection < len(self.items):
-            item_info = self.items[self.selection]
-            item_data = self.jeu.loader.items.get(item_info["id"])
-
-            if item_data:
-                detail_x = 550
-                detail_y = 150
-
-                text_render_centered_left(self.jeu.ui_surface, item_data["nom"], "bold", color=(255, 200, 100),
-                                          pos=(detail_x, detail_y), size=32)
-
-                desc = item_data.get("description", "")
-
-                words = desc.split(' ')
-                lines = []
-                current_line = ""
-                for word in words:
-                    if len(current_line) + len(word) < 30:
-                        current_line += word + " "
-                    else:
-                        lines.append(current_line)
-                        current_line = word + " "
-                lines.append(current_line)
-
-                for j, line in enumerate(lines):
-                    text_render_centered_left(self.jeu.ui_surface, line, "regular", color=(220, 220, 220),
-                                              pos=(detail_x, detail_y + 60 + j * 25), size=20)
-
-                text_render_centered_left(self.jeu.ui_surface, "[ESPACE] Acheter / [ECHAP] Quitter", "regular",
-                                          color=(150, 150, 150), pos=(detail_x, 600), size=18)
+        text_render_centered_left(self.jeu.ui_surface, "[TAB] Changer mode / [ESPACE] Confirmer / [ECHAP] Quitter",
+                                  "imregular", color=(150, 150, 150), pos=(start_x, 600), size=18)
 
     def executer(self):
         super().executer()

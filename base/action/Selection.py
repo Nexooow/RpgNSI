@@ -1,6 +1,7 @@
 import pygame
 from lib.render import text_render_centered_left
 from .Action import Action
+from lib.sounds import son_selection
 
 
 class Selection(Action):
@@ -82,11 +83,11 @@ class Selection(Action):
     def update(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-                if self.option_choisie > 0:
-                    self.option_choisie -= 1
+                son_selection.play()
+                self.option_choisie = (self.option_choisie - 1) % len(self.options)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if self.option_choisie < len(self.options) - 1:
-                    self.option_choisie += 1
+                son_selection.play()
+                self.option_choisie = (self.option_choisie + 1) % len(self.options)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.complete = True
                 valeur = self.options[self.option_choisie]["valeur"]

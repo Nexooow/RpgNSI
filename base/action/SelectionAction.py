@@ -5,6 +5,7 @@ from menu.inventaire import Inventaire
 from menu.competences import MenuCompetences
 from .Action import Action
 from lib.render import text_render_centered_left
+from lib.sounds import son_selection
 
 
 class SelectionAction(Action):
@@ -32,8 +33,10 @@ class SelectionAction(Action):
                 elif self.option_choisie == 3:
                     self.jeu.ouvrir_menu(MenuCompetences(self.jeu))
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                son_selection.play()
                 self.option_choisie = (self.option_choisie + 1) % len(self.options)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                son_selection.play()
                 self.option_choisie = (self.option_choisie - 1) % len(self.options)
 
     def draw(self):

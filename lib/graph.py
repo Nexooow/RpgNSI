@@ -9,7 +9,10 @@ from lib.compatibility import get_canvas_buffer
 images = {
     "background": plt.imread("./assets/maps/background.webp"),
     "mountain": plt.imread("./assets/maps/mountain.jpg"),
-    "ceilidh": plt.imread("./assets/maps/ceilidh.jpg")
+    "ceilidh": plt.imread("./assets/maps/ceilidh.jpg"),
+    "elder_tree": plt.imread("./assets/maps/Elden_Tree_bg.webp"),
+    "dawn_of_the_world": plt.imread("./assets/maps/Dawn_of_the_world_bg.webp"),
+    "auberge": plt.imread("./assets/maps/auberge_bg.jpg")
 }
 
 
@@ -125,6 +128,9 @@ def affichage_graphe(graph: Graph, screen, image):
         font_family="Arial",
         font_size=10,
         node_size=1000,
+        bbox={
+            "facecolor": "white"
+        }
     )
     nx.draw_networkx_edge_labels(
         g,
@@ -134,8 +140,8 @@ def affichage_graphe(graph: Graph, screen, image):
         rotate=False,
         font_family="Arial",
         bbox={
-            "facecolor": "white", "pad": 0.2, "edgecolor": None, "alpha": 0, "linewidth": 0.5, "antialiased": True
-        },
+            "facecolor": "white"
+        }
     )
     fig.canvas.draw()
     buf = get_canvas_buffer(fig.canvas)

@@ -20,6 +20,9 @@ class Jeu:
     HEIGHT = 700
 
     def __init__(self):
+        """
+        Initialise le jeu, les variables globales et charge les ressources nécessaires via Loader.
+        """
 
         self.identifiant = None
         self.running = True
@@ -54,21 +57,31 @@ class Jeu:
     # GETTERS
 
     def get_temps(self):
+        """
+        Renvoie le temps actuel sous forme de tuple (jour, heure)
+        """
+
         return divmod(self.temps, 24)  # retourne (temps//24, temps%24) donc (jour, heure)
 
     def get_region_actuelle(self):
+        """
+        Renvoie la région actuelle du jeu
+        """
+
         if self.region is None:
             return None
         return self.regions[self.region]
 
-    def get_pnj(self):
-        if self.lieu is None:
-            return None
-        return self.loader.npc[self.lieu.nom]
-
     # GESTION PARTIES
 
     def demarrer(self, identifiant, save_json=None):
+        """
+        Demarre la partie avec l'identifiant donné, ou restaure une partie si un JSON de sauvegarde est fourni.
+        :param identifiant: L'identifiant de la partie
+        :param save_json: Le JSON de sauvegarde (optionnel)
+        :return: None
+        """
+
         self.debute = True
         self.menu = None
         self.identifiant = identifiant
@@ -78,9 +91,13 @@ class Jeu:
         else:
             # self.equipe.ajouter_personnage(Vous(self.equipe))
             self.equipe.ajouter_personnage(Barman(self.equipe))
-        self.executer_sequence("test_combat")
+        # self.executer_sequence("test_combat")
 
     def restaurer(self, save_json):
+        """
+        Restaure l'état du jeu à partir d'un JSON de sauvegarde.
+        """
+
         self.region = save_json["region"]
         self.lieu = save_json["lieu"]
         self.temps = save_json["temps"]
@@ -95,6 +112,10 @@ class Jeu:
             self.action_actuelle.executer()
 
     def sauvegarder(self):
+        """
+        Sauvegarde l'état actuel du jeu dans un fichier JSON.
+        """
+
         actions = [action.data for action in self.actions.contenu]
         data = {
             "id": self.identifiant,
@@ -109,21 +130,39 @@ class Jeu:
         json.dump(data, open(f"./.data/saves/{self.identifiant}.json", "w"))
 
     def quitter(self):
+        """
+        Quitte le jeu proprement.
+        """
+
         self.running = False
 
     # AFFICHAGE, ÉVÉNEMENTS ET GESTION DES ACTIONS
 
     def gerer_evenement(self, evenements):
+        """
+        Délègue la gestion des événements au menu ou à l'action actuelle.
+        :param evenements: Liste des événements pygame
+        :return: None
+        """
+
         if self.menu is not None:
             self.menu.update(evenements)
         elif self.action_actuelle is not None:
             self.action_actuelle.update(evenements)
 
     def action_suivante(self):
+        """
+        Passe à l'action suivante dans la file d'actions et l'exécute.
+        """
+
         self.action_actuelle = self.actions.defiler()
         self.action_actuelle.executer()
 
     def executer(self):
+        """
+        Gère l'exécution des actions dans la file d'actions.
+        """
+
         if self.action_actuelle is None:
             if not self.actions.est_vide():
                 self.action_suivante()
@@ -146,6 +185,10 @@ class Jeu:
                 self.jouer_musique(None)
 
     def scene(self):
+        """
+        Gère le dessin de la scène, que ce soit le menu ou l'action actuelle.
+        """
+
         if self.menu is not None:
             self.menu.draw()
         elif self.debute:
@@ -158,6 +201,10 @@ class Jeu:
         self.filters()  # applique les filtres sur l'écran
 
     def ui(self):
+        """
+        Dessine l'interface utilisateur (UI) sur l'écran.
+        """
+
         if not self.action_actuelle or (
                 self.action_actuelle and not self.action_actuelle.desactive_ui
         ):
@@ -258,6 +305,10 @@ class Jeu:
             )
 
     def filters(self):
+        """
+        Applique les filtres d'écran (ex: fondu) sur l'écran de jeu.
+        """
+
         if self.fade > 0:
             if self.fade < 8:
                 self.fade = 2
@@ -275,6 +326,7 @@ class Jeu:
         :param loop: Booléen, si la musique doit être en boucle ou non
         :param volume: Volume de la musique (0.0 à 1.0)
         """
+
         if musique is None or musique == "":
             pygame.mixer.music.stop()
             return
@@ -287,6 +339,12 @@ class Jeu:
     # GESTION ACTIONS
 
     def interagir(self, npc=None):
+        """
+        Gère l'interaction avec un PNJ donné ou avec le lieu actuel si aucun PNJ n'est spécifié.
+        :param npc: L'identifiant du PNJ avec lequel interagir (optionnel)
+        :return: None
+        """
+
         if npc is None:
             npc = self.lieu
         if f"{npc}:rencontre" not in self.variables_jeu and self.loader.get_sequence(f"{npc}:rencontre"):
@@ -296,11 +354,24 @@ class Jeu:
             self.executer_sequence(npc + ":interaction")
 
     def ajouter_action(self, action):
+        """
+        Ajoute une action à la file d'actions.
+        :param action: L'action à ajouter
+        :return: None
+        """
+
         assert isinstance(action,
                           Action), f"L'action à ajouter n'est pas une instance de la classe Action mais est de type {type(action)}"
         self.actions.enfiler(action)
 
     def executer_sequence(self, identifiant, priority=False):
+        """
+        Exécute une séquence d'actions identifiée par son identifiant.
+        :param identifiant: L'identifiant de la séquence à exécuter
+        :param priority: Si True, insère la séquence au début de la file d'actions
+        :return: None
+        """
+
         sequence = self.loader.get_sequence(identifiant)
         if sequence:
             if priority:
@@ -315,15 +386,35 @@ class Jeu:
     # GESTION MENU
 
     def fermer_menu(self):
+        """
+        Ferme le menu actuel.
+        """
+
         self.menu = None
 
     def ouvrir_menu(self, menu):
+        """
+        Ouvre un menu donné.
+        :param menu: Le menu à ouvrir
+        :return: None
+        """
+
         self.menu = menu
         self.menu.ouvrir()
 
     # DEPLACEMENTS
 
     def simuler_segment(self, temps, region_dest, lieu_dest, simulation_temps, destination=False):
+        """
+        Simule un segment de déplacement en ajoutant des actions de temps et en exécutant des actions aléatoires.
+        :param temps: Le temps total du segment
+        :param region_dest: La région de destination
+        :param lieu_dest: Le lieu de destination
+        :param simulation_temps: Le temps de simulation actuel
+        :param destination: Booléen, si c'est la destination finale
+        :return: None
+        """
+
         for _ in range(temps):
 
             chance = self.equipe.chance
@@ -348,6 +439,13 @@ class Jeu:
         )
 
     def deplacement(self, region, lieu):
+        """
+        Gère le déplacement du joueur vers une région et un lieu donnés en ajoutant les actions nécessaires à la file d'actions.
+        :param region: La région de destination
+        :param lieu: Le lieu de destination
+        :return: None
+        """
+
         self.action_actuelle.complete = True
 
         region_actuelle = self.get_region_actuelle()

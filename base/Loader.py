@@ -82,15 +82,36 @@ class Loader:
             else:
                 regions[region].append(lieu)
         return {
-            "Auberge": Region(self.parent, "Auberge", regions["Auberge"]),
+            "Auberge": Region(
+                self.parent,
+                "Auberge",
+                regions["Auberge"],
+                image="auberge"
+            ),
             "Mountain": Region(
-                self.parent, "Mountain", regions["Mountain"], image="mountain"
+                self.parent,
+                "Mountain",
+                regions["Mountain"],
+                image="mountain"
             ),
-            "Ceilidh": Region(self.parent, "Ceilidh", regions["Ceilidh"], image="ceilidh"),
+            "Ceilidh": Region(
+                self.parent,
+                "Ceilidh",
+                regions["Ceilidh"],
+                image="ceilidh"
+            ),
             "Dawn of the world": Region(
-                self.parent, "Dawn of the world", regions["Dawn of the world"]
+                self.parent,
+                "Dawn of the world",
+                regions["Dawn of the world"],
+                image="dawn_of_the_world"
             ),
-            "Elder Tree": Region(self.parent, "Elder Tree", regions["Elder Tree"]),
+            "Elder Tree": Region(
+                self.parent,
+                "Elder Tree",
+                regions["Elder Tree"],
+                image="elder_tree"
+            ),
         }
 
     def charger_lieux(self):

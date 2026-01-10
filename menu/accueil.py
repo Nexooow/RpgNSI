@@ -7,9 +7,10 @@ import pygame
 
 from lib.render import text_render_centered
 from menu.Menu import Menu
+from lib.sounds import son_selection
 
 son_clique = pygame.mixer.Sound("./assets/sounds/accueil_clique.mp3")
-son_selection = pygame.mixer.Sound("./assets/sounds/menu-selection.mp3")
+son_clique.set_volume(0.25)
 
 
 class Accueil(Menu):
@@ -80,7 +81,6 @@ class Accueil(Menu):
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE):
                 self.fermer()
                 self.jeu.fade = 1000
-                son_clique.set_volume(0.25)
                 son_clique.play()
                 partie_choisie = self.saves[self.menu_selected_option]
                 assert isinstance(partie_choisie, dict)
@@ -91,7 +91,7 @@ class Accueil(Menu):
             if event.type == pygame.KEYDOWN and (
                     event.key == pygame.K_UP or event.key == pygame.K_DOWN
             ):
-                son_selection.play().set_volume(0.01)
+                son_selection.play()
         if self.sous_page == "main":
             self.update_page_main(events)
         elif self.sous_page == "sauvegardes":

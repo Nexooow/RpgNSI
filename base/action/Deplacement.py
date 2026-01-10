@@ -7,6 +7,7 @@ from menu.carte import Carte
 from menu.inventaire import Inventaire
 
 from lib.render import text_render_centered_left
+from lib.sounds import son_selection
 
 
 class Deplacement(Action):
@@ -37,8 +38,10 @@ class Deplacement(Action):
                     elif self.option_choisie == 4:
                         self.jeu.ouvrir_menu(MenuCompetences(self.jeu))
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                son_selection.play()
                 self.option_choisie = (self.option_choisie + 1) % len(self.options)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                son_selection.play()
                 self.option_choisie = (self.option_choisie - 1) % len(self.options)
 
     def draw(self):
