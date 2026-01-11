@@ -139,7 +139,8 @@ class Loader:
                     if "interaction" in content and content["interaction"]:
                         self.creer_sequence(f"{identifiant}:interaction", content["interaction"], "action")
                         print(f"JSONLoader | NPC | {identifiant} > action d'interaction créer")
-            except Exception:
+            except Exception as e:
+                print(f"Impossible de charger le NPC '{file}': {e}")
                 continue
 
     def get_sequence(self, sequence_id: str):

@@ -20,7 +20,7 @@ demiurge_animation_steps = [8, 8, 1, 8, 8, 3, 7]
 
 class StreetFighter(Action):
 
-    def __init__(self, jeu):
+    def __init__(self, jeu, _):
         super().__init__(jeu, {})
         self.jeu = jeu
         self.desactive_ui = True
