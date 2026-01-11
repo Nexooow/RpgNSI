@@ -28,8 +28,8 @@
                 "actions": {
                     "yes": [
                         {
-                            "type":"execution",
-                            "code":"accepted_bath=True"
+                            "type": "execution",
+                            "code": "accepted_bath=True"
                         },
                         {
                             "type": "dialogue",
@@ -52,85 +52,84 @@
             }
         ]
     ],
-    "interaction": [{
-        "type":"condition",
-        "code":"accepted_bath==True",
-        "actions":{
-            "result":[
-                {
-            "type":"dialogue",
-            "speaker":"Casan Famhair",
-            "lines":[
-                "You again? What makes you come around this time?",
-                "Came again for me water eh? You bloke might be happy with the new perfume I took."
-            ]
-                },
-                {
-                    "type":"dialogue",
-                    "speaker":"Casan Famhair",
-                    "lines":[
-                        "What I am? That's a weird question to ask a bloke innit? Aye, because it's you, I'll answer"
-                    ]
-                },
-                {
-                    "type":"dialogue",
-                    "speaker":"Casan Famhair",
-                    "lines":[
-                        "I'm one of the last Giants of the Lands-in-Between. The only other folk is that good ol' Ozzie, but he's a big one, unlike me.",
-                        "As tall as a mountain that Ozzie. Probably why he survived, got mixed up with a mountain, hah!",
-                        "I came to be respected by all dwarves because of that mother of mine.",
-                        "Even married one, mind you. Got a daughter, her turn now. She's to be married this day. I'm getting all cleaned up for the event."
-                    ]
-                }
-        
-            ],
-            "not result":[
-                {
-            "type":"dialogue",
-            "speaker":"Casan Famhair",
-            "lines":[
-                "You again? What makes you come around this time?",
-                "Came back for me water eh? You bloke might be happy with the new perfume I took."
-            ]
-        },
+    "interaction": [
         {
-            "type":"dialogue",
-            "speaker":"Casan Famhair",
-            "lines":[
-                "What am I? That is a weird question to ask, don't ye think?",
-                "You come to me, ask me this. But you don't ask with respect, you don't offer friendship."
-            ]
-        },
-                {
-                    "type":"dialogue",
-                    "speaker":"Casan Famhair",
-                    "lines":[
-                        "I am the ruler of all dwarfs in the Lands-in-Between, the representant of both the Giants and the Dwarves",
-                        "All midgets and dwarves respond to me.",
-                        "For your information, I am bound to become King. My daughter is supposed to be married in a few hours. So you come to me on the day of her wedding and ask me this.",
-                        "Humans are always disrespectful"
-                    ]
-                },
-                {
-                    "type":"dialogue",
-                    "speaker":"Casan Famhair",
-                    "lines":[
-                        "Your kin came to me, decades ago. During the Great War. They asked for help, in the fight against me own kind, for money.",
-                        "Do you think I am the kind to be bought? To betray?"
-                    ]
-                },
-                {
-                    "type":"dialogue",
-                    "speaker":"Casan Famhair",
-                    "lines":[
-                        "Well I did. And I regret every single second of it.",
-                        "All of them, dead. Their corpses lying around, merging with the Mountain.",
-                        "Now it is only me, my dwarves, and that good ol' Ozzie."
-                    ]
-                }
-            ]
+            "type": "condition",
+            "code": "accepted_bath==True",
+            "actions": {
+                "result": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "You again? What makes you come around this time?",
+                            "Came again for me water eh? You bloke might be happy with the new perfume I took."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "What I am? That's a weird question to ask a bloke innit? Aye, because it's you, I'll answer"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "I'm one of the last Giants of the Lands-in-Between. The only other folk is that good ol' Ozzie, but he's a big one, unlike me.",
+                            "As tall as a mountain that Ozzie. Probably why he survived, got mixed up with a mountain, hah!",
+                            "I came to be respected by all dwarves because of that mother of mine.",
+                            "Even married one, mind you. Got a daughter, her turn now. She's to be married this day. I'm getting all cleaned up for the event."
+                        ]
+                    }
+                ],
+                "not result": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "You again? What makes you come around this time?",
+                            "Came back for me water eh? You bloke might be happy with the new perfume I took."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "What am I? That is a weird question to ask, don't ye think?",
+                            "You come to me, ask me this. But you don't ask with respect, you don't offer friendship."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "I am the ruler of all dwarfs in the Lands-in-Between, the representant of both the Giants and the Dwarves",
+                            "All midgets and dwarves respond to me.",
+                            "For your information, I am bound to become King. My daughter is supposed to be married in a few hours. So you come to me on the day of her wedding and ask me this.",
+                            "Humans are always disrespectful"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "Your kin came to me, decades ago. During the Great War. They asked for help, in the fight against me own kind, for money.",
+                            "Do you think I am the kind to be bought? To betray?"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Casan Famhair",
+                        "lines": [
+                            "Well I did. And I regret every single second of it.",
+                            "All of them, dead. Their corpses lying around, merging with the Mountain.",
+                            "Now it is only me, my dwarves, and that good ol' Ozzie."
+                        ]
+                    }
+                ]
+            }
         }
-    }
-        
     ]
 }

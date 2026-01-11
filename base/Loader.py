@@ -150,6 +150,8 @@ class Loader:
             return None
 
     def creer_action(self, data: dict) -> typing.Optional[Action]:
+        assert isinstance(data, dict)
+        assert "type" in data
         try:
             return actions_par_type[data["type"]](self.parent, data)  # instancie l'action correspondante
         except KeyError:
@@ -157,7 +159,7 @@ class Loader:
             return None
 
     def tirer_action(self, chance: int) -> typing.Optional[str]:
-        evenement = random() * 100 <= 15
+        evenement = random() * 100 <= 7
         if evenement:
             if randint(0, 100) <= chance:
                 key = self.actions_types["event-positif"][

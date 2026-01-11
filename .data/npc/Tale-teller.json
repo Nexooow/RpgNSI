@@ -86,81 +86,81 @@
             }
         ]
     ],
-    "interaction": [{
-        "type":"condition",
-        "code":"jeu.variables_jeu[met_twice]==False",
-        "actions":{
-            "result==True":[{
-            "type":"dialogue",
-            "speaker":"Tale-teller",
-            "lines":[
-                "Le commencement de cette histoire se déroule non pas dans l’Entre-terre, mais dans le cosmos, où sont présentes des divinités supérieures que nous ne verrons jamais.",
-                "Et celle qui nous intéresse se nomme la Volonté suprême."
-            ]
-        },
+    "interaction": [
         {
-            "type":"dialogue",
-            "speaker":"Tale-teller",
-            "lines":[
-                "Afin de protéger l'Entre-Terre, elle envoya une comète  avec en son sein la bête d’Elden, qui est la véritable forme du Paresseux.",
-                "De l’impact de la comète va pousser un arbre géant doré, symbole dans tout l’Entre-terre de la Volonté suprême.",
-                "Lorsque sa forme physique a presque complètement disparu, elle a du créer des agents capables de relayer le dessein de la Volonté Suprême.",
-                "Marika, membre du peuple Numen, race dont on sait peu de choses si ce n'est que ce sont des Etrangers à l'Entre-Terre, a été choisie par Elle pour relayer Sa voix." 
-            ]
-        },
-        {
-            "type":"execution",
-            "code":"jeu.variables_jeu[met_twice]=True"
-        }
-    ],
-            "result==False":[
-            {
-                "type":"dialogue",
-                "speaker":"Tale-teller",
-                "lines":[
-                    "Les Elus de la Volonté Suprême ne peuvent rester sans Consorts. Le Premier Fidèle, Simon, ayant été banni de l'Entre-Terre à la suite de la Première Guerre contre les Géants,",
-                    "Marika se trouvait alors sans mari pour régner. Elle décida alors de rappeler Radagon à ses côtés"
-                ]
-            },
-            {
-                "type":"dialogue",
-                "speaker":"Tale-teller",
-                "lines":[
-                    "L'union officialisée, Radagon devint le Second Fidèle.",
-                    "La paix régna durant un temps sur l’Entre-terre, contrôlée par Marika et la Volonté suprême, mais dans l’ombre se tramait un complot en la personne de Demiurge."
-                ]
-            },
-            {
-                "type":"dialogue",
-                "speaker":"Tale-teller",
-                "lines":[
-                    "Avec tout lumière vient son ombre. Demiurge est l'anti-thèse de Marika.",
-                    "Si Marika est la conscience de la Volonté Suprême, Demiurge en est en quelque sorte son inconscience, ses désirs les plus profonds refoulés."
-                ]
-            },
-            {
-                "type":"dialogue",
-                "speaker":"Tale-teller",
-                "lines":[
-                    "Afin de se soustraire à la Volonté Suprême, Demiurge devait dérober l'un des Doigts conservés par Marika.",
-                    "Lorsqu'il tenta de s'approcher de l'Elder Tree, Demiurge rencontra Wynnflaed, le premier enfant de Marika. Lorsque Wynnflaed s'opposa à Demiurge,",
-                    "il se fit tuer. En apprenant la nouvelle de la mort de son fils aîné Wynnflaed, Marika, folle de rage et de chagrin, perdit la raison, et éparpilla les Trois Doigts à travers toute l'Entre-Terre.",
-                    "Ce fut alors le début du désastre que nous connaissons aujourd'hui, connu sous le nom de l’Éclatement."
-                ]
-            },
-            {
-                "type":"dialogue",
-                "speaker":"Tale-teller",
-                "lines":[
-                    "Ce fut non sans peine que Demiurge parvint à récupérer l'un des Doigts.",
-                    "Il le conserve désormais jalousement dans son domaine hors de l'espace et du temps,",
-                    "Dont l'entrée est quelque part dans Dawn of the World."
+            "type": "condition",
+            "code": "jeu.variables_jeu['met_twice']==False",
+            "actions": {
+                "result==True": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Le commencement de cette histoire se déroule non pas dans l’Entre-terre, mais dans le cosmos, où sont présentes des divinités supérieures que nous ne verrons jamais.",
+                            "Et celle qui nous intéresse se nomme la Volonté suprême."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Afin de protéger l'Entre-Terre, elle envoya une comète  avec en son sein la bête d’Elden, qui est la véritable forme du Paresseux.",
+                            "De l’impact de la comète va pousser un arbre géant doré, symbole dans tout l’Entre-terre de la Volonté suprême.",
+                            "Lorsque sa forme physique a presque complètement disparu, elle a du créer des agents capables de relayer le dessein de la Volonté Suprême.",
+                            "Marika, membre du peuple Numen, race dont on sait peu de choses si ce n'est que ce sont des Etrangers à l'Entre-Terre, a été choisie par Elle pour relayer Sa voix."
+                        ]
+                    },
+                    {
+                        "type": "execution",
+                        "code": "jeu.variables_jeu['met_twice']=True"
+                    }
+                ],
+                "result==False": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Les Elus de la Volonté Suprême ne peuvent rester sans Consorts. Le Premier Fidèle, Simon, ayant été banni de l'Entre-Terre à la suite de la Première Guerre contre les Géants,",
+                            "Marika se trouvait alors sans mari pour régner. Elle décida alors de rappeler Radagon à ses côtés"
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "L'union officialisée, Radagon devint le Second Fidèle.",
+                            "La paix régna durant un temps sur l’Entre-terre, contrôlée par Marika et la Volonté suprême, mais dans l’ombre se tramait un complot en la personne de Demiurge."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Avec tout lumière vient son ombre. Demiurge est l'anti-thèse de Marika.",
+                            "Si Marika est la conscience de la Volonté Suprême, Demiurge en est en quelque sorte son inconscience, ses désirs les plus profonds refoulés."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Afin de se soustraire à la Volonté Suprême, Demiurge devait dérober l'un des Doigts conservés par Marika.",
+                            "Lorsqu'il tenta de s'approcher de l'Elder Tree, Demiurge rencontra Wynnflaed, le premier enfant de Marika. Lorsque Wynnflaed s'opposa à Demiurge,",
+                            "il se fit tuer. En apprenant la nouvelle de la mort de son fils aîné Wynnflaed, Marika, folle de rage et de chagrin, perdit la raison, et éparpilla les Trois Doigts à travers toute l'Entre-Terre.",
+                            "Ce fut alors le début du désastre que nous connaissons aujourd'hui, connu sous le nom de l’Éclatement."
+                        ]
+                    },
+                    {
+                        "type": "dialogue",
+                        "speaker": "Tale-teller",
+                        "lines": [
+                            "Ce fut non sans peine que Demiurge parvint à récupérer l'un des Doigts.",
+                            "Il le conserve désormais jalousement dans son domaine hors de l'espace et du temps,",
+                            "Dont l'entrée est quelque part dans Dawn of the World."
+                        ]
+                    }
                 ]
             }
-        ]
         }
-    }
-        
-        
     ]
 }

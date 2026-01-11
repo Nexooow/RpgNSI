@@ -40,6 +40,7 @@ class Radahn(Action):
         super().__init__(jeu)
         self.start_time = None
         self.desactive_ui = True
+        self.utilise_musique = True
         self.radahn_frame_index = 0
         self.explosion_group = pygame.sprite.Group()
         self.meteors = []
@@ -47,7 +48,7 @@ class Radahn(Action):
     def executer(self):
         self.start_time = time()
         self.radahn_frame_index = 0
-        self.jeu.jouer_musique("survive", False)
+        self.jeu.jouer_musique("survive", loop=False)
 
     def update(self, events):
         pass
@@ -103,10 +104,10 @@ class Radahn(Action):
             )
         if player.health <= 0:
             text_render_centered(self.jeu.ui_surface, "GIT GUD", "extrabold", color=(255, 0, 0), pos=(500, 350))
-            self.complete=True
+            self.complete = True
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()
             text_render_centered(self.jeu.ui_surface, "Great Finger Obtained", "bold", color=(255, 215, 0),
                                  pos=(500, 350))
-            self.jeu.variables_jeu['radahn_killed']=True
-            self.complete=True
+            self.jeu.variables_jeu['radahn_killed'] = True
+            self.complete = True

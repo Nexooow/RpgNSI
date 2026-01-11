@@ -1,195 +1,224 @@
-# Comment lancer le jeu ?
+# Document de Conception - Projet RPG
 
-Installer les dépendances nécessaires en utilisant pip :
+## Vue d'ensemble
+
+### Description générale
+
+Ce projet est un **RPG** développé en **Python** avec **Pygame**.
+
+### But du jeu
+
+Le joueur doit vaincre les trois boss (Simon, Radahn et Demiurge) pour récupérer trois doigts.
+
+### Déroulement type
+
+Le joueur commence dans une auberge, explore pour recruter des alliés, améliore son équipement et affronte des boss dans
+différentes régions.
+Lors de ses déplacements, il rencontre des PNJ, participe à des combats au tour par tour, et progresse dans l'histoire.
+
+---
+
+## Composants principaux
+
+### 1. Classe Jeu (Jeu.py)
+
+**Rôle:** Orchestrateur central du jeu
+
+- Gestion de l'état global du jeu
+- Gestion de la file d'actions
+- Gestion de la région et du lieu actuels
+- Gestion du temps de jeu
+- Gestion de la musique et des effets sonores
+- Coordination entre menu et gameplay
+
+**Attributs clés:**
 
 ```
-pip install -r requirements.txt
+- WIDTH, HEIGHT (1000x700)
+- running: bool (état du jeu)
+- debute: bool (jeu démarré)
+- fond: pygame.Surface (fond du jeu)
+- ui_surface: pygame.Surface (interface utilisateur)
+- filter_surface: pygame.Surface (filtres/effets)
+- action_actuelle: Action (action en cours)
+- actions: File (file d'attente d'actions)
+- equipe: Equipe (équipe du joueur)
+- regions: dict (régions du monde)
+- region: str (région actuelle)
+- lieu: str (lieu actuel)
+- temps: int (temps de jeu en heures)
+- variables_jeu: dict (variables de jeu dynamiques)
 ```
 
-Ensuite, exécuter le jeu en utilisant la commande suivante :
+**Méthodes principales:**
+
+- `demarrer(identifiant, save_json)` : Démarre une partie
+- `sauvegarder()` : Sauvegarde l'état du jeu
+- `restaurer(save_json)` : Restaure une partie sauvegardée
+- `gerer_evenement(evenements)` : Traite les événements
+- `executer()` : Gère la boucle d'exécution des actions
+- `scene()` : Rendu de la scène actuelle
+- `jouer_musique(nom, loop, volume)` : Gère la musique
+
+### 2. Classe Personnage (base/Personnage.py)
+
+**Rôle:** Représentation des personnages du jeu
+
+- Gestion des attributs et statistiques
+- Gestion des animations et sprites
+- Gestion des compétences et équipement
+- Calcul des dégâts et défense
+- Progression et expérience
+
+**Attributs clés:**
 
 ```
-python main.py
+- nom: str
+- niveau: int
+- xp: int
+- attributs: dict {
+    "vie_max": int,
+    "vie": int,
+    "force": int,
+    "vitesse": int,
+    "chance_critique": int
+  }
+- competences: dict (compétences équipées)
+- arme: dict (arme équipée)
+- animation_list: list (frames d'animation)
+- action: int (animation courante)
+- frame_index: int (frame courante)
+- effets: dict (effets actifs)
 ```
 
-# Carte
+**Sous-classes:**
 
-Voir image jointe
-À noter que chaque région sur cette carte dispose elle-même d'une carte qui permet de naviguer entre les lieux de la
-région.
+- `Vous` : Personnage principal jouable
+- `Barman` : PNJ allié
+- `Fachan` : allié (deux formes : normale et acier)
 
-# Univers & but
+### 3. Classe Équipe (base/Equipe.py)
 
-Toute resemblance avec le jeu "Elden Ring" est purement fortuite.
+**Rôle:** Gestion de l'équipe du joueur
 
-Le jeu se déroule dans le monde d'un ancien empire qui a été détruit par une guerre interne.
-Le but est de récupérer les trois doigts détenus par Radahn, Demiurge et Simon.
+- Gestion des personnages dans l'équipe
+- Gestion de l'inventaire
+- Gestion de l'argent et des ressources
 
-# Comment se déroule la partie ?
+**Attributs clés:**
 
-Le joueur se déplace entre régions, puis entre lieux dans chaque région.
-Cependant, chaque trajet est une aventure qui peut changer la suite de la partie.
-Le joueur doit aussi gérer le temps, et ses ressources.
-En effet, chaque trajet prend du temps, et vous ne voulez pas vous déplacer en pleine nuit...
-Le joueur peut également explorer les lieux et rencontrer des PNJ pour obtenir des informations ou des objets.
+```
+- personnages: list[Personnage]
+- inventaire: dict (items et quantités)
+- argent: int
+- chance: int
+```
 
-# Diagramme de classe
+### 4. Classe Region (base/Region.py)
 
-### Classe Jeu:
+**Rôle:** Représentation d'une région du monde
 
-* identifiant: string
-* joueur: Joueur
-* scenes: File (contenant des listes)
-  File qui contient les scènes, chaque scène est une liste de classes (générées à partir d'un fichier JSON)
-  Ces classes sont ensuite générées sur la fenêtre pygame
-* carte: Graphe
-* loader: JSONLoader
-* regions: dict<string, Region>
-* region: string
-  Region actuelle ou "voyage" si le joueur est en deplacement
-* lieu: string
-  Lieu actuel dans la région
-* jour: int
-* heure: int
-* minutes: int
+- Gestion des lieux dans la région
+- Gestion de la carte locale (graphe)
+- Gestion des paramètres régionaux (musique, fond)
 
-* **init(self, identifiant: string, json?: dict)**
-  Utilise le loader pour charger toutes les actions et NPC du jeu, ainsi que les informations du joueur et de la partie
-  depuis un fichier JSON
-* **gerer_evenement(self, evenement)**
-  Gère les événements pygame et les interactions avec le joueur
-  ex: touches pressées ...
-* **show_scene(self)**
-  Ne renvoie rien, mais affiche la scène actuelle sur la fenêtre pygame
-  Executée à chaque frame
-* **deplacement(self, lieu: string, est_region: bool = false)**
-  Ne renvoie rien, mais ajoute des scènes à la file et met à jour les informations du joueur et de la partie
-  si est_region est vrai, déplacement entre région, sinon déplacement entre lieu
-  Pour chaque heure que prend le déplacement, on tire un evenement avec JSONLoader#tirer_action
-* **save(self)**
-  Ne renvoie rien, mais sauvegarde les informations du joueur et de la partie dans un fichier JSON
+**Attributs clés:**
 
----
+```
+- nom: str (nom de la région)
+- lieux: dict (lieux disponibles)
+- entree: str (lieu d'entrée par défaut)
+- carte: Graph (graphe de la région)
+- position: tuple (position sur la carte mondiale)
+- modificateur_chance: float
+```
 
-### Classe JSONLoader
+**Régions existantes:**
 
-* parent: Jeu
-* actions: dict<string, Action>
-* npcs: dict<string, NPC>
+- Auberge (taverne, point de départ)
+- Mountain (montagne)
+- Ceilidh (région mystique)
+- Dawn of the world (aube du monde)
+- Elder Tree (arbre ancien)
 
-* **init(self)**
-  Charge toutes les actions codées en JSON depuis le dossier "data/actions" ainsi que les NPC depuis le dossier "
-  data/npcs"
-  les ajoute à la liste des actions ou NPC, ainsi que dans les listes d'actions par région et lieu
-* **charger_NPC(self, json: dict)**
-  Charge les NPC à partir d'un dictionnaire JSON
-* **charger_action(self, json: dict)**
-  Charge une action à partir d'un dictionnaire JSON
-* **tirer_action(self, chance_evenement?: float, chance_evenement_negatif?: float)**
-  Tire une action aléatoire en fonction des chances données lors des déplacements du joueur (lors de déplacements, le
-  joueur peut être affecté par des événements négatifs ou positifs)
+### 5. Classe Action (base/action/Action.py)
 
----
+**Rôle:** Classe de base pour toutes les actions  
+**Responsabilités:**
 
-### Classe Action
+- Définition de l'interface d'action
+- Gestion du cycle de vie (exécution, mise à jour, rendu)
+- Gestion des flags (utilise_musique, utilise_fond, desactive_ui)
 
-* type: string
-* nom: string
-* sous_actions: list<string>
-* data: dict
-  Données de l'événement en cours d'exécution
+**Méthodes principales:**
 
-* **init(self, json: dict)**
-  Initialise l'action à partir d'un dictionnaire JSON
-* **executer(self)**
-  Execute l'action
-* **draw(self)**
-  Affiche l'action sur l'écran
-  ex: si l'action est un dialogue, on affiche le texte du dialogue
-* **est_complete(self)**
-  Renvoie True si l'action est terminée, False sinon
-  ex: un dialogue est terminé lorsque le joueur confirme avec 'espace'
+```
+def executer(self):  # Appelée au démarrage de l'action
+def update(self, events):  # Mise à jour selon événements
+def draw(self):  # Rendu
+def get_complete(self) -> bool:  # Retourne si action terminée
+```
 
----
+**Types d'actions implémentées:**
 
-### Classe NPC
+| Type               | Classe          | Utilité                              |
+|--------------------|-----------------|--------------------------------------|
+| `combat`           | Combat          | Gestion des combats au tour par tour |
+| `dialogue`         | Dialogue        | Affichage de dialogues               |
+| `deplacement`      | Deplacement     | Déplacement entre lieux              |
+| `ajout-temps`      | AjoutTemps      | Progression du temps                 |
+| `ajout-items`      | AjoutItems      | Ajout d'items à l'inventaire         |
+| `boutique`         | Boutique        | Système de magasin                   |
+| `damage`           | Damage          | Infliction de dégâts                 |
+| `condition`        | Condition       | Branchement conditionnel             |
+| `selection-action` | SelectionAction | Menu de sélection d'actions          |
+| `execution`        | Execution       | Exécution d'une séquence             |
+| `random`           | RandomAction    | Choix aléatoire d'actions            |
+| `select`           | Selection       | Sélection dans un menu               |
+| `add_perso`        | AddPerso        | Ajout de personnage à l'équipe       |
+| `radahn`           | Radahn          | Boss fight (combat contre Radahn)    |
+| `street-fighter`   | StreetFighter   | Boss fight                           |
 
-* nom: string
+### 6. Classe Loader (base/Loader.py)
 
-* **init(self, json: dict)**
-  Initialise le NPC à partir d'un dictionnaire JSON
-* **interagir(self)**
-  Execute l'interaction avec le NPC
+**Rôle:** Chargement dynamique des ressources
 
----
+- Chargement des actions depuis JSON
+- Chargement des items depuis JSON
+- Chargement des NPCs depuis JSON
+- Chargement des régions
+- Création d'instances d'actions
 
-### Classe Region
+**Structure des fichiers chargés:**
 
-* nom: string
-* description: string
-* lieux: Graphe
-* lieu_depart: string
+- `.data/actions/` : Définitions des séquences d'actions
+- `.data/items/` : Définitions des items
+- `.data/saves/` : Fichiers de sauvegarde
 
-* **init(self, parent: Jeu)**
-* **rentrer(self)**
-  Execute les actions de la région lorsque le joueur entre dans la région
-  ex: le joueur rencontre un ennemi lors de son arrivée
-* **quitter(self)**
-  Execute les actions de la région lorsque le joueur quitte la région
+### 7. Classe Graph (lib/graph.py)
+
+**Rôle:** Implémentation d'un graphe pondéré
+
+- Représentation des connexions entre lieux/régions
+- Calcul de trajectoires et affichage
+
+**Utilisation:**
+
+- Graphe global : connexions entre 5 régions
+- Graphe régional : connexions entre lieux dans une région
 
 ---
 
-### Classe Lieu
+## Fonctionnalités
 
-* nom: string
-* description?: string
-* npc: list<string>
+- Déplacement inter régions et lieux
+- Système de combat au tour par tour
+- Gestion d'inventaire et boutique
+- Système de progression et expérience
+- Compétences et équipements
+- Sauvegarde et restauration de parties
 
-* **init(self, parent: Region, json?: dict)**
-* **recuperer_actions(self)**
-  Renvoies les actions ou interactions possibles dans le lieu
-* **executer_action(self, action: string)**
-  Execute l'action correspondante si elle existe en utilisant le gestionnaire d'actions
+### Fonctionnalités tentés
 
----
-
-### Classe Joueur
-
-* parent: Jeu
-* vie: int
-* vie_max: int
-* defense: int
-* agilite: int
-* energie: int
-* chance: int
-* inventaire: list<tuple<Item, int>>
-* objets_equipes: dict<string, string>
-
-* **init(self, parent: Jeu, json?: dict)**
-  Définit les attributs du joueur à partir du fichier JSON si il est fourni (on restaure les attributs de la partie)
-* **ajouter_item(self, item: string, quantite: int)**
-  Renvoie la nouvelle quantité
-* **retirer_item(self, item: string, quantite?: int)**
-  Renvoie la nouvelle quantité
-* **infliger(self, degats: int)**
-  Diminue la vie du joueur et renvoie la nouvelle vie
-* **soigner(self, points: int)**
-  Augmente la vie du joueur et renvoie la nouvelle vie
-* **calculer_degats(self)**
-  Renvoie le nombre de dégâts que le joueur inflige (prend en compte l'energie, potentiellement la chance et
-  l'inventaire)
-
----
-
-### Classe Item
-
-* type: string
-  Type de l'item; arme, armure, objet, potion...
-* nom: string
-* description: string
-* rarete: string
-* attributs: dict<string, int>
-  Attributs que l'item apporte au joueur quand porté
-  si la valeur est positive, l'item augmente les attributs du joueur
-  si la valeur est négative, l'item diminue les attributs du joueur
-* **init(self, type: str, nom: str, description: str, rarete: str, attributs: dict<string, int>)**
+- Animation des compétences: on a tenté d'animer les compétences et d'ajouter les effets lorsque celles-ci sont
+  utilisées en combat. Cependant, faute de temps, nous n'avons pas pu finaliser cette fonctionnalité.

@@ -46,7 +46,7 @@ class Accueil(Menu):
                 if self.menu_selected_option == 1 and len(self.saves) == 0:
                     self.menu_selected_option = 0
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if self.menu_selected_option != 3:
+                if self.menu_selected_option != 2:
                     self.menu_selected_option += 1
                 if self.menu_selected_option == 1 and len(self.saves) == 0:
                     self.menu_selected_option = 2
@@ -64,8 +64,6 @@ class Accueil(Menu):
                     self.menu_selected_option = 0
                     self.sous_page = "sauvegardes"
                 elif self.menu_selected_option == 2:
-                    pass
-                elif self.menu_selected_option == 3:
                     self.jeu.quitter()
 
     def update_page_sauvegardes(self, events):
@@ -80,7 +78,7 @@ class Accueil(Menu):
                     self.menu_selected_option = 0
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_SPACE):
                 self.fermer()
-                self.jeu.fade = 1000
+                self.jeu.fade = 255
                 son_clique.play()
                 partie_choisie = self.saves[self.menu_selected_option]
                 assert isinstance(partie_choisie, dict)
@@ -127,19 +125,11 @@ class Accueil(Menu):
         )
         text_render_centered(
             self.jeu.fond,
-            "Paramètres",
+            "Quitter",
             "regular",
             color=(245, 205, 0, 185),
             pos=(1000 / 2, 450),
             underline=self.menu_selected_option == 2,
-        )
-        text_render_centered(
-            self.jeu.fond,
-            "Quitter",
-            "regular",
-            color=(245, 205, 0, 185),
-            pos=(1000 / 2, 500),
-            underline=self.menu_selected_option == 3,
         )
 
     def draw_sauvegardes(self):

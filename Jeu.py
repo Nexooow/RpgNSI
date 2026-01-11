@@ -361,7 +361,7 @@ class Jeu:
         :param action: L'action à ajouter
         :return: None
         """
-
+        print(action)
         assert isinstance(action,
                           Action), f"L'action à ajouter n'est pas une instance de la classe Action mais est de type {type(action)}"
         self.actions.enfiler(action)
@@ -375,6 +375,7 @@ class Jeu:
         """
 
         sequence = self.loader.get_sequence(identifiant)
+        print("Execution de la séquence :", identifiant)
         if sequence:
             if priority:
                 self.actions.inserer(sequence)
