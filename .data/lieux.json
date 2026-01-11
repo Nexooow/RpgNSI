@@ -84,7 +84,7 @@
         "id": "Fachan",
         "region": "Dawn of the world",
         "location": {
-            "x": 250,
+            "x": 450,
             "y": 500
         },
         "routes": [
@@ -99,7 +99,7 @@
         "id": "Demiurge",
         "region": "Dawn of the world",
         "location": {
-            "x": 450,
+            "x": 650,
             "y": 300
         },
         "routes": [
@@ -114,7 +114,7 @@
         "id": "Liurnia Gate",
         "region": "Dawn of the world",
         "location": {
-            "x": 100,
+            "x": 300,
             "y": 100
         },
         "routes": [
@@ -135,7 +135,7 @@
         "id": "Simon",
         "region": "Dawn of the world",
         "location": {
-            "x": 200,
+            "x": 500,
             "y": 100
         },
         "routes": [
@@ -150,7 +150,7 @@
         "id": "The Holy Maiden",
         "region": "Elder Tree",
         "location": {
-            "x": 500,
+            "x": 800,
             "y": 350
         },
         "routes": [
@@ -165,14 +165,19 @@
         "id": "Elder Sanctuary",
         "region": "Elder Tree",
         "location": {
-            "x": 300,
-            "y": 450
+            "x": 500,
+            "y": 500
         },
         "routes": [
             {
                 "id": "The Holy Maiden",
                 "temps": 1,
                 "bidirectionnel": true
+            },
+            {
+                "id":"Wynnflaed",
+                "temps":1,
+                "bidirectionnel":true
             }
         ],
         "entree": true
@@ -198,12 +203,13 @@
         ],
         "entree": true
     },
+    
     {
         "id": "Tale-teller",
         "region": "Auberge",
         "location": {
-            "x": 50,
-            "y": 100
+            "x": 400,
+            "y": 600
         },
         "routes": [
             {
@@ -217,8 +223,8 @@
         "id": "Wandering Merchant",
         "region": "Auberge",
         "location": {
-            "x": 150,
-            "y": 200
+            "x": 650,
+            "y": 550
         },
         "routes": [
             {
@@ -233,8 +239,8 @@
         "id": "Barman",
         "region": "Auberge",
         "location": {
-            "x": 300,
-            "y": 150
+            "x": 400,
+            "y": 400
         },
         "routes": [
             {
@@ -250,11 +256,26 @@
         ]
     },
     {
+        "id":"Wynnflaed",
+        "region":"Elder Tree",
+        "location":{
+            "x":800,
+            "y":600
+        },
+        "routes":[
+            {
+                "id":"Elder Sanctuary",
+                "temps":1,
+                "bidirectionnel":true
+            }
+        ]
+    },
+    {
         "id": "Door",
         "region": "Auberge",
         "location": {
-            "x": 500,
-            "y": 0
+            "x": 50,
+            "y": 350
         },
         "routes": [
             {
