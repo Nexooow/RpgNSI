@@ -40,6 +40,10 @@
             ]
         },
         {
+            "type":"execution",
+            "code":"jeu.equipe.ajouter_personnage(Fachan)"
+        },
+        {
             "type": "street-fighter"
         }
     ],

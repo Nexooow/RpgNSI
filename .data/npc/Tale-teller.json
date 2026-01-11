@@ -73,7 +73,7 @@
                 "type": "dialogue",
                 "speaker": "Tale-teller",
                 "lines": [
-                    "Le sort de BOB, LE PARESSEUX, vient à échéance. Si rien n'est fait, d'ici 57 jours, nous nous remettrons à tourner jusqu'à ce que mort s'ensuive."
+                    "Le sort de BOB, LE PARESSEUX, vient à échéance. Si rien n'est fait, nous nous remettrons à sombrer dans une guerre sans fin jusqu'à ce que rien ne subsiste sur cette terre."
                 ]
             },
             {
@@ -88,7 +88,7 @@
     ],
     "interaction": [{
         "type":"condition",
-        "code":"met_twice==False",
+        "code":"jeu.variables_jeu[met_twice]==False",
         "actions":{
             "result==True":[{
             "type":"dialogue",
@@ -107,13 +107,18 @@
                 "Lorsque sa forme physique a presque complètement disparu, elle a du créer des agents capables de relayer le dessein de la Volonté Suprême.",
                 "Marika, membre du peuple Numen, race dont on sait peu de choses si ce n'est que ce sont des Etrangers à l'Entre-Terre, a été choisie par Elle pour relayer Sa voix." 
             ]
-        }],
+        },
+        {
+            "type":"execution",
+            "code":"jeu.variables_jeu[met_twice]=True"
+        }
+    ],
             "result==False":[
             {
                 "type":"dialogue",
                 "speaker":"Tale-teller",
                 "lines":[
-                    "Les Elus de la Volonté Suprême ne peuvent rester sans Consorts. Le Premier Fidèle, Godfrey, ayant été banni de l'Entre-Terre à la suite de la Première Guerre contre les Géants,",
+                    "Les Elus de la Volonté Suprême ne peuvent rester sans Consorts. Le Premier Fidèle, Simon, ayant été banni de l'Entre-Terre à la suite de la Première Guerre contre les Géants,",
                     "Marika se trouvait alors sans mari pour régner. Elle décida alors de rappeler Radagon à ses côtés"
                 ]
             },
@@ -138,8 +143,8 @@
                 "speaker":"Tale-teller",
                 "lines":[
                     "Afin de se soustraire à la Volonté Suprême, Demiurge devait dérober l'un des Doigts conservés par Marika.",
-                    "Lorsqu'il tenta de s'approcher de l'Elder Tree, Demiurge rencontra Godwyn, le premier fils de Marika. Lorsque Godwyn s'opposa à Demiurge,",
-                    "il se fit tuer. En apprenant la nouvelle de la mort de son fils aîné Godwyn, Marika, folle de rage et de chagrin, perdit la raison, et éparpilla les Trois Doigts à travers toute l'Entre-Terre.",
+                    "Lorsqu'il tenta de s'approcher de l'Elder Tree, Demiurge rencontra Wynnflaed, le premier enfant de Marika. Lorsque Wynnflaed s'opposa à Demiurge,",
+                    "il se fit tuer. En apprenant la nouvelle de la mort de son fils aîné Wynnflaed, Marika, folle de rage et de chagrin, perdit la raison, et éparpilla les Trois Doigts à travers toute l'Entre-Terre.",
                     "Ce fut alors le début du désastre que nous connaissons aujourd'hui, connu sous le nom de l’Éclatement."
                 ]
             },

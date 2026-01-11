@@ -1,6 +1,6 @@
 import pygame
 import random
-from lib.render import text_render_centered, text_render_centered_left
+from lib.render import text_render_centered, text_render_centered_left,render_text_wrapped
 from menu.Menu import Menu
 from lib.file import File
 import Jeu
@@ -15,7 +15,12 @@ separator_x = box_x + 400
 
 menu_width = box_width - (separator_x - box_x)
 
-
+DESCRIPTION_RECT = pygame.Rect(
+    100,
+    300,
+    menu_width - 40,
+    total_height
+)
 class MenuCompetences(Menu):
 
     def __init__(self, jeu):
@@ -27,7 +32,6 @@ class MenuCompetences(Menu):
         self.choice = None
         self.menu_actuel = "principal"
         self.selection = 0
-        self.prix_accessible={}
 
     def ouvrir(self):
         self.menu_actuel = "principal"
@@ -59,7 +63,10 @@ class MenuCompetences(Menu):
 
 
         elif self.menu_actuel == self.perso_selectionne.nom:
-            self.options = self.perso_selectionne.competences
+            self.options = self.perso_selectionne.competences_equipes
+            if not self.options:
+                self.changer_menu("principal")
+                return
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -74,16 +81,20 @@ class MenuCompetences(Menu):
             prix_accessible = {
                 competence: self.perso_selectionne.competences[competence]
                 for competence in self.perso_selectionne.competences.keys()
-                if (self.perso_selectionne.competences[competence][
+                if competence not in self.perso_selectionne.competences_equipes and (self.perso_selectionne.competences[competence][
                         "points"] <= self.perso_selectionne.points_competences or (
                             competence in self.perso_selectionne.competences_achetees and not competence in self.perso_selectionne.competences_equipes))
             }
-            self.prix_accessible=prix_accessible
             self.options = list(prix_accessible.keys())
+            
             print(self.options)
             print(self.selection)
+            if not self.options:
+                self.changer_menu("principal")
+                return
             competence_selectionnee = list(prix_accessible.keys())[self.selection]
-            self.display_text = self.perso_selectionne.competences[competence_selectionnee]
+            self.description_text = self.perso_selectionne.competences[competence_selectionnee]
+            self.displaying=True
             # self.options=self.perso_selectionne.competences
             for event in events:
                 if event.type == pygame.KEYDOWN:
@@ -95,11 +106,12 @@ class MenuCompetences(Menu):
 
                             self.perso_selectionne.competences_equipes[self.choice] = competence_selectionnee
                         self.perso_selectionne.competences_achetees.append(competence_selectionnee)
+                        self.perso_selectionne.points_competences-=1
                         self.changer_menu(self.perso_selectionne.nom)
                     elif event.key == pygame.K_ESCAPE:
                         if self.displaying:
                             self.displaying = False
-                            self.display_text = ""
+                            self.description_text = ""
                         self.changer_menu("principal")
 
     def draw_selection(self, options):
@@ -124,15 +136,26 @@ class MenuCompetences(Menu):
             options = self.perso_selectionne.competences_equipes
             self.draw_selection(options)
         elif self.menu_actuel == "competences possibles":
-
+            """
             competences = self.perso_selectionne.competences
             self.draw_selection([comp["nom"] for comp in competences.values()])
+            """
+            self.draw_selection(self.options)
             if self.displaying:
+                """
                 text_render_centered(
                     self.jeu.ui_surface,
                     f"{self.description_text}",
                     "regular",
                     (230, 230, 230),
-                    (500, 620),
+                    (500, 350),
                     size=18
                 )
+                """
+                render_text_wrapped(
+                    self.jeu.ui_surface,
+                    self.description_text["description"],
+                    font_name="regular",
+                    rect=DESCRIPTION_RECT
+                )
+

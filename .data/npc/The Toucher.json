@@ -5,7 +5,7 @@
         {
             "type": "condition",
             "name": "check_finger",
-            "code": "'finger_radahn' in jeu.equipe.inventaire.keys()",
+            "code": "jeu.variables_jeu['radahn_killed']==True",
             "actions": {
                 "not result": [
                     {
@@ -60,5 +60,45 @@
             }
         }
     ],
-    "interaction": []
+    "interaction": [
+        {
+            "type":"condition",
+            "name":"check_finger",
+            "code":"radahn_killed==True",
+            "actions":{
+                "result": [
+                    {
+                        "type": "dialogue",
+                        "speaker": "The Toucher",
+                        "lines": [
+                            "Merci de nous avoir purifié de ce fardeau"
+                        ]
+                    }
+                ],
+                "not result":[
+                    {
+                        "type":"dialogue",
+                        "speaker":"The Toucher",
+                        "lines":[
+                            "Radahn est mon frère. Nous sommes tous les deux les fils de Radagon, le Second Fidèle de Marika.",
+                            "Il y a bien longtemps que notre paternel a disparu. ",
+                            "Après la mort de notre soeur, notre mère, folle de chagrin, a sombré dans la folie et a causé ce désastre.",
+                            "Mon frère et moi, nous nous sommes battus un temps incalculable. Personne n'en est sorti vainqueur.",
+                            "Il n'est plus conscient, et je n'ai bientôt plus de consistance."
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "speaker":"The Toucher",
+                        "lines":[
+                            "Notre avidité pour le pouvoir nous a consumé.",
+                            "Nous, tout comme notre beau-père, Simon. Bien qu'il ait été exilé pour ses crimes durant la guerre, il est revenu, en quête de toujours plus de pouvoir.",
+                            "Exilé par la Volonté, les Doigts lui permettent de se prémunir de Ses décisions.",
+                            "Il est revenu, et il est aussi puissant qu'au sommet de sa gloire."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
 }

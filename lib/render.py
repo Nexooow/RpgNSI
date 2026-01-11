@@ -50,3 +50,28 @@ def text_render_centered_left(
         center=(pos[0] + text_surface.get_width() / 2, pos[1])
     )
     surface.blit(text_surface, position)
+def render_text_wrapped(surface, text, font_name,  rect,color=(230,230,230), line_spacing=2):
+    font=pygame.font.Font(f"./assets/fonts/{font_name}.ttf",18)
+    x,y,w,h=rect
+    space_width=font.size(" ")[0]
+    words=text.split(" ")
+    line=[]
+    line_width=0
+    for word in words:
+        word_surface=font.render(word, True, color)
+        word_width,word_height=word_surface.get_size()
+        if line_width+word_width <= w:
+            line.append(word)
+            line_width+= word_width + space_width
+        else:
+            line_surface=font.render(" ".join(line), True, color)
+            surface.blit(line_surface, (x, y))
+            y+= word_height + line_spacing
+            if y > rect[1] + h - word_height:
+                return
+            line = [word]
+            line_width = word_width + space_width
+
+    if line and y <= rect[1] + h - word_height:
+        line_surface = font.render(" ".join(line), True, color)
+        surface.blit(line_surface, (x, y))

@@ -15,6 +15,10 @@
                     "valeur": "boutique"
                 },
                 {
+                    "name":"Discuter",
+                    "valeur":"chat"
+                },
+                {
                     "name": "Rien merci",
                     "valeur": "quitter"
                 }
@@ -36,6 +40,21 @@
                                 "stock": 3
                             }
                         ]
+                    }
+                ],
+                "chat":[
+                    {
+                        "type":"dialogue",
+                        "speaker":"Barman",
+                        "lines":[
+                            "Vous partez à l'aventure? A travers tout le continent? Tout seul? C'est bien triste, de vivre une vie pleine d'expérience",
+                            "et de ne pouvoir la partager avec personne. Tiens, et si je me greffais à vous? A deux, on traversera mieux les épreuves.",
+                            "Si l'un baisse les bras, l'autre sera toujours là pour le rattraper. C'est d'accord? Hah! Ca me fera de belles histoires à raconter à mes petits-enfants"
+                        ]
+                    },
+                    {
+                        "type":"execution",
+                        "code":"jeu.equipe.ajouter_personnage(Barman)"
                     }
                 ],
                 "quitter": [

@@ -1,0 +1,61 @@
+{
+    "id":"Wynnflaed",
+    "nom":"Wynnflaed",
+    "rencontre":[
+        {
+            "type":"dialogue",
+            "lines":[
+                "Wynnflaed est un fantôme du passé, une instance presque divine qui échoua à le devenir.",
+                "Elle est le premier enfant de Marika, et était destinée à lui succéder.",
+                "Ses paroles sont confuses, destinées au Consort qui lui a été promis, Radahn."
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Ma fidèle lame. Et Champion.",
+                "Puissent tes actes êtres chantés.",
+                "Maintenant, la promesse est sur le point d'être honorée, et l'âme du Seigneur Mon frère reviendra",
+                "afin qu'il devienne Mon Consort"
+            ]
+        }
+    ],
+    "interaction":[
+        {
+            "type":"condition",
+            "code":"jeu.variables_jeu['radahn_killed']==True",
+            "actions":{
+                "result==True":[
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Seigneur mon frère. Enfin vous êtes revenu.",
+                            "Aventurier, vous qui êtes en quêtes des Doigts",
+                            "Si vous êtes affligés par ce monde qui nous entoure",
+                            "Montrez-nous le chemin, à moi, Wynnflaed, et à mon Consort Promis, Radahn"
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Je vous promets un fabuleux voyage de mille ans guidé par la compassion.",
+                            "Puissent vos pensées... être d'amour",
+                            "Seigneur d'une ère révolue, allons-y ensemble"
+                        ]
+                    }
+                ],
+                "result==False":[
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Seigneur mon frère,",
+                            "Je vais devenir un dieu.",
+                            "Si nous honorons notre part du marché, promettez-moi de devenir mon Consort.",
+                            "Je ferais du monde un endroit plus agréable."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -42,6 +42,15 @@
             "actions": {
                 "1": [
                     {
+                        "type":"dialogue",
+                        "lines":[
+                            "La réunification des doigts permet le retour de l'Ordre sur l'Entre-Terre.",
+                            "Le temps s'arrête de nouveau, pour reprendre lentement son cours.",
+                            "La putréfaction qui s'étendait sur le monde met un terme à son avancée. Les guerres sont finies.",
+                            "Marika et la Volonté Suprême ont de nouveau la main-mise sur le monde."
+                        ]
+                    },
+                    {
                         "type": "execution",
                         "code": "jeu.variables_jeu['Termine'] = True"
                     }
@@ -53,6 +62,55 @@
                         "lines": [
                             "Vous osez défier la volonté sacrée?",
                             "Alors subissez la colère du Paresseux éternel!"
+                        ]
+                    },
+                    
+                    {
+                        "type":"combat",
+                        "ennemis":{
+                            "type":"ennemi",
+                            "nom":"Marika",
+                            "vie":1000,
+                            "attributs":{
+                                "vitesse":100,
+                                "force":1
+                            }
+                        }
+                    },
+                    {
+                        "type":"dialogue",
+                        "speaker":"Wynnflaed",
+                        "lines":[
+                            "Je jure présentement, à toute forme de vie, et toute âme qui subsiste encore,",
+                            "que vient à présent l'âge de notre eden.",
+                            "Un voyage de mille ans guidé par la compassion,",
+                            "Débutant ici, l'amour englobe tout. Nulle chose vivante ne sera refoulée, nul acte censuré.",
+                            "Je suis prête. A embracer le tout. Allons-y ensemble, Radahn, mon consort promis."
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "L'âme de Wynnflaed s'approche des racines de l'Elder Tree, et se met à parler aux restes du Paresseux Divin.",
+                            "Il n'est plus qu'idéal, symbole de pouvoir sans âme"
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "speaker":"Wynnflaed",
+                        "lines":[
+                            "Jeune pousse, jeune pousse. Retourne au sein de la terre. Mais souviens-toi bien. Tu m'appartiens.",
+                            "Ainsi je me donnerai entièrement. Ceci est pour toi. Mon abondance, ma goûte de rosée. Etanche ta soif, de tout ton être.",
+                            "Fleuris et éclos, encore et encore. Grandis, fortifie-toi. Jusqu'au jour où tu pourras partager mon rêve."
+                        ]
+                    },
+                    {
+                        "type":"dialogue",
+                        "speaker":"Wynnflaed",
+                        "lines":[
+                            "Marika n'est plus. Sans elle, sans vecteur de Sa voix, la Volonté Suprême n'a plus d'emprise sur ces terres.",
+                            "Inscris ma vision dans ton coeur.",
+                            "Dans le monde nouveau qui as été créé par tes actes, toute chose prospérera, qu'elle soit gracieuse ou maléfique."
                         ]
                     }
                 ]
