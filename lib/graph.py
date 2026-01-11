@@ -115,14 +115,18 @@ def format_temps(heures):
 def affichage_graphe(graph: Graph, screen, image):
     img = images[image or "background"]
     g = graph.get_graph()
-
-    fig, ax = plt.subplots(figsize=(10, 7))
-    ax.imshow(img, extent=(0, 1000, 700, 0))
+    screen_width, screen_height = screen.get_size()
+    fig=plt.figure(figsize=(screen_width / 100, screen_height / 100), dpi=100)
+    ax=fig.add_subplot(1,1,1)
+    ax.set_xlim(0, screen_width)
+    ax.set_ylim(screen_height, 0)
+    ax.axis("off")
+    ax.imshow(img, extent=(0, screen_width, screen_height, 0))
     aretes_labels = {(u, v): format_temps(data['weight']) for u, v, data in g.edges(data=True)}
-
+    scaled_pos={k:(x*screen_width/1000, y*screen_height/700) for k,(x,y) in graph.pos.items()}
     nx.draw(
         g,
-        graph.pos,
+        scaled_pos,
         node_color="none",
         with_labels=True,
         font_family="Arial",
@@ -134,7 +138,7 @@ def affichage_graphe(graph: Graph, screen, image):
     )
     nx.draw_networkx_edge_labels(
         g,
-        graph.pos,
+        scaled_pos,
         edge_labels=aretes_labels,
         label_pos=0.5,
         rotate=False,
