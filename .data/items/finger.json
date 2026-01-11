@@ -2,7 +2,7 @@
     "id": "finger",
     "nom": "finger",
     "description": "Doigt du Divin Paresseux",
-    "type": "consommable",
+    "type": "artefact",
     "effets": [],
     "valeur": 0
 }

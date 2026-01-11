@@ -255,6 +255,15 @@
                                             ]
                                         }
                                     ]
+                                },
+                                {
+                                    "type": "ajout-items",
+                                    "items": [
+                                        {
+                                            "id": "finger",
+                                            "quantite": 1
+                                        }
+                                    ]
                                 }
                             ],
                             "cancel": []
