@@ -31,10 +31,6 @@
       ]
     },
     {
-      "type":"execution",
-      "code":"pygame.image.load('./assets/sprites/nain-de-jardin-qui-montre-ses-fesse.png')"
-    },
-    {
       "type":"dialogue",
       "lines":[
         "Vous vous êtes fait flasher par un nain.",

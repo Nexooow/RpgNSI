@@ -10,10 +10,7 @@
                 "Soudain, vous remarquez une étrange bête et vous exclamez:"
             ]
         },
-        {
-            "type": "execution",
-            "code": "pygame.image.load('./assets/sprites/holy_cow.png')"
-        },
+        
         {
             "type": "dialogue",
             "lines": [

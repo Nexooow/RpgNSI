@@ -12,7 +12,7 @@ from .Execution import Execution
 from .RandomAction import RandomAction
 from .Selection import Selection
 from .SelectionAction import SelectionAction
-
+from .AddPerso import AddPerso
 from boss.radahn import Radahn
 from boss.street_fighter import StreetFighter
 
@@ -29,7 +29,7 @@ actions_par_type = {
     "random": RandomAction,
     "select": Selection,
     "selection-action": SelectionAction,
-
+    "add_perso":AddPerso,
     "street-fighter": StreetFighter,
     "radahn": Radahn
 }

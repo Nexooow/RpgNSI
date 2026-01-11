@@ -1,0 +1,131 @@
+{
+    "type":"event",
+    "name":"unicorn",
+    "run":[
+        {
+            "type":"random",
+            "actions_possibles":[
+                [
+                {
+            "type":"dialogue",
+            "lines":[
+                "Une licorne appraît devant vous, son pelage scintillant sous la lumière du soleil.",
+                "Elle vous regarde avec des yeux pleins de sagesse et de mystère.",
+                "Soudain, elle s'incline légèrement, comme pour vous inviter à la suivre"
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Elle vous entraîne sur un chemin tortueux." ,
+                "Vous peinez à comprendre ou cet être légendaire vous mène."
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "La licorne disparaît tout à coup derrière un gros rocher.",
+                "Vous la rejoignez, et ne comprenez pas où elle a pu passer. Il n'y a rien autour du rocher.",
+                "Vous apercevez alors une faille dans la roche."
+            ]
+        },
+        {
+            "type":"select",
+            "question":"",
+            "options":[
+                {
+                    "name":"Suivre la licorne",
+                    "valeur":"follow"
+                },
+                {
+                    "name":"Reprendre votre route, et ignorer la nature même de l'être humain, la curiosité.",
+                    "valeur":"no_follow"
+                }
+            ],
+            "actions":{
+                "follow":[
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "La curiosité est la base des plus grandes réalisations des espèces conscientes, de l'exploration des confins de l'Entre-Terre à la découverte des instances qui régissent les lois de notre monde.",
+                            "Cette soif de la découverte vous pousse toujours plus loin, et vous mène désormais à la découverte d'une source mythique.",
+                            "La licorne n'était qu'un esprit, et vous laisse désormais seul, seul avec cette source à l'eau cristalline, à l'atmosphère envoutante.",
+                            "Vous vous approchez de la surface de l'eau."
+                        ]
+                    },
+                    {
+                        "type":"random",
+                        "actions_possibles":[
+                            [
+                                {
+                                    "type":"dialogue",
+                                    "lines":[
+                                        "Votre main pénètre la surface pristine de l'eau. Une onde s'en dégage, et illumine la salle.",
+                                        "Vous gagnez le savoir de la source, de toutes les espèces qui l'ont jamais touchée, des siècles de savoir en un instant."
+                                    ]
+                                },
+                                {
+                                    "type":"execution",
+                                    "code":"jeu.equipe.ajouter_xp(10)"
+                                }
+                            ],
+                            [
+                                {
+                                    "type":"dialogue",
+                                    "lines":[
+                                        "A son contact, vous commencez à sentir des démangeaisons intenses.",
+                                        "Cette eau est atteinte par la putréfaction!",
+                                        "Vous voyez du coin de l'oeil une chèvre, étendue sur le rivage, dont les entrailles coulent dans la source."
+                                    ]
+                                },
+                                {
+                                    "type":"dialogue",
+                                    "lines":[
+                                        "Vous vous en éloignez prestement"
+                                    ]
+                                },
+                                {
+                                    "type":"execution",
+                                    "code":"jeu.equipe.infliger(10)"
+                                }
+                            ]
+                        ]
+                    }
+                ],
+                "not_follow":[
+                    {
+                        "type":"dialogue",
+                        "lines":[
+                            "Vous reprenez votre route, ignorant de ce qui eut pu arriver.",
+                            "Le conservatisme est parfois préférable à la réforme."
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    [
+        {
+            "type":"dialogue",
+            "lines":[
+                "Une bête de forme chevaline apparaît devant vous, sa robe noire charbon engloutissant toute lumière.",
+                "Vous ne parvenez à la distinguer que grâce à ses contours, et à ses yeux d'un rouge brûlant.",
+                "Ses cornes, en spirales telles celles d'un bouc, sont parsemées d'argent."
+            ]
+        },
+        {
+            "type":"dialogue",
+            "lines":[
+                "Le cauchemar se lance tout à coup sur vous, et vous dérobe un peu de votre vitalité en passant à travers votre corps."
+            ]
+        },
+        {
+            "type":"execution",
+            "code":"jeu.equipe.infliger(10)"
+        }
+    ]
+]
+        }
+        
+    ]
+}

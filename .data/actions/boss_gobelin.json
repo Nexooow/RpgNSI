@@ -8,20 +8,190 @@
                 {
                     "type": "ennemi",
                     "nom": "Gobelin",
+                    
                     "vie": 100,
-                    "dmg":10
+                    "attributs":{
+                        "vitesse":50
+                    },
+                    "attaques": [
+                        {
+                            "nom": "Poings",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 100,
+                                    "w_end": 150,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 10
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 20
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 30
+                                }
+                            ]
+                        }
+                    ]
+                    
                 },
                 {
                     "type":"ennemi",
                     "nom":"Gobelin d'elite",
                     "vie":300,
-                    "dmg":30
+                    "attributs":{
+                        "vitesse":50
+                    },
+                    "attaques": [
+                        {
+                            "nom": "Poings",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 100,
+                                    "w_end": 150,
+                                    "damage": 30
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 30
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 30
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 30
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 30
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 40
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 50
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "type":"ennemi",
                     "nom":"Gobelin",
                     "vie":100,
-                    "dmg":10
+                    "attributs":{
+                        "vitesse":50
+                    },
+                    "attaques": [
+                        {
+                            "nom": "Poings",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 100,
+                                    "w_end": 150,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 10
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 10
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 20
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 30
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

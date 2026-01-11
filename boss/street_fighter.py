@@ -64,3 +64,8 @@ class StreetFighter(Action):
         self.player.move(1000, 700, self.jeu.fond, self.demiurge)
         self.demiurge.move(1000, 700, self.jeu.fond, self.player, False)
         self.demiurge.ai_behavior(self.jeu.fond, self.player)
+        if not self.demiuge.alive and self.demiurge.frame_index==len(self.demiurge.animation_list[6])-1:
+            self.jeu.variables_jeu['demiurge_killed']=True
+            self.complete=True
+        if not self.player.alive and self.player.frame_index==len(self.player.animation_list[6])-1:
+            self.complete=True

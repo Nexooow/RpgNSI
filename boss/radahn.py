@@ -103,7 +103,10 @@ class Radahn(Action):
             )
         if player.health <= 0:
             text_render_centered(self.jeu.ui_surface, "GIT GUD", "extrabold", color=(255, 0, 0), pos=(500, 350))
+            self.complete=True
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()
             text_render_centered(self.jeu.ui_surface, "Great Finger Obtained", "bold", color=(255, 215, 0),
                                  pos=(500, 350))
+            self.jeu.variables_jeu['radahn_killed']=True
+            self.complete=True

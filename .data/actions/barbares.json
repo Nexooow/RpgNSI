@@ -9,13 +9,126 @@
                     "type": "ennemi",
                     "nom": "Barbare",
                     "vie": 50,
-                    "dmg": 50
+
+                    "attributs":{
+                        "vitesse":30
+                    },
+                    "attaques": [
+                        {
+                            "nom": "Poings",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 100,
+                                    "w_end": 150,
+                                    "damage": 50
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 50
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 50
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 50
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 50
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 60
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 70
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "type":"ennemi",
                     "nom":"Barbare d'elite",
                     "vie":80,
-                    "dmg":80
+                    "attributs":{
+                        "vitesse":30
+                    },
+                    "attaques": [
+                        {
+                            "nom": "Poings",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 100,
+                                    "w_end": 150,
+                                    "damage": 80
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 175,
+                                    "w_end": 250,
+                                    "damage": 80
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 255,
+                                    "w_end": 300,
+                                    "damage": 80
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 325,
+                                    "w_end": 370,
+                                    "damage": 80
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 375,
+                                    "w_end": 420,
+                                    "damage": 80
+                                }
+                            ]
+                        },
+                        {
+                            "nom": "Combo rapide",
+                            "actions": [
+                                {
+                                    "type": "parry",
+                                    "w_start": 200,
+                                    "w_end": 230,
+                                    "damage": 90
+                                },
+                                {
+                                    "type": "parry",
+                                    "w_start": 240,
+                                    "w_end": 270,
+                                    "damage": 100
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

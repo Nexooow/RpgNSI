@@ -53,8 +53,8 @@
                         ]
                     },
                     {
-                        "type":"execution",
-                        "code":"jeu.equipe.ajouter_personnage(Barman)"
+                        "type":"add_perso",
+                        "perso_data":"Barman"
                     }
                 ],
                 "quitter": [

@@ -34,17 +34,26 @@
         },
         {
             "type": "dialogue",
-            "speaker": "Fachan",
             "lines": [
-                "Vous commencez à le rattraper quand, soudain, le sol s'effondra sous vos pieds*"
+                "Vous commencez à le rattraper quand, soudain, le sol s'effondra sous vos pieds",
+                "Vous tombez seul dans la crevasse, et entrez dans le royaume de Demiurge"
             ]
         },
         {
-            "type":"execution",
-            "code":"jeu.equipe.ajouter_personnage(Fachan)"
+            "type": "street-fighter"
         },
         {
-            "type": "street-fighter"
+            "type":"ajout-items",
+            "items":[
+                {
+                    "id":"finger",
+                    "quantite":1
+                }
+            ]
+        },
+        {
+            "type":"add_perso",
+            "perso_data":"Fachan"
         }
     ],
     "interaction": []

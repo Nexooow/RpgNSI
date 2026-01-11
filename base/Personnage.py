@@ -549,21 +549,21 @@ class Fachan(Personnage):
         },
                          50,
                          450, [100, 0.25, [0, 0]], [
+                             pygame.transform.flip
+                                 (pygame.image.load('./assets/sprites/fachan_static_steel-removebg-preview.png'),
+                                                         True,False),
                              pygame.transform.flip(
-                                 pygame.transform.scale(pygame.image.load('./assets/sprites/fachan_static_steel.png'),
-                                                        (int((408 / 1024) * 1536), 408)), False, True),
-                             pygame.transform.flip(
-                                 pygame.transform.scale(pygame.image.load("./assets/sprites/fachan_static.png"),
-                                                        (int((408 / 1024) * 1536), 408)), False, True),
-                             pygame.transform.flip(pygame.image.load("./assets/sprites/fachan_attacking.png"), False,
-                                                   True),
+                                 pygame.image.load("./assets/sprites/fachan_static-removebg-preview.png")
+                                                        , True, False),
+                             pygame.transform.flip(pygame.image.load("./assets/sprites/fachan_attacking.png"), True,
+                                                   False),
                              pygame.transform.flip(pygame.image.load("./assets/sprites/fachan_steelform_attacking.png"),
-                                                   False, True),
-                             pygame.transform.flip(pygame.image.load("./assets/sprites/look_for_feet.png"), False,
-                                                   True),
+                                                   True, False),
+                             pygame.transform.flip(pygame.image.load("./assets/sprites/look_for_feet.png"), True,
+                                                   False),
                              pygame.transform.flip(
                                  pygame.transform.scale(pygame.image.load("./assets/sprites/look_for_feet_steel.png"),
-                                                        (int((408 / 100) * 97), 100), False, True))
+                                                        (int((408 / 100) * 97), 100), True, False))
                          ],
                          [1, 1, 3, 3, 1, 1],
                          {0: [0], 1: [0], 2: [2], 3: [2], 4: [0], 5: [0]},

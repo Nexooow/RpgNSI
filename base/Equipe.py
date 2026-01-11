@@ -49,7 +49,9 @@ class Equipe:
                 self.inventaire[item_id] -= quantite
                 if self.inventaire[item_id] <= 0:
                     del self.inventaire[item_id]
-
+    def ajouter_xp(self,xp):
+        for personnage in self.personnages:
+            personnage.xp+=xp
     def restaurer(self, json):
         self.argent = json["argent"]
         self.chance = json["chance"]
