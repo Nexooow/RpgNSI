@@ -196,8 +196,6 @@ class Jeu:
             self.fond.fill((255, 255, 255))
             self.fond.blit(fonds_regions[self.region], (0, 0))
             if self.action_actuelle is not None:
-                if not self.action_actuelle.utilise_fond:
-                    pass
                 self.action_actuelle.draw()
             self.ui()
         self.filters()  # applique les filtres sur l'écran

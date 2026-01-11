@@ -81,7 +81,7 @@ class Radahn(Action):
                 self.jeu.fond.blit(meteor.frame, meteor.rect)
         player.update()
         player.draw(self.jeu.fond)
-        pygame.draw.circle(self.jeu.fond, (0, 255, 0), player.rect.center, int(player.radiuspx), 1)
+
         self.explosion_group.draw(self.jeu.fond)
         self.explosion_group.update()
 
@@ -104,6 +104,11 @@ class Radahn(Action):
             )
         if player.health <= 0:
             text_render_centered(self.jeu.ui_surface, "GIT GUD", "extrabold", color=(255, 0, 0), pos=(500, 350))
+            # Téléporter l'équipe à l'auberge et soigner
+            self.jeu.region = "Auberge"
+            self.jeu.lieu = self.jeu.regions["Auberge"].entree
+            self.jeu.equipe.soigner_complet()
+            self.jeu.actions.contenu = []
             self.complete = True
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()

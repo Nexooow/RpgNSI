@@ -147,6 +147,17 @@ class Combat(Action):
         self.selection = 0
         self.debut_tour()
 
+    def synchroniser_stats_equipe(self):
+        """
+        Synchronise les stats des personnages du combat avec ceux de l'équipe.
+        Appelé à la fin du combat.
+        """
+        for perso_combat in self.personnages:
+            perso_equipe = self.jeu.equipe.get_personnage(perso_combat["nom"])
+            if perso_equipe:
+                perso_equipe.attributs["vie"] = perso_combat["attributs"]["vie"]
+                perso_equipe.alive = perso_combat["attributs"]["vie"] > 0
+
     def debut_tour(self):
         """
         Applique les effets sur le joueur/ennemi au début du tour.
@@ -510,6 +521,17 @@ class Combat(Action):
                 break
 
         if not personnages_vivants or not ennemi_vivants:
+            # Synchroniser les stats des personnages avec l'équipe
+            self.synchroniser_stats_equipe()
+
+            if not personnages_vivants:
+                # Tous les personnages sont morts → téléporter à l'auberge et soigner
+                self.jeu.region = "Auberge"
+                self.jeu.lieu = self.jeu.regions["Auberge"].entree
+                self.jeu.equipe.soigner_complet()
+                self.jeu.actions.contenu = []
+                self.set_message("L'équipe a été vaincue... Retour à l'auberge.")
+
             self.complete = True
 
         for event in events:

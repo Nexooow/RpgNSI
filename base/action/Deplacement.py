@@ -142,6 +142,10 @@ class Deplacement(Action):
         self.jeu.lieu = self.data["lieu"]
         self.jeu.region = self.data["region"]
 
+        # Soigner l'équipe si on arrive à l'auberge
+        if self.data["region"] == "Auberge":
+            self.jeu.equipe.soigner_complet()
+
         if self.jeu.debute: self.jeu.sauvegarder()
 
         self.options = [
