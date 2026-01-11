@@ -51,7 +51,7 @@
                                 {
                                     "type": "combat",
                                     "musique": "clair_obscur_we_lost",
-                                    "fond": "background.webp",
+                                    "fond": "fight_zone.png",
                                     "ennemis": [
                                         {
                                             "type": "ennemi",

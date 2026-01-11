@@ -2,7 +2,7 @@ import pygame
 import random
 
 from lib.combat import add_effets, calcul_degats
-from lib.render import text_render_centered_left
+from lib.render import text_render_centered_left, text_render_centered
 from .Action import Action
 from lib.file import File
 from lib.sounds import son_selection
@@ -72,12 +72,6 @@ class Combat(Action):
         self.musique = data.get("musique", None)
         self.utilise_musique = self.musique is not None
 
-        self.fond = data.get("fond", None)
-        self.utilise_fond = self.fond is not None
-
-        if self.utilise_fond:
-            self.fond = pygame.image.load(f"./assets/maps/{self.fond}")
-
         self.tours = File()
         self.tour = None
         self.action = None
@@ -91,6 +85,7 @@ class Combat(Action):
 
         self.menu_actuel = "principal"
         self.selection = 0
+        self.item_en_cours = None
 
         self.message = None
 
@@ -141,7 +136,7 @@ class Combat(Action):
             return self.ennemis[tour[1]]
 
     def set_message(self, message):
-        self.message = (message, 90)
+        self.message = (message, 200)
 
     def prochain_tour(self):
         if self.tours.est_vide():
@@ -204,6 +199,10 @@ class Combat(Action):
             cible = random.choice(
                 [perso for perso in self.personnages if perso["attributs"]["vie"] > 0]
             )
+
+            # Afficher le message d'attaque
+            nom_attaque = attaque.get("nom", "Attaque")
+            self.set_message(f"{ennemi['nom']} utilise {nom_attaque} sur {cible['nom']}")
 
             # Créer les attaques avec positions
             actions_avec_positions = []
@@ -305,8 +304,10 @@ class Combat(Action):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         ennemi = self.ennemis[ennemis_vivants[self.selection]]
-                        ennemi["attributs"]["vie"] -= calcul_degats(perso_actuel, ennemi)
+                        degats = calcul_degats(perso_actuel, ennemi)
+                        ennemi["attributs"]["vie"] -= degats
                         ajouter_pa(perso_actuel)
+                        self.set_message(f"{perso_actuel['nom']} attaque {ennemi['nom']} (-{int(degats)} PV)")
                         self.prochain_tour()
                     elif event.key == pygame.K_ESCAPE:
                         self.changer_menu("principal")
@@ -322,11 +323,46 @@ class Combat(Action):
                 if event.type == pygame.KEYDOWN:
                     if len(items_disponibles) > 0:
                         if event.key == pygame.K_SPACE:
-                            pass
+                            item_id, _ = items_disponibles[self.selection]
+                            self.item_en_cours = item_id
+                            item_data = self.jeu.loader.items.get(item_id)
+                            cible_type = item_data.get("cible", "soi")
+                            if cible_type == "soi":
+                                self.utiliser_item(item_id, perso_actuel)
+                            elif cible_type == "allie":
+                                self.changer_menu("cible_allie_item")
+                            elif cible_type == "ennemi":
+                                self.changer_menu("cible_ennemi_item")
+                            else:
+                                # Par défaut, utiliser sur soi-même
+                                self.utiliser_item(item_id, perso_actuel)
                         elif event.key == pygame.K_ESCAPE:
                             self.changer_menu("principal")
                     elif event.key == pygame.K_ESCAPE:
                         self.changer_menu("principal")
+
+        elif self.menu_actuel == "cible_allie_item":
+
+            allies_vivants = [index for index, perso in enumerate(self.personnages) if perso["attributs"]["vie"] > 0]
+            self.options = allies_vivants
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        cible = self.personnages[allies_vivants[self.selection]]
+                        self.utiliser_item(self.item_en_cours, cible)
+                    elif event.key == pygame.K_ESCAPE:
+                        self.changer_menu("items")
+
+        elif self.menu_actuel == "cible_ennemi_item":
+
+            self.options = ennemis_vivants
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        cible = self.ennemis[ennemis_vivants[self.selection]]
+                        self.utiliser_item(self.item_en_cours, cible)
+                    elif event.key == pygame.K_ESCAPE:
+                        self.changer_menu("items")
 
         elif self.menu_actuel == "competences":
 
@@ -374,10 +410,12 @@ class Combat(Action):
         classe_personnage = self.jeu.equipe.get_personnage(perso_dict["nom"])
         competence = classe_personnage.competences[competence_id]
         if competence["cost"]["pa"] > perso_dict["pa"]:
+            self.set_message("PA insuffisants !")
             return
         if "mitigation" in competence["cost"]:
             niveau_effet = perso_dict["effets"].get("mitigation", (0, 0))[0]
             if niveau_effet < competence["cost"]["mitigation"]:
+                self.set_message("Effet 'mitigation' requis !")
                 return
             else:
                 perso_dict["effets"]["mitigation"][1] -= 1
@@ -386,12 +424,61 @@ class Combat(Action):
         if "elan" in competence["cost"]:
             niveau_effet = perso_dict["effets"].get("elan", (0, 0))[0]
             if niveau_effet < competence["cost"]["elan"]:
+                self.set_message("Effet 'élan' requis !")
                 return
             else:
                 perso_dict["effets"]["elan"][1] -= 1
                 if perso_dict["effets"]["elan"][1] <= 0:
                     del perso_dict["effets"]["elan"]
+
+        # Afficher le message de compétence
+        if isinstance(target, dict):
+            self.set_message(f"{perso_dict['nom']} utilise {competence['nom']} sur {target['nom']}")
+        else:
+            self.set_message(f"{perso_dict['nom']} utilise {competence['nom']}")
+
         classe_personnage.utiliser_competence(competence_id, perso_dict, target)
+        self.prochain_tour()
+
+    def utiliser_item(self, item_id, cible):
+        """
+        Utilise un item consommable sur une cible.
+        Gère les différents effets: heal, buffs, debuffs, etc.
+        """
+        item_data = self.jeu.loader.items.get(item_id)
+        if not item_data:
+            return
+
+        effets = item_data.get("effets", {})
+
+        for nom_effet, (niveau, duree) in effets.items():
+            if nom_effet == "heal":
+                # Soigner la cible
+                vie_max = cible["attributs"].get("vie_max", cible.get("vie_depart", 100))
+                cible["attributs"]["vie"] = min(
+                    cible["attributs"]["vie"] + niveau,
+                    vie_max
+                )
+            elif nom_effet == "restore_pa":
+                # Restaurer des PA
+                cible["pa"] = min(cible["pa"] + niveau, max_pa)
+            elif nom_effet == "damage":
+                # Infliger des dégâts directs
+                cible["attributs"]["vie"] -= niveau
+            else:
+                # Autres effets (buffs/debuffs) - utiliser add_effets
+                add_effets(cible, {nom_effet: [niveau, duree]})
+
+        # Retirer l'item de l'inventaire
+        if item_id in self.jeu.equipe.inventaire:
+            self.jeu.equipe.inventaire[item_id] -= 1
+            if self.jeu.equipe.inventaire[item_id] <= 0:
+                del self.jeu.equipe.inventaire[item_id]
+
+        # Afficher un message
+        self.set_message(f"{cible['nom']} utilise {item_data['nom']}")
+
+        # Passer au tour suivant
         self.prochain_tour()
 
     def on_hit(self, attacker, target):
@@ -401,6 +488,14 @@ class Combat(Action):
     def update(self, events):
 
         self.sub_frame_count += 1
+
+        # Gestion du message
+        if self.message is not None:
+            texte, duree = self.message
+            if duree > 0:
+                self.message = (texte, duree - 1)
+            else:
+                self.message = None
 
         ennemi_vivants = False
         for ennemi in self.ennemis:
@@ -664,6 +759,16 @@ class Combat(Action):
             ennemis_vivants = [ennemi for ennemi in self.ennemis if ennemi["attributs"]["vie"] > 0]
             self.draw_selection([ennemi["nom"] for ennemi in ennemis_vivants])
 
+        elif self.menu_actuel == "cible_allie_item":
+
+            allies_vivants = [perso for perso in self.personnages if perso["attributs"]["vie"] > 0]
+            self.draw_selection([perso["nom"] for perso in allies_vivants])
+
+        elif self.menu_actuel == "cible_ennemi_item":
+
+            ennemis_vivants = [ennemi for ennemi in self.ennemis if ennemi["attributs"]["vie"] > 0]
+            self.draw_selection([ennemi["nom"] for ennemi in ennemis_vivants])
+
     def draw_health_bar(self, x, y, vie, vie_max, width=100, height=8):
         """Dessine une barre de vie à la position donnée"""
         ratio_vie = max(0, vie / vie_max) if vie_max > 0 else 0
@@ -682,6 +787,20 @@ class Combat(Action):
         pygame.draw.rect(self.jeu.ui_surface, color, (x - width // 2 + 1, y + 1, width * ratio_vie, height))
 
     def draw_ui(self):
+        # Affichage du message
+        if self.message is not None:
+            texte, duree = self.message
+            # Calcul de l'opacité pour un effet de fade-out
+            alpha = min(255, duree * 3)
+            text_render_centered(
+                self.jeu.ui_surface,
+                texte,
+                "imregular",
+                (255, 255, 255, alpha),
+                (500, 80),
+                size=24
+            )
+
         # menu
         if self.action == "selection" and self.tour[0] == "personnage":
             self.draw_menu()
