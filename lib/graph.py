@@ -121,7 +121,10 @@ def affichage_graphe(graph: Graph, screen, image):
     ax.set_xlim(0, screen_width)
     ax.set_ylim(screen_height, 0)
     ax.axis("off")
+
+    
     ax.imshow(img, extent=(0, screen_width, screen_height, 0))
+    scaled_pos={k:(x*screen_width/1000, y*screen_height/700) for k,(x,y) in graph.pos.items()}
     aretes_labels = {(u, v): format_temps(data['weight']) for u, v, data in g.edges(data=True)}
     scaled_pos={k:(x*screen_width/1000, y*screen_height/700) for k,(x,y) in graph.pos.items()}
     nx.draw(
