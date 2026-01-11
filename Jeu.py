@@ -36,11 +36,14 @@ class Jeu:
 
         self.menu = Accueil(self)
         self.loader = Loader(self)
-
+        
         # carte et regions/lieux
         self.carte = Graph(sommets, aretes, True, positions_sommets)
         self.equipe = Equipe(self)
         self.variables_jeu = {}  # variables utilisés par certaines actions (exemple : stock des boutiques ...)
+        self.variables_jeu["jeu_termine"]=False
+        self.variables_jeu["radahn_killed"]=False
+        self.variables_jeu["demiurge_killed"]=False
         self.regions = self.loader.charger_regions()
         self.region = "Auberge"
         self.lieu = self.regions["Auberge"].entree
@@ -182,6 +185,11 @@ class Jeu:
                 self.jouer_musique(musique_region, loop=True, volume=0.07)
             else:
                 self.jouer_musique(None)
+        if self.variables_jeu.get("jeu_termine",False):
+            self.ouvrir_menu(Accueil(self))
+            self.debute=False
+            self.action_actuelle=None
+            self.actions=File()
 
     def scene(self):
         """
