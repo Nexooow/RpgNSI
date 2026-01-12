@@ -1,7 +1,8 @@
 {
     "type":"event",
+    "id":"rats",
     "run":[{
-        "type":"conditon",
+        "type":"condition",
         "code":"jeu.equipe.argent>=10",
         "actions":{
             "result==True":[

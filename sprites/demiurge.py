@@ -1,5 +1,5 @@
 import pygame
-
+import random
 
 class Fighter:
     def __init__(self, x, y, data, sprite, animation, attack_frame, hitbox_height=180):
@@ -141,11 +141,11 @@ class Fighter:
                 self.frame_index = 0
                 if self.action == 3 or self.action == 4:
                     self.attacking = False
-                    self.attack_cooldown = 20
+                    #self.attack_cooldown = 20
                 if self.action == 5:
                     self.hit = False
                     self.attacking = False
-                    self.attack_cooldown = 20
+                    #self.attack_cooldown = 20
         if self.attacking and not self.has_hit:
             if self.frame_index in self.attack_frame[self.attack_type]:
                 self.apply_attack(target)
@@ -206,16 +206,19 @@ class Fighter:
                             self.flip = False
                     else:
 
-                        attack_choice = [1, 2]
-                        self.attack_type = attack_choice[pygame.time.get_ticks() % 2]
+                        #attack_choice = [1, 2]
+                        #self.attack_type = attack_choice[pygame.time.get_ticks() % 2]
+                        self.attack_type=random.randint(1,2)
                         self.attack(surface, player)
                         self.attack_cooldown = 20
                 else:
                     self.attack_cooldown -= 1
 
     def attack(self, surface, target=None):
+        
         self.attacking = True
         self.has_hit = False
+        self.attack_cooldown = 0
 
     def update_action(self, new_action):
         if new_action != self.action:

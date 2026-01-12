@@ -9,5 +9,5 @@ class AddPerso(Action):
         super().executer()
         from base.Personnage import Barman, Fachan
         nouveau_perso=Barman if self.perso_data=="Barman" else Fachan
-        self.jeu.personnages.ajouter_personnage(nouveau_perso(self.jeu.equipe))
+        self.jeu.equipe.ajouter_personnage(nouveau_perso(self.jeu.equipe))
         self.complete=True

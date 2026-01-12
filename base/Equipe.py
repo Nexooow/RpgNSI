@@ -7,6 +7,7 @@ classes_personnages = {
     "Fachan": Fachan
 }
 
+
 class Equipe:
 
     def __init__(self, jeu):
@@ -27,7 +28,8 @@ class Equipe:
         return personnage is not None
 
     def ajouter_personnage(self, personnage):
-        self.personnages.append(personnage)
+        if not self.personnage_debloque(personnage.nom):
+            self.personnages.append(personnage)
 
     def equiper_personnage(self, nom, item_id):
         if item_id in self.inventaire:
@@ -49,9 +51,11 @@ class Equipe:
                 self.inventaire[item_id] -= quantite
                 if self.inventaire[item_id] <= 0:
                     del self.inventaire[item_id]
-    def ajouter_xp(self,xp):
+
+    def ajouter_xp(self, xp):
         for personnage in self.personnages:
-            personnage.xp+=xp
+            personnage.xp += xp
+
     def restaurer(self, json):
         self.argent = json["argent"]
         self.chance = json["chance"]
@@ -79,3 +83,16 @@ class Equipe:
     def soigner(self, points):
         for personnage in self.personnages:
             personnage.soigner(points)
+
+    def soigner_complet(self):
+        """Soigne tous les personnages à leur vie maximum."""
+        for personnage in self.personnages:
+            personnage.attributs["vie"] = personnage.attributs["vie_max"]
+            personnage.alive = True
+
+    def tous_morts(self):
+        """Vérifie si tous les personnages sont morts."""
+        for personnage in self.personnages:
+            if personnage.attributs["vie"] > 0:
+                return False
+        return True

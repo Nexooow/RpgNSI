@@ -57,6 +57,7 @@
                                             "type": "ennemi",
                                             "nom": "Simon",
                                             "vie": 1000,
+                                            "image":"./assets/sprites/Simon.png",
                                             "attributs": {
                                                 "vitesse": 100
                                             },

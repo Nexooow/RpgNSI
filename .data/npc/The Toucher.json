@@ -39,10 +39,10 @@
                         ]
                     },
                     {
-                        "type": "ajout-item",
+                        "type": "ajout-items",
                         "items": [
                             {
-                                "id": "rotten finger",
+                                "id": "rotten_finger",
                                 "quantite": 1
                             }
                         ]
@@ -64,7 +64,7 @@
         {
             "type":"condition",
             "name":"check_finger",
-            "code":"radahn_killed==True",
+            "code":"jeu.variables_jeu['radahn_killed']==True",
             "actions":{
                 "result": [
                     {

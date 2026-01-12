@@ -9,6 +9,7 @@
                     "type": "ennemi",
                     "nom": "Gobelin",
                     "vie": 100,
+                    "image":"./assets/sprites/goblin_static.png",
                     "attributs": {
                         "vitesse": 50
                     },

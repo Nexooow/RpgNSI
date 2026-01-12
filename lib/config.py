@@ -9,6 +9,7 @@ aretes = [
     ("Ceilidh", "Mountain", 33),
     ("Ceilidh", "Auberge", 34),
     ("Auberge", "Elder Tree", 25),
+    ("Elder Tree", "Auberge", 25),
     ("Auberge", "Ceilidh", 34),
     ("Auberge", "Dawn of the world", 19),
     ("Dawn of the world", "Auberge", 19),

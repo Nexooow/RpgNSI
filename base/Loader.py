@@ -2,7 +2,7 @@ from glob import glob
 import json
 from random import randint, random
 import typing
-
+import pygame
 from base.action import Action, actions_par_type
 from base.Region import Region
 
@@ -16,7 +16,7 @@ class Loader:
 
         self.npc = {}
         self.items = {}
-
+        self.npc_regions={}
     def charger(self):
         self.charger_actions()
         self.charger_items()
@@ -132,6 +132,7 @@ class Loader:
                     assert isinstance(content, dict)
                     identifiant = content["id"]
                     self.npc[identifiant] = content
+                    
                     if "rencontre" in content and content["rencontre"]:
                         # sequence premiere interaction
                         self.creer_sequence(f"{identifiant}:rencontre", content["rencontre"], "action")
@@ -139,6 +140,7 @@ class Loader:
                     if "interaction" in content and content["interaction"]:
                         self.creer_sequence(f"{identifiant}:interaction", content["interaction"], "action")
                         print(f"JSONLoader | NPC | {identifiant} > action d'interaction créer")
+                    
             except Exception:
                 continue
 

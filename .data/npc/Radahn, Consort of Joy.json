@@ -20,4 +20,26 @@
       ]
     }
   }
-], "interaction": []}
+], "interaction": [
+  {
+    "type":"radahn"
+  },
+  {
+    "type":"condition",
+    "code":"jeu.variables_jeu['radahn_killed']==True",
+    "actions":{
+      "result==True":[
+        {
+          "type":"ajout-items",
+          "items":[
+            {
+              "id":"finger",
+              "quantite":1
+            }
+
+          ]
+        }
+      ]
+    }
+  }
+]}

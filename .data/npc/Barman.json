@@ -1,6 +1,7 @@
 {
     "id": "Barman",
     "nom": "Barman",
+    "background":"barman.jpg",
     "rencontre": [
     ],
     "interaction": [

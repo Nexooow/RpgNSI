@@ -36,11 +36,14 @@ class Jeu:
 
         self.menu = Accueil(self)
         self.loader = Loader(self)
-
+        
         # carte et regions/lieux
         self.carte = Graph(sommets, aretes, True, positions_sommets)
         self.equipe = Equipe(self)
         self.variables_jeu = {}  # variables utilisés par certaines actions (exemple : stock des boutiques ...)
+        self.variables_jeu["jeu_termine"]=False
+        self.variables_jeu["radahn_killed"]=False
+        self.variables_jeu["demiurge_killed"]=False
         self.regions = self.loader.charger_regions()
         self.region = "Auberge"
         self.lieu = self.regions["Auberge"].entree
@@ -90,8 +93,6 @@ class Jeu:
             self.restaurer(save_json)
         else:
             self.equipe.ajouter_personnage(Vous(self.equipe))
-            self.equipe.ajouter_personnage(Barman(self.equipe))
-            self.equipe.ajouter_personnage(Fachan(self.equipe))
         # self.executer_sequence("test_combat")
 
     def restaurer(self, save_json):
@@ -184,6 +185,11 @@ class Jeu:
                 self.jouer_musique(musique_region, loop=True, volume=0.07)
             else:
                 self.jouer_musique(None)
+        if self.variables_jeu.get("jeu_termine",False):
+            self.ouvrir_menu(Accueil(self))
+            self.debute=False
+            self.action_actuelle=None
+            self.actions=File()
 
     def scene(self):
         """
@@ -196,8 +202,6 @@ class Jeu:
             self.fond.fill((255, 255, 255))
             self.fond.blit(fonds_regions[self.region], (0, 0))
             if self.action_actuelle is not None:
-                if not self.action_actuelle.utilise_fond:
-                    pass
                 self.action_actuelle.draw()
             self.ui()
         self.filters()  # applique les filtres sur l'écran
@@ -361,7 +365,7 @@ class Jeu:
         :param action: L'action à ajouter
         :return: None
         """
-
+        print(action)
         assert isinstance(action,
                           Action), f"L'action à ajouter n'est pas une instance de la classe Action mais est de type {type(action)}"
         self.actions.enfiler(action)
@@ -375,6 +379,7 @@ class Jeu:
         """
 
         sequence = self.loader.get_sequence(identifiant)
+        print("Execution de la séquence :", identifiant)
         if sequence:
             if priority:
                 self.actions.inserer(sequence)

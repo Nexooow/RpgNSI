@@ -36,10 +36,11 @@ player = Fighter(500, 480, [162, 1, [72, 56]], player_sheet, [10, 8, 1, 7, 7, 3,
 
 
 class Radahn(Action):
-    def __init__(self, jeu):
+    def __init__(self, jeu, _):
         super().__init__(jeu)
         self.start_time = None
         self.desactive_ui = True
+        self.utilise_musique = True
         self.radahn_frame_index = 0
         self.explosion_group = pygame.sprite.Group()
         self.meteors = []
@@ -47,7 +48,7 @@ class Radahn(Action):
     def executer(self):
         self.start_time = time()
         self.radahn_frame_index = 0
-        self.jeu.jouer_musique("survive", False)
+        self.jeu.jouer_musique("survive", loop=False)
 
     def update(self, events):
         pass
@@ -80,7 +81,7 @@ class Radahn(Action):
                 self.jeu.fond.blit(meteor.frame, meteor.rect)
         player.update()
         player.draw(self.jeu.fond)
-        pygame.draw.circle(self.jeu.fond, (0, 255, 0), player.rect.center, int(player.radiuspx), 1)
+
         self.explosion_group.draw(self.jeu.fond)
         self.explosion_group.update()
 
@@ -103,10 +104,15 @@ class Radahn(Action):
             )
         if player.health <= 0:
             text_render_centered(self.jeu.ui_surface, "GIT GUD", "extrabold", color=(255, 0, 0), pos=(500, 350))
-            self.complete=True
+            # Téléporter l'équipe à l'auberge et soigner
+            self.jeu.region = "Auberge"
+            self.jeu.lieu = self.jeu.regions["Auberge"].entree
+            self.jeu.equipe.soigner_complet()
+            self.jeu.actions.contenu = []
+            self.complete = True
         if 195 - round(time() - self.start_time) == 0:
             pygame.mixer.music.stop()
             text_render_centered(self.jeu.ui_surface, "Great Finger Obtained", "bold", color=(255, 215, 0),
                                  pos=(500, 350))
-            self.jeu.variables_jeu['radahn_killed']=True
-            self.complete=True
+            self.jeu.variables_jeu['radahn_killed'] = True
+            self.complete = True

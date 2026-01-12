@@ -56,10 +56,10 @@
                     },
                     {
                         "type": "execution",
-                        "code": "jeu.equipe.vie-=5"
+                        "code": "jeu.equipe.infliger(5)"
                     },
                     {
-                        "type":"ajout-item",
+                        "type":"ajout-items",
                         "items":[
                             {
                                 "id":"finger",

@@ -42,10 +42,10 @@ class StreetFighter(Action):
             warrior_animation_steps,
             {1: [4], 2: [2]}
         )
-
+        
     def draw_bg(self):
         background = pygame.image.load("./assets/sprites/images.jpg").convert_alpha()
-        background = pygame.transform.scale(background, 100)
+        background = pygame.transform.scale(background, (1000, 700))
         self.jeu.fond.blit(background, (0, 0))
 
     def draw_health(self, health, x, y):
@@ -64,8 +64,12 @@ class StreetFighter(Action):
         self.player.move(1000, 700, self.jeu.fond, self.demiurge)
         self.demiurge.move(1000, 700, self.jeu.fond, self.player, False)
         self.demiurge.ai_behavior(self.jeu.fond, self.player)
-        if not self.demiuge.alive and self.demiurge.frame_index==len(self.demiurge.animation_list[6])-1:
+        if not self.demiurge.alive and self.demiurge.frame_index==len(self.demiurge.animation_list[6])-1:
             self.jeu.variables_jeu['demiurge_killed']=True
             self.complete=True
         if not self.player.alive and self.player.frame_index==len(self.player.animation_list[6])-1:
+            self.jeu.region = "Auberge"
+            self.jeu.lieu = self.jeu.regions["Auberge"].entree
+            self.jeu.equipe.soigner_complet()
+            self.jeu.actions.contenu = []
             self.complete=True

@@ -15,6 +15,7 @@ from .SelectionAction import SelectionAction
 from .AddPerso import AddPerso
 from boss.radahn import Radahn
 from boss.street_fighter import StreetFighter
+from .RetireItems import RetireItems
 
 actions_par_type = {
     "ajout-items": AjoutItems,
@@ -31,5 +32,6 @@ actions_par_type = {
     "selection-action": SelectionAction,
     "add_perso":AddPerso,
     "street-fighter": StreetFighter,
-    "radahn": Radahn
+    "radahn": Radahn,
+    "retire-item": RetireItems
 }

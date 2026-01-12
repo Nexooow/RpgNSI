@@ -74,13 +74,19 @@ class Meteor:
         return f
 
     def collision(self, target):
+        """
         x = self.rect.centerx-target.rect.centerx
         y = self.rect.centery-target.rect.centery+10
         distance = math.sqrt(x**2+y**2)
         if distance <= self.radiuspx + target.radiuspx and not self.has_hit:
             target.health -= self.impact_force()
             self.has_hit = True
-
+        """
+        offset=(target.rect.left - self.rect.left, target.rect.top - self.rect.top)
+        overlap=self.mask.overlap(target.mask,offset)
+        if overlap and not self.has_hit:
+            target.health-=self.impact_force()
+            self.has_hit=True
     def load_frames(self, frame_width=448, frame_height=448):
         frames = []
         sheet_width = self.image.get_width()

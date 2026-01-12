@@ -1,6 +1,6 @@
 {
     "type":"event",
-    "name":"unicorn",
+    "id":"unicorn",
     "run":[
         {
             "type":"random",

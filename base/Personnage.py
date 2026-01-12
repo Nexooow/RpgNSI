@@ -164,8 +164,7 @@ class Personnage:
             self.rect.x - (self.offset[0] * self.image_scale),
             self.rect.y - (self.offset[1] * self.image_scale)
         )
-        self.equipe.jeu.fond.blit(img, self.img_pos)
-        pygame.draw.rect(self.equipe.jeu.fond, (255, 0, 0), self.rect, 2)
+        self.equipe.jeu.ui_surface.blit(img, self.img_pos)
         self.mask = pygame.mask.from_surface(img)
 
     def move(self, x, y):
