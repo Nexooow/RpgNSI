@@ -4,7 +4,37 @@
     "rencontre": [
         {
             "type": "radahn"
+        },
+        {
+          "type":"ajout-items",
+          "items":[
+            {
+              "id":"finger",
+              "quantite":1
+            }
+          ]
         }
     ],
-    "interaction": []
+    "interaction": [
+      {
+        "type":"condition",
+        "code":"jeu.variables_jeu['radahn_killed']==True",
+        "actions":{
+          "result==False":[
+            {
+              "type":"radahn"
+            },
+        {
+          "type":"ajout-items",
+          "items":[
+            {
+              "id":"finger",
+              "quantite":1
+            }
+          ]
+        }
+          ]
+        }
+      }
+    ]
 }

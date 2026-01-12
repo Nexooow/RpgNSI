@@ -36,7 +36,7 @@ player = Fighter(500, 480, [162, 1, [72, 56]], player_sheet, [10, 8, 1, 7, 7, 3,
 
 
 class Radahn(Action):
-    def __init__(self, jeu, _):
+    
     def __init__(self, jeu, _):
         super().__init__(jeu)
         self.start_time = None
